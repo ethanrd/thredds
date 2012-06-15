@@ -32,10 +32,7 @@
  */
 package thredds.catalog2.builder;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Iterator;
 
 import ucar.nc2.constants.FeatureType;
 import thredds.catalog2.ThreddsMetadata;
@@ -104,7 +101,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
   public DatePointBuilder setMetadataModifiedDatePointBuilder( String date, String format );
   public DatePointBuilder getMetadataModifiedDatePointBuilder();
 
-  public GeospatialCoverageBuilder setNewGeospatialCoverageBuilder( URI crsUri );
+  public GeospatialCoverageBuilder setNewGeospatialCoverageBuilder( String crsUri );
   public void removeGeospatialCoverageBuilder();
   public GeospatialCoverageBuilder getGeospatialCoverageBuilder();
 
@@ -147,9 +144,8 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     //public void setTitle( String title );
     public String getTitle();
 
-    //public void setExternalReference( URI externalReference );
+    //public void setExternalReference( String externalReference );
     public String getExternalReference();
-    public URI getExternalReferenceAsUri() throws URISyntaxException;
 
     public ThreddsMetadata.Documentation build() throws BuilderException;
   }
@@ -253,8 +249,8 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
 
   public interface GeospatialCoverageBuilder extends ThreddsBuilder
   {
-    public void setCRS( URI crsUri );
-    public URI getCRS();
+    public void setCRS( String crsUri );
+    public String getCRS();
 
     public void setGlobal( boolean isGlobal );
     public boolean isGlobal();

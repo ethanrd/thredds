@@ -36,23 +36,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import thredds.catalog2.xml.parser.ThreddsXmlParser;
-import thredds.catalog2.xml.parser.ThreddsXmlParserException;
-import thredds.catalog2.xml.parser.stax.StaxThreddsXmlParser;
-import thredds.catalog2.xml.writer.ThreddsXmlWriterFactory;
-import thredds.catalog2.xml.writer.ThreddsXmlWriter;
-import thredds.catalog2.xml.writer.ThreddsXmlWriterException;
 import thredds.catalog2.*;
 import thredds.catalog2.builder.CatalogBuilder;
-import thredds.catalog2.builder.DatasetNodeBuilder;
-import thredds.catalog2.builder.ThreddsMetadataBuilder;
 import thredds.catalog2.builder.BuilderException;
-import thredds.catalog.ServiceType;
 
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * _more_
@@ -108,7 +98,7 @@ public class TestCatalogParser
             .append( "  </dataset>\n" )
             .append( "</catalog>" );
 
-      CatalogBuilder catBldr = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, doc.toString() );
+      CatalogBuilder catBldr = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(doc.toString()), docBaseUri));
 
     String catName = "Unidata THREDDS Data Server";
     assertTrue( "Catalog name [" + catBldr.getName() + "] not as expected [" + catName + "].",

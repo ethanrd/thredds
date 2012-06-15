@@ -37,6 +37,7 @@ import thredds.catalog2.builder.*;
 import thredds.catalog.ServiceType;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import ucar.nc2.units.DateType;
@@ -50,7 +51,7 @@ import ucar.nc2.units.DateType;
 class CatalogImpl implements Catalog, CatalogBuilder
 {
   private String name;
-  private URI docBaseUri;
+  private String docBaseUri;
   private String version;
   private DateType expires;
   private DateType lastModified;
@@ -65,21 +66,24 @@ class CatalogImpl implements Catalog, CatalogBuilder
   private boolean isBuilt = false;
 
 
-  CatalogImpl( String name, URI docBaseUri, String version, DateType expires, DateType lastModified )
+  CatalogImpl()
   {
-    if ( docBaseUri == null ) throw new IllegalArgumentException( "Catalog base URI must not be null.");
-    this.name = name;
-    this.docBaseUri = docBaseUri;
-    this.version = version;
-    this.expires = expires;
-    this.lastModified = lastModified;
-
     this.globalServiceContainer = new GlobalServiceContainer();
     this.serviceContainer = new ServiceContainer( globalServiceContainer );
 
     this.datasetContainer = new DatasetNodeContainer( null );
-
     this.propertyContainer = new PropertyContainer();
+  }
+
+  CatalogImpl( String name, String docBaseUri, String version, DateType expires, DateType lastModified )
+  {
+    this();
+
+    this.docBaseUri = docBaseUri != null ? docBaseUri : "";
+    this.name = name;
+    this.version = version;
+    this.expires = expires;
+    this.lastModified = lastModified;
   }
 
   DatasetNodeContainer getDatasetNodeContainer()
@@ -98,11 +102,10 @@ class CatalogImpl implements Catalog, CatalogBuilder
     return this.name;
   }
 
-  public void setDocBaseUri( URI docBaseUri )
+  public void setDocBaseUri( String docBaseUri )
   {
     if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
-    if ( docBaseUri == null ) throw new IllegalArgumentException( "Catalog base URI must not be null." );
-    this.docBaseUri = docBaseUri;
+    this.docBaseUri = docBaseUri != null ? docBaseUri : "";
   }
 
   public URI getDocBaseUri()
@@ -143,7 +146,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
     return this.lastModified;
   }
 
-  public ServiceBuilder addService( String name, ServiceType type, URI baseUri )
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri )
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This CatalogBuilder has been built." );
@@ -252,7 +255,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
     return di;
   }
 
-  public CatalogRefBuilder addCatalogRef( String name, URI reference )
+  public CatalogRefBuilder addCatalogRef( String name, String reference )
   {
     if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
     CatalogRefImpl crb = new CatalogRefImpl( name, reference, this, null );
@@ -309,41 +312,72 @@ class CatalogImpl implements Catalog, CatalogBuilder
     return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
   }
 
-  public boolean isBuilt()
-  {
+  public boolean isBuilt() {
     return this.isBuilt;
   }
 
   public BuilderIssues getIssues()
   {
+    if ( this.isBuilt )
+      throw new IllegalStateException( "This CatalogBuilder has been built." );
+
     BuilderIssues issues = new BuilderIssues();
 
-    // ToDo Check any invariants.
-    // Check invariants
-
-    // Check subordinates.
-    issues.addAllIssues( this.globalServiceContainer.getIssues( this ));
-    issues.addAllIssues( this.serviceContainer.getIssues());
-    issues.addAllIssues( this.datasetContainer.getIssues());
-    issues.addAllIssues( this.propertyContainer.getIssues());
-
+    this.gatherIssues( issues, false );
     return issues;
   }
 
   public Catalog build() throws BuilderException
   {
     if ( this.isBuilt )
-      return this;
+      throw new IllegalStateException( "This CatalogBuilder has been built." );
 
-    // ToDo Check any invariants.
-    // Check invariants
+    BuilderIssues allIssues = new BuilderIssues();
+    this.gatherIssues( allIssues, true );
 
-    // Check subordinates.
-    this.serviceContainer.build();
-    this.datasetContainer.build();
-    this.propertyContainer.build();
-    
+    this.threddsCatalogIssues = new ThreddsCatalogIssuesImpl( allIssues);
+
     this.isBuilt = true;
     return this;
+  }
+
+  private ThreddsCatalogIssues threddsCatalogIssues;
+  public ThreddsCatalogIssues getCatalogIssues()
+  {
+    return this.threddsCatalogIssues;
+  }
+
+  BuilderIssues externalIssues = new BuilderIssues();
+
+  BuilderIssues getLocalIssues()
+  {
+    BuilderIssues localIssues = new BuilderIssues();
+
+    try {
+      new URI( this.docBaseUri );
+    }
+    catch ( URISyntaxException e ) {
+      localIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Document base URI [" + this.docBaseUri + "] has bad URI syntax.", this, e ) );
+    }
+    return localIssues;
+  }
+
+  void gatherIssues( BuilderIssues container, boolean build)
+  {
+    if ( this.isBuilt)
+      return;
+
+    container.addAllIssues( getLocalIssues() );
+    if ( externalIssues != null && ! externalIssues.isEmpty())
+      container.addAllIssues( externalIssues );
+
+//    this.globalServiceContainer.gatherIssues( container, build, this ) ;
+//    this.serviceContainer.gatherIssues( container, build);
+//    this.datasetContainer.gatherIssues( container, build);
+//    this.propertyContainer.gatherIssues( container, build);
+
+    if ( build) {
+      isBuilt = true;
+    }
   }
 }

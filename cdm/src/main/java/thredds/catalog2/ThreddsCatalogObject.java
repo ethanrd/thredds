@@ -8,5 +8,5 @@ package thredds.catalog2;
  */
 public interface ThreddsCatalogObject
 {
-  public CatalogIssues getIssues();
+  public ThreddsCatalogIssues getIssues();
 }

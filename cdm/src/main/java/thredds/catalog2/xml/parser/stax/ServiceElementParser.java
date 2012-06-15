@@ -32,9 +32,7 @@
  */
 package thredds.catalog2.xml.parser.stax;
 
-import thredds.catalog2.builder.CatalogBuilder;
-import thredds.catalog2.builder.ServiceBuilder;
-import thredds.catalog2.builder.ThreddsBuilderFactory;
+import thredds.catalog2.builder.*;
 import thredds.catalog2.xml.parser.ThreddsXmlParserException;
 import thredds.catalog2.xml.names.ServiceElementNames;
 import thredds.catalog.ServiceType;
@@ -55,6 +53,8 @@ import java.net.URISyntaxException;
  */
 class ServiceElementParser extends AbstractElementParser
 {
+  private final ThreddsBuilder parentBuilder;
+  private final boolean parentBuilderIsCatalog;
   private final CatalogBuilder parentCatalogBuilder;
   private final ServiceBuilder parentServiceBuilder;
 
@@ -70,6 +70,8 @@ class ServiceElementParser extends AbstractElementParser
                                 CatalogBuilder parentCatalogBuilder )
   {
     super( elementName, reader, builderFactory);
+    this.parentBuilder = parentCatalogBuilder;
+    this.parentBuilderIsCatalog = true;
     this.parentCatalogBuilder = parentCatalogBuilder;
     this.parentServiceBuilder = null;
 
@@ -83,6 +85,9 @@ class ServiceElementParser extends AbstractElementParser
                         ServiceBuilder parentServiceBuilder )
   {
     super( elementName, reader, builderFactory );
+    this.parentBuilder = parentServiceBuilder;
+    this.parentBuilderIsCatalog = false;
+
     this.parentCatalogBuilder = null;
     this.parentServiceBuilder = parentServiceBuilder;
 
@@ -100,7 +105,7 @@ class ServiceElementParser extends AbstractElementParser
     StartElement startElement = this.getNextEventIfStartElementIsMine();
 
     Attribute nameAtt = startElement.getAttributeByName( ServiceElementNames.ServiceElement_Name );
-    String name = nameAtt.getValue();
+    String name = nameAtt != null ? nameAtt.getValue() : null;
     Attribute serviceTypeAtt = startElement.getAttributeByName( ServiceElementNames.ServiceElement_ServiceType );
     ServiceType serviceType = ServiceType.getType( serviceTypeAtt.getValue() );
     Attribute baseUriAtt = startElement.getAttributeByName( ServiceElementNames.ServiceElement_Base );
@@ -112,8 +117,11 @@ class ServiceElementParser extends AbstractElementParser
     }
     catch ( URISyntaxException e )
     {
-      log.error( "parseElement(): Bad service base URI [" + baseUriString + "]: " + e.getMessage(), e );
+      String msg = "Bad service base URI [" + baseUriString + "]: " + e.getMessage();
+    //  BuilderIssue issue = new BuilderIssue( BuilderIssue.Severity.ERROR, msg, this.parentBuilder, e );
+      log.error( "parseElement(): " + msg );
       throw new ThreddsXmlParserException( "Bad service base URI [" + baseUriString + "]", e );
+      // ToDo Add external issue and add service with null baseUri
     }
     if ( this.parentCatalogBuilder != null )
       this.selfBuilder = this.parentCatalogBuilder.addService( name, serviceType, baseUri );

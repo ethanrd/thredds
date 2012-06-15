@@ -72,4 +72,9 @@ public class BuilderIssue
   public Exception getCause() {
     return this.cause;
   }
+
+  public String toString() {
+    return new StringBuilder( this.getSeverity().toString())
+            .append( ": " ).append( this.getMessage() ).append( "\n" ).toString();
+  }
 }

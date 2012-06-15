@@ -35,7 +35,6 @@ package thredds.catalog2.builder;
 import thredds.catalog2.Catalog;
 import thredds.catalog.ServiceType;
 
-import java.net.URI;
 import java.util.List;
 
 import ucar.nc2.units.DateType;
@@ -51,8 +50,8 @@ public interface CatalogBuilder extends ThreddsBuilder
   public String getName();
   public void setName( String name);
 
-  public URI getDocBaseUri();
-  public void setDocBaseUri( URI docBaseUri);
+  public String getDocBaseUriAsString();
+  public void setDocBaseUri( String docBaseUri);
 
   public String getVersion();
   public void setVersion( String version );
@@ -64,14 +63,14 @@ public interface CatalogBuilder extends ThreddsBuilder
   public void setLastModified( DateType lastModified );
 
   // * @throws IllegalStateException this CatalogBuilder has already been finished or already contains a ServiceBuilder with the given name.
-  public ServiceBuilder addService( String name, ServiceType type, URI baseUri );
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri );
   public boolean removeService( ServiceBuilder serviceBuilder );
   public List<ServiceBuilder> getServiceBuilders();
   public ServiceBuilder getServiceBuilderByName( String name );
   public ServiceBuilder findServiceBuilderByNameGlobally( String name );
 
   public DatasetBuilder addDataset( String name );
-  public CatalogRefBuilder addCatalogRef( String name, URI reference );
+  public CatalogRefBuilder addCatalogRef( String name, String uriReference );
   public boolean removeDataset( DatasetNodeBuilder datasetNodeBuilder );
 
   public List<DatasetNodeBuilder> getDatasetNodeBuilders();

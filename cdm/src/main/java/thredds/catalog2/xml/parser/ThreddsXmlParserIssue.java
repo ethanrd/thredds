@@ -33,6 +33,7 @@
 package thredds.catalog2.xml.parser;
 
 import thredds.catalog2.builder.ThreddsBuilder;
+import thredds.catalog2.builder.BuilderIssue;
 
 /**
  * _more_
@@ -40,40 +41,9 @@ import thredds.catalog2.builder.ThreddsBuilder;
  * @author edavis
  * @since 4.0
  */
-public class ThreddsXmlParserIssue
+public class ThreddsXmlParserIssue extends BuilderIssue
 {
-  public enum Severity{ FATAL, ERROR, WARNING };
-
-  private final Severity severity;
-  private final String message;
-  private final ThreddsBuilder builder;
-  private final Exception cause;
-
-  public ThreddsXmlParserIssue( Severity severity, String message, ThreddsBuilder builder, Exception cause )
-  {
-    this.severity = severity;
-    this.message = message;
-    this.builder = builder;
-    this.cause = cause;
-  }
-
-  public Severity getSeverity()
-  {
-    return this.severity;
-  }
-
-  public String getMessage()
-  {
-    return this.message;
-  }
-
-  public ThreddsBuilder getBuilder()
-  {
-    return this.builder;
-  }
-
-  public Exception getCause()
-  {
-    return this.cause;
+  public ThreddsXmlParserIssue( Severity severity, String message, ThreddsBuilder builder, Exception cause ) {
+    super( severity, message, builder, cause );
   }
 }

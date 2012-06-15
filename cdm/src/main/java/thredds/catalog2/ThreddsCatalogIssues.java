@@ -1,14 +1,12 @@
 package thredds.catalog2;
 
-import java.util.List;
-
 /**
  * _more_
  *
  * @author edavis
  * @since 4.0
  */
-public interface CatalogIssues
+public interface ThreddsCatalogIssues
 {
   public boolean isValid();
 
@@ -19,6 +17,4 @@ public interface CatalogIssues
   public String getFatalIssuesMessage();
   public String getErrorIssuesMessage();
   public String getWarningIssuesMessage();
-
-  public String toString();
 }

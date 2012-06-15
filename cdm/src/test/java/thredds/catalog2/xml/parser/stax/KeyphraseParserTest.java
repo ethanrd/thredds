@@ -7,12 +7,14 @@ import static org.junit.Assert.assertEquals;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
+import java.io.StringReader;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.net.URISyntaxException;
 import java.net.URI;
 
+import thredds.catalog.xml.testutil.CatalogXmlAsStringUtil;
 import thredds.catalog2.xml.parser.ThreddsXmlParserException;
 import thredds.catalog2.xml.parser.CatalogXmlUtils;
 import thredds.catalog2.xml.names.ThreddsMetadataElementNames;
@@ -92,9 +94,9 @@ public class KeyphraseParserTest
                  ThreddsXmlParserException
   {
     URI docBaseUri = new URI( docBaseUriString );
-    String catalogXml = CatalogXmlUtils.wrapThreddsXmlInContainerDataset( kpXml );
+    String catalogXml = CatalogXmlAsStringUtil.wrapThreddsXmlInContainerDataset(kpXml);
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogXml );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogXml), docBaseUri));
 
     assertNotNull( catBuilder );
 

@@ -32,8 +32,6 @@
  */
 package thredds.catalog2.builder;
 
-import java.util.List;
-
 /**
  * Parent type for all THREDDS builders.
  *
@@ -48,12 +46,29 @@ public interface ThreddsBuilder
    * @return true if this ThreddsBuilder has already been built, false otherwise.
    */
   public boolean isBuilt();
+
   /**
    * Check whether the state of this ThreddsBuilder is such that build() will succeed.
    *
    * @return true if this ThreddsBuilder is in a state where build() will succeed.
    */
   public BuilderIssues getIssues();
+
+  /**
+   * Allow the addition of a BuilderIssue that represents an issue experienced by an external process
+   * while in the process of constructing this ThreddsBuilder.
+   *
+   * @param issue the BuilderIssue to add to this ThreddsBuilder.
+   */
+  //public void addExternalIssue( BuilderIssue issue);
+
+  /**
+   * Allow the addition of BuilderIssues that represents a set of issues experienced by an external process
+   * while in the process of constructing this ThreddsBuilder.
+   *
+   * @param issues the BuilderIssues to add to this ThreddsBuilder.
+   */
+  //public void addExternalIssues( BuilderIssues issues);
 
   /**
    * Generate the object being built by this ThreddsBuilder.

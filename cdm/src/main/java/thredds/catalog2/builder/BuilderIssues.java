@@ -27,23 +27,8 @@ public class BuilderIssues
   {
     this();
     if ( issue == null )
-    {
-      throw new IllegalArgumentException( "Issue may not be null." );
-    }
+      return;
     this.issues.add( issue );
-  }
-
-  public BuilderIssues( BuilderIssue.Severity severity, String message, ThreddsBuilder builder, Exception cause )
-  {
-    this();
-    this.issues.add( new BuilderIssue( severity, message, builder, cause ) );
-    trackSeverity( severity );
-  }
-
-  public void addIssue( BuilderIssue.Severity severity, String message, ThreddsBuilder builder, Exception cause )
-  {
-    this.issues.add( new BuilderIssue( severity, message, builder, cause ) );
-    trackSeverity( severity );
   }
 
   public void addIssue( BuilderIssue issue )
@@ -73,14 +58,31 @@ public class BuilderIssues
     }
   }
 
-  public boolean isEmpty()
-  {
+  public void clear() {
+    this.issues.clear();
+    this.numWarningIssues = 0;
+    this.numErrorIssues = 0;
+    this.numFatalIssues = 0;
+  }
+
+  public boolean isEmpty() {
     return this.issues.isEmpty();
   }
 
-  public int size()
-  {
+  public int size() {
     return this.issues.size();
+  }
+
+  public int getNumWarningIssues() {
+    return this.numWarningIssues;
+  }
+
+  public int getNumErrorIssues() {
+    return this.numErrorIssues;
+  }
+
+  public int getNumFatalIssues() {
+    return this.numFatalIssues;
   }
 
   public List<BuilderIssue> getIssues()
@@ -103,7 +105,7 @@ public class BuilderIssues
     StringBuilder sb = new StringBuilder();
     for ( BuilderIssue bfi : this.issues )
     {
-      sb.append( bfi.getMessage() ).append( "\n" );
+      sb.append( bfi.toString());
     }
     return sb.toString();
   }

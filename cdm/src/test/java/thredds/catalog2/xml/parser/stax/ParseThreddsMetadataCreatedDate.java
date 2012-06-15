@@ -1,16 +1,16 @@
 package thredds.catalog2.xml.parser.stax;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 import javax.xml.stream.XMLStreamException;
+import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URI;
-import java.util.Collection;
 
+import thredds.catalog.xml.testutil.CatalogXmlAsStringUtil;
 import thredds.catalog2.xml.parser.ThreddsXmlParserException;
 import thredds.catalog2.xml.parser.CatalogXmlUtils;
 import thredds.catalog2.builder.CatalogBuilder;
@@ -78,9 +78,9 @@ public class ParseThreddsMetadataCreatedDate
                    ThreddsXmlParserException
     {
         URI docBaseUri = new URI( docBaseUriString );
-        String catalogXml = CatalogXmlUtils.wrapThreddsXmlInContainerDataset( mdXml );
+        String catalogXml = CatalogXmlAsStringUtil.wrapThreddsXmlInContainerDataset(mdXml);
 
-        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogXml );
+        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogXml), docBaseUri));
 
         assertNotNull( catBuilder );
 

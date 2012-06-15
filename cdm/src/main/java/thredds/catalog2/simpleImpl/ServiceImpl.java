@@ -64,6 +64,7 @@ class ServiceImpl implements Service, ServiceBuilder
   private final GlobalServiceContainer globalServiceContainer;
   private final boolean isRootContainer;
 
+  private final BuilderIssueContainer builderIssuesContainer;
   private boolean isBuilt = false;
 
   ServiceImpl( String name, ServiceType type, URI baseUri, GlobalServiceContainer globalServiceContainer )
@@ -71,6 +72,9 @@ class ServiceImpl implements Service, ServiceBuilder
     if ( name == null ) throw new IllegalArgumentException( "Name must not be null.");
     if ( type == null ) throw new IllegalArgumentException( "Service type must not be null.");
     if ( baseUri == null ) throw new IllegalArgumentException( "Base URI must not be null.");
+
+    builderIssuesContainer = new BuilderIssueContainer();
+    isBuilt = false;
 
     this.name = name;
     this.description = "";
@@ -261,7 +265,7 @@ class ServiceImpl implements Service, ServiceBuilder
 
     // Check if this is leaf service that it has a baseUri.
     if ( this.serviceContainer.isEmpty() && this.baseUri == null )
-      issues.addIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this, null );
+      issues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this, null ));
 
     return issues;
   }
@@ -283,5 +287,22 @@ class ServiceImpl implements Service, ServiceBuilder
 
     this.isBuilt = true;
     return this;
+  }
+
+  public BuilderIssues buildAndGetIssues()
+  {
+    BuilderIssues issues = this.serviceContainer.getIssues();
+
+    // Check subordinates.
+    if ( this.isRootContainer )
+      issues.addAllIssues( this.globalServiceContainer.getIssues( this ) );
+    issues.addAllIssues( this.propertyContainer.getIssues() );
+
+    // Check if this is leaf service that it has a baseUri.
+    if ( this.serviceContainer.isEmpty() && this.baseUri == null )
+      issues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this, null ) );
+
+    return issues;
+
   }
 }

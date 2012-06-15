@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.io.StringReader;
 
+import thredds.catalog.xml.testutil.CatalogXmlAsStringUtil;
 import thredds.catalog2.xml.parser.ThreddsXmlParserException;
 import thredds.catalog2.xml.parser.ThreddsXmlParser;
 import thredds.catalog2.xml.parser.CatalogXmlUtils;
@@ -47,7 +48,7 @@ public class ParseCatalogTest
     String baseUriString = "http://cat2.stax.ParseCatalogTest/simpleCatalog.xml";
     URI docBaseUri = new URI( baseUriString );
     DateType expires = new DateType( false, new Date( System.currentTimeMillis() + 60*60*1000));
-    String xml = CatalogXmlUtils.getCatalog( expires);
+    String xml = CatalogXmlAsStringUtil.getCatalog( expires);
 
     ThreddsXmlParser cp = StaxThreddsXmlParser.newInstance();
     CatalogBuilder catBuilder = cp.parseIntoBuilder( new StringReader( xml ),
@@ -66,7 +67,7 @@ public class ParseCatalogTest
     String baseUriString = "http://cat2.stax.ParseCatalogTest/CatalogWithService.xml";
     URI docBaseUri = new URI( baseUriString );
     DateType expires = new DateType( false, new Date( System.currentTimeMillis() + 60*60*1000));
-    String xml = CatalogXmlUtils.getCatalogWithService( expires);
+    String xml = CatalogXmlAsStringUtil.getCatalogWithService( expires);
 
     ThreddsXmlParser cp = StaxThreddsXmlParser.newInstance();
     CatalogBuilder catBuilder = cp.parseIntoBuilder( new StringReader( xml ),
@@ -85,7 +86,7 @@ public class ParseCatalogTest
     String baseUriString = "http://cat2.stax.ParseCatalogTest/CatalogWithCompoundService.xml";
     URI docBaseUri = new URI( baseUriString );
     DateType expires = new DateType( false, new Date( System.currentTimeMillis() + 60*60*1000));
-    String xml = CatalogXmlUtils.getCatalogWithCompoundService( expires);
+    String xml = CatalogXmlAsStringUtil.getCatalogWithCompoundService( expires);
 
     ThreddsXmlParser cp = StaxThreddsXmlParser.newInstance();
     CatalogBuilder catBuilder = cp.parseIntoBuilder( new StringReader( xml ),
@@ -102,9 +103,9 @@ public class ParseCatalogTest
     {
         String docBaseUriString = "http://cat2.stax.ParseContainerDatasetTest/MetadataServiceName.xml";
         URI docBaseUri = new URI( docBaseUriString);
-        String catXml = CatalogXmlUtils.wrapThreddsXmlInCatalogDatasetMetadata( "<serviceName>odap</serviceName>\n" );
+        String catXml = CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogDatasetMetadata( "<serviceName>odap</serviceName>\n" );
 
-        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catXml );
+        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catXml), docBaseUri));
         assertNotNull( catBuilder );
     }
 
@@ -114,7 +115,7 @@ public class ParseCatalogTest
                  XMLStreamException,
                  ThreddsXmlParserException
   {
-    String xml = CatalogXmlUtils.getCatalogWithSingleAccessDatasetWithRawServiceName();
+    String xml = CatalogXmlAsStringUtil.getCatalogWithSingleAccessDatasetWithRawServiceName();
     String baseUriString = "http://cat2.stax.ParseAccessibleDatasetTest/RawServiceName.xml";
 
     ThreddsXmlParser cp = StaxThreddsXmlParser.newInstance();
@@ -132,7 +133,7 @@ public class ParseCatalogTest
                  XMLStreamException,
                  ThreddsXmlParserException
   {
-    String xml = CatalogXmlUtils.getCatalogWithSingleAccessDatasetWithMetadataServiceName();
+    String xml = CatalogXmlAsStringUtil.getCatalogWithSingleAccessDatasetWithMetadataServiceName();
     String baseUriString = "http://cat2.stax.ParseAccessibleDatasetTest/MetadataServiceName.xml";
 
     ThreddsXmlParser cp = StaxThreddsXmlParser.newInstance();
@@ -168,7 +169,7 @@ public class ParseCatalogTest
                  XMLStreamException,
                  ThreddsXmlParserException
   {
-    String xml = CatalogXmlUtils.getCatalogWithSingleAccessDatasetOldStyle();
+    String xml = CatalogXmlAsStringUtil.getCatalogWithSingleAccessDatasetOldStyle();
     String baseUriString = "http://cat2.stax.ParseAccessibleDatasetTest/OldStyleAccess.xml";
 
     ThreddsXmlParser cp = StaxThreddsXmlParser.newInstance();

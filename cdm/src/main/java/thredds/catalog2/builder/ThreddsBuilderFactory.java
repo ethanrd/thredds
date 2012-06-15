@@ -35,8 +35,6 @@ package thredds.catalog2.builder;
 import thredds.catalog2.*;
 import thredds.catalog.ServiceType;
 
-import java.net.URI;
-
 import ucar.nc2.units.DateType;
 
 /**
@@ -47,16 +45,16 @@ import ucar.nc2.units.DateType;
  */
 public interface ThreddsBuilderFactory
 {
-  public CatalogBuilder newCatalogBuilder( String name, URI docBaseUri, String version, DateType expires, DateType lastModified );
+  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
   public CatalogBuilder newCatalogBuilder( Catalog catalog );
 
-  public ServiceBuilder newServiceBuilder( String name, ServiceType type, URI baseUri );
+  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
   public ServiceBuilder newServiceBuilder( Service service );
 
   public DatasetBuilder newDatasetBuilder( String name );
   public DatasetBuilder newDatasetBuilder( Dataset dataset );
   
-  public CatalogRefBuilder newCatalogRefBuilder( String name, URI reference );
+  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
   public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
 
   public MetadataBuilder newMetadataBuilder();

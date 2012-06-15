@@ -34,9 +34,6 @@ package thredds.catalog2.builder;
 
 import thredds.catalog2.CatalogRef;
 
-import java.net.URI;
-import java.util.List;
-
 /**
  * _more_
  *
@@ -46,8 +43,8 @@ import java.util.List;
 public interface CatalogRefBuilder
         extends DatasetNodeBuilder
 {
-  public URI getReference();
-  public void setReference( URI reference );
+  public String getReferenceUriAsString();
+  public void setReferenceUri( String uriReference );
 
   public CatalogRef build() throws BuilderException;
 }

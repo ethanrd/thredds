@@ -170,16 +170,18 @@ class MetadataImpl implements Metadata, MetadataBuilder
 
   public BuilderIssues getIssues()
   {
+    BuilderIssue issue = null;
     if ( this.isContainedContent )
     {
       if ( this.content == null )
-        return new BuilderIssues( BuilderIssue.Severity.WARNING, "MetadataBuilder contains null content.", this, null );
+        issue = new BuilderIssue( BuilderIssue.Severity.WARNING, "MetadataBuilder contains null content.", this, null );
     }
     else
       if ( this.title == null || this.externalReference == null )
-        return new BuilderIssues( BuilderIssue.Severity.WARNING, "MetadataBuilder with link has null title and/or link URI.", this, null );
+        issue = new BuilderIssue( BuilderIssue.Severity.WARNING, "MetadataBuilder with link has null title and/or link URI.", this, null );
 
-    return new BuilderIssues();
+    return new BuilderIssues( issue );
+
   }
 
   public Metadata build() throws BuilderException

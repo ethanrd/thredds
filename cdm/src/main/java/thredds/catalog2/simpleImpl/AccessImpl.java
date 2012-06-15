@@ -124,9 +124,9 @@ class AccessImpl implements Access, AccessBuilder
     BuilderIssues issues = new BuilderIssues();
 
     if ( this.service == null )
-      issues.addIssue( BuilderIssue.Severity.ERROR, "Dataset[\"" + parentDs.getName() + "\"] not accessible[\"" + this.urlPath + "\"] due to null service.", this, null );
+      issues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, "Dataset[\"" + parentDs.getName() + "\"] not accessible[\"" + this.urlPath + "\"] due to null service.", this, null ));
     if ( this.urlPath == null )
-      issues.addIssue( BuilderIssue.Severity.ERROR, "Dataset[\"" + parentDs.getName() + "\"] not accessible[\"" + this.service != null ? this.service.getName() : "" + "\"] due to null urlPath.", this, null );
+      issues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, "Dataset[\"" + parentDs.getName() + "\"] not accessible[\"" + this.service != null ? this.service.getName() : "" + "\"] due to null urlPath.", this, null ));
 
     return issues;
   }

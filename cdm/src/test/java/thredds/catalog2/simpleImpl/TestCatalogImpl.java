@@ -60,7 +60,7 @@ public class TestCatalogImpl
 {
   private CatalogImpl catImpl;
   private String catName;
-  private URI catDocBaseUri;
+  private String catDocBaseUri;
   private String catVersion;
   private DateType catExpires;
   private DateType catLastModified;
@@ -71,7 +71,7 @@ public class TestCatalogImpl
   public void setupBasicCatalog() throws URISyntaxException, ParseException
   {
     this.catName = "Catalog Name";
-    this.catDocBaseUri = new URI( "http://server/thredds/cat.xml");
+    this.catDocBaseUri = "http://server/thredds/cat.xml";
     this.catVersion = "1.0.2";
     this.catLastModified = new DateType( false, new Date( System.currentTimeMillis() ) );
     this.catExpires = new DateType( catLastModified ).add( new TimeDuration( "P5D" ) );
@@ -129,9 +129,9 @@ public class TestCatalogImpl
     this.catImpl.setName( "name" );
     assertEquals( "name", this.catImpl.getName());
 
-    URI uri = new URI( "http://server/thredds/bad/" );
-    this.catImpl.setDocBaseUri( uri );
-    assertEquals( uri, this.catImpl.getDocBaseUri());
+    String docBaseUri = "http://server/thredds/bad/";
+    this.catImpl.setDocBaseUri( docBaseUri);
+    assertEquals( this.catDocBaseUri, this.catImpl.getDocBaseUri());
 
     this.catImpl.setVersion( "ver" );
     assertEquals( "ver", this.catImpl.getVersion());

@@ -38,8 +38,9 @@ import thredds.catalog2.Catalog;
 import thredds.catalog2.simpleImpl.ThreddsBuilderFactoryImpl;
 import thredds.catalog2.builder.*;
 
-import java.net.URI;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URI;
 
 
 import javax.xml.stream.XMLInputFactory;
@@ -156,10 +157,10 @@ public class StaxThreddsXmlParser implements ThreddsXmlParser
   }
 
 
-  public Catalog parse( URI documentUri )
-          throws ThreddsXmlParserException
+  public Catalog parse( String docLocationUri )
+          throws URISyntaxException, ThreddsXmlParserException
   {
-    Source s = StaxThreddsXmlParserUtils.getSourceFromUri( documentUri );
+    Source s = StaxThreddsXmlParserUtils.getSourceFromUri( new URI( docLocationUri ) );
     try
     {
       return readCatalogXML( s ).build();
@@ -171,7 +172,7 @@ public class StaxThreddsXmlParser implements ThreddsXmlParser
     }
   }
 
-  public Catalog parse( File file, URI docBaseUri )
+  public Catalog parse( File file, String docBaseUri )
           throws ThreddsXmlParserException
   {
     try
@@ -185,7 +186,7 @@ public class StaxThreddsXmlParser implements ThreddsXmlParser
     }
   }
 
-  public Catalog parse( Reader reader, URI docBaseUri )
+  public Catalog parse( Reader reader, String docBaseUri )
           throws ThreddsXmlParserException
   {
     try
@@ -199,7 +200,7 @@ public class StaxThreddsXmlParser implements ThreddsXmlParser
     }
   }
 
-  public Catalog parse( InputStream is, URI docBaseUri )
+  public Catalog parse( InputStream is, String docBaseUri )
           throws ThreddsXmlParserException
   {
     try
@@ -213,28 +214,28 @@ public class StaxThreddsXmlParser implements ThreddsXmlParser
     }
   }
 
-  public CatalogBuilder parseIntoBuilder( URI documentUri )
-          throws ThreddsXmlParserException
+  public CatalogBuilder parseIntoBuilder( String docLocationUri )
+          throws URISyntaxException, ThreddsXmlParserException
   {
-    Source s = StaxThreddsXmlParserUtils.getSourceFromUri( documentUri );
+    Source s = StaxThreddsXmlParserUtils.getSourceFromUri( new URI( docLocationUri) );
     return readCatalogXML( s );
   }
 
-  public CatalogBuilder parseIntoBuilder( File file, URI docBaseUri )
+  public CatalogBuilder parseIntoBuilder( File file, String docBaseUri )
           throws ThreddsXmlParserException
   {
     Source s = StaxThreddsXmlParserUtils.getSourceFromFile( file, docBaseUri );
     return readCatalogXML( s );
   }
 
-  public CatalogBuilder parseIntoBuilder( Reader reader, URI docBaseUri )
+  public CatalogBuilder parseIntoBuilder( Reader reader, String docBaseUri )
           throws ThreddsXmlParserException
   {
     Source source = new StreamSource( reader, docBaseUri.toString() );
     return readCatalogXML( source );
   }
 
-  public CatalogBuilder parseIntoBuilder( InputStream is, URI docBaseUri )
+  public CatalogBuilder parseIntoBuilder( InputStream is, String docBaseUri )
           throws ThreddsXmlParserException
   {
     Source source = new StreamSource( is, docBaseUri.toString() );

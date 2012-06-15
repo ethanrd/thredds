@@ -893,13 +893,6 @@ class ThreddsMetadataImpl
       return this.externalReference;
     }
 
-    public URI getExternalReferenceAsUri() throws URISyntaxException
-    {
-      if ( this.isContainedContent )
-        throw new IllegalStateException( "Documentation with contained content has no external reference.");
-      return this.externalReference != null ? new URI( this.externalReference) : null;
-    }
-
     public boolean isBuilt()
     {
       return this.isBuilt;
@@ -950,7 +943,7 @@ class ThreddsMetadataImpl
 
     public BuilderIssues getIssues() {
       if ( phrase == null || phrase.length() == 0 )
-        return new BuilderIssues( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null );
+        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null ));
       return new BuilderIssues();
     }
 
@@ -990,7 +983,7 @@ class ThreddsMetadataImpl
 
     public BuilderIssues getIssues() {
       if ( projectName == null || projectName.length() == 0 )
-        return new BuilderIssues( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null );
+        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null ));
       return new BuilderIssues();
     }
 
@@ -1062,7 +1055,7 @@ class ThreddsMetadataImpl
 
         public BuilderIssues getIssues() {
           if ( this.date == null )
-            return new BuilderIssues( BuilderIssue.Severity.ERROR, "Date may not be null.", this, null);
+            return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Date may not be null.", this, null));
           return new BuilderIssues();
         }
 
@@ -1165,12 +1158,12 @@ class ThreddsMetadataImpl
             if ( this.duration == null || this.duration.length() == 0 )
                 specified--;
 
-            if ( specified == 2 )
-                return new BuilderIssues();
-            else if ( specified < 2)
-              return new BuilderIssues( BuilderIssue.Severity.ERROR, "Underspecified " + this.toString(), this, null);
-            else // if (specified > 2)
-              return new BuilderIssues( BuilderIssue.Severity.ERROR, "Overspecified " + this.toString(), this, null);
+          if ( specified < 2)
+            return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Underspecified " + this.toString(), this, null));
+          else  if ( specified > 2)
+            return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Overspecified " + this.toString(), this, null));
+          else
+            return new BuilderIssues();
         }
 
         public DateRange build() throws BuilderException {
@@ -1255,7 +1248,7 @@ class ThreddsMetadataImpl
 
     public BuilderIssues getIssues() {
       if ( this.name == null )
-        return new BuilderIssues( BuilderIssue.Severity.ERROR, "Name may not be null.", this, null);
+        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Name may not be null.", this, null));
       return new BuilderIssues();
     }
 
@@ -1356,7 +1349,7 @@ class ThreddsMetadataImpl
     public BuilderIssues getIssues()
     {
       if ( variableMapUrl != null && this.variables != null && ! this.variables.isEmpty())
-        return new BuilderIssues( BuilderIssue.Severity.ERROR, "This VariableGroupBuilder has variables and variableMap.", this, null );
+        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "This VariableGroupBuilder has variables and variableMap.", this, null ));
       return new BuilderIssues();
     }
 
@@ -1462,7 +1455,7 @@ class ThreddsMetadataImpl
     public BuilderIssues getIssues()
     {
       if ( this.name == null || this.name.length() == 0 )
-        return new BuilderIssues( BuilderIssue.Severity.WARNING, "Variable name is null or empty.", this, null );
+        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Variable name is null or empty.", this, null ));
       return new BuilderIssues();
     }
 

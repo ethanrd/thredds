@@ -1,15 +1,20 @@
-package thredds.catalog2.xml.parser;
+package thredds.catalog.testutil;
 
 import thredds.catalog2.builder.*;
+import thredds.catalog2.xml.parser.ThreddsXmlParser;
+import thredds.catalog2.xml.parser.ThreddsXmlParserException;
+import thredds.catalog2.xml.parser.ThreddsXmlParserFactory;
+import thredds.catalog2.xml.parser.stax.StaxThreddsXmlParser;
 import thredds.catalog2.xml.writer.ThreddsXmlWriter;
 import thredds.catalog2.xml.writer.ThreddsXmlWriterFactory;
 import thredds.catalog2.xml.writer.ThreddsXmlWriterException;
 import thredds.catalog2.Catalog;
 import thredds.catalog.ServiceType;
 
-import java.io.StringReader;
 import java.util.List;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.io.StringReader;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -49,18 +54,18 @@ public class CatalogXmlUtils
         }
     }
 
-  public static void assertCatalogAsExpected( CatalogBuilder catBuilder, URI docBaseUri, DateType expires ) {
-    assertCatalogAsExpected( catBuilder, docBaseUri, catName, catVersion, expires != null ? expires.toString() : null);
+    public static void assertCatalogAsExpected( CatalogBuilder catBuilder, URI docBaseUri, DateType expires ) {
+    assertCatalogAsExpected(catBuilder, docBaseUri, catName, catVersion, expires != null ? expires.toString() : null);
   }
 
   public static void assertCatalogAsExpected( CatalogBuilder catBuilder, URI docBaseUri,
                                               String name, String version, String expires )
   {
-      assertNotNull( "DocBase URI is null.", docBaseUri) ;
+      assertNotNull("DocBase URI is null.", docBaseUri) ;
       assertNotNull( "CatalogBuilder [" + docBaseUri + "] is null.", catBuilder) ;
 
-    assertEquals( catBuilder.getDocBaseUri(), docBaseUri);
-    assertEquals( catBuilder.getName(), name);
+    assertEquals(catBuilder.getDocBaseUri(), docBaseUri);
+    assertEquals(catBuilder.getName(), name);
     assertEquals( catBuilder.getVersion(), version);
     if ( expires != null )
       assertEquals( catBuilder.getExpires().toString(), expires.toString());
@@ -81,15 +86,15 @@ public class CatalogXmlUtils
 
   public static void assertCatalogWithCompoundServiceAsExpected( CatalogBuilder catBuilder, URI docBaseUri, DateType expires )
   {
-    assertCatalogAsExpected( catBuilder, docBaseUri, expires );
+    assertCatalogAsExpected(catBuilder, docBaseUri, expires);
 
     List<ServiceBuilder> serviceBldrs = catBuilder.getServiceBuilders();
-    assertFalse( serviceBldrs.isEmpty() );
+    assertFalse(serviceBldrs.isEmpty());
     assertTrue( serviceBldrs.size() == 1 );
     ServiceBuilder serviceBldr = serviceBldrs.get( 0 );
     assertEquals( serviceBldr.getName(), "all" );
     assertEquals( serviceBldr.getType(), ServiceType.COMPOUND );
-    assertEquals( serviceBldr.getBaseUri().toString(), "" );
+    assertEquals(serviceBldr.getBaseUri().toString(), "");
 
     serviceBldrs = serviceBldr.getServiceBuilders();
     assertFalse( serviceBldrs.isEmpty());
@@ -212,5 +217,4 @@ public class CatalogXmlUtils
 
     return (DatasetBuilder) dsnBuilder;
   }
-
 }

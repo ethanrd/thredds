@@ -47,14 +47,15 @@ class CatalogRefImpl
         extends DatasetNodeImpl
         implements CatalogRef, CatalogRefBuilder
 {
+  private String referenceAsString;
   private URI reference;
   private boolean isBuilt = false;
 
-  CatalogRefImpl( String name, URI reference, CatalogImpl parentCatalog, DatasetNodeImpl parent )
+  CatalogRefImpl( String name, String referenceAsString, CatalogImpl parentCatalog, DatasetNodeImpl parent )
   {
     super( name, parentCatalog, parent);
-    if ( reference == null ) throw new IllegalArgumentException( "CatalogRef reference URI must not be null." );
-    this.reference = reference;
+    if ( referenceAsString == null ) throw new IllegalArgumentException( "CatalogRef reference URI must not be null." );
+    this.referenceAsString = referenceAsString;
   }
 
   public void setReference( URI reference )
@@ -64,7 +65,7 @@ class CatalogRefImpl
     this.reference = reference;
   }
 
-  public URI getReference()
+  public URI getReferenceUri()
   {
     return this.reference;
   }

@@ -6,6 +6,7 @@ import org.junit.Test;
 import thredds.catalog.*;
 import thredds.catalog.ThreddsMetadata;
 import thredds.catalog.util.DeepCopyUtils;
+import thredds.catalog.xml.testutil.CatalogXmlAsStringUtil;
 import thredds.catalog2.xml.parser.CatalogXmlUtils;
 
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class TestDeepCopyUtils
             .append( "    </dataset>" )
             .append( "  </dataset>" );
 
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), "Catalog 1", "1.0.3", null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService(sb.toString(), "Catalog 1", "1.0.3", null);
   }
 
 

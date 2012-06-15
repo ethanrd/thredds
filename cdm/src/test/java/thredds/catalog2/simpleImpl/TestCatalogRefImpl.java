@@ -36,9 +36,6 @@ import junit.framework.*;
 import thredds.catalog2.builder.*;
 import thredds.catalog2.CatalogRef;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 /**
  * _more_
  *
@@ -49,7 +46,7 @@ public class TestCatalogRefImpl extends TestCase
 {
   private CatalogImpl parentCatalog;
   private String parentCatName;
-  private URI parentCatDocBaseUri;
+  private String parentCatDocBaseUri;
   private String parentCatVer;
 
   private DatasetNodeBuilder parentDataset;
@@ -59,8 +56,8 @@ public class TestCatalogRefImpl extends TestCase
   private CatalogRef catRef;
 
   private String catRefName;
-  private URI catRefUri;
-  private URI catRefUri2;
+  private String catRefUri;
+  private String catRefUri2;
 
   public TestCatalogRefImpl( String name )
   {
@@ -70,17 +67,10 @@ public class TestCatalogRefImpl extends TestCase
   protected void setUp()
   {
     parentCatName = "parent catalog";
-    try
-    {
-      parentCatDocBaseUri = new URI( "http://server/thredds/aCat.xml");
-      catRefUri = new URI( "http://server/thredds/cat2.xml" );
-      catRefUri2 = new URI( "http://server/thredds/cat3.xml" );
-    }
-    catch ( URISyntaxException e )
-    {
-      fail( "Bad URI syntax: " + e.getMessage());
-      return;
-    }
+    parentCatDocBaseUri = "http://server/thredds/aCat.xml";
+    catRefUri = "http://server/thredds/cat2.xml";
+    catRefUri2 = "http://server/thredds/cat3.xml";
+
     parentCatVer = "version";
     parentCatalog = new CatalogImpl( parentCatName, parentCatDocBaseUri, parentCatVer, null, null);
 
@@ -122,7 +112,7 @@ public class TestCatalogRefImpl extends TestCase
 
     // Test getters of resulting CatalogRef.
     assertTrue( catRef.getName().equals( catRefName ) );
-    assertTrue( catRef.getReference().equals( catRefUri ) );
+    assertTrue( catRef.getReferenceUri().equals( catRefUri ) );
 
     try
     { catRefBldr.setReference( catRefUri2 ); }

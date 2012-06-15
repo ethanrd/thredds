@@ -121,7 +121,7 @@ class GlobalServiceContainer
     // Check subordinates.
     if ( ! this.servicesWithDuplicateName.isEmpty())
       for ( ServiceImpl s : this.servicesWithDuplicateName )
-        issues.addIssue( BuilderIssue.Severity.WARNING, "Catalog contains duplicate service name [" + s.getName() + "].", responsibleBuilder, null );
+        issues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Catalog contains duplicate service name [" + s.getName() + "].", responsibleBuilder, null ));
 
     return issues;
   }

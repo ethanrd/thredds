@@ -1,9 +1,11 @@
 package thredds.catalog2.xml.parser;
 
+import thredds.catalog.xml.testutil.CatalogXmlAsStringUtil;
 import thredds.catalog2.builder.CatalogBuilder;
 import thredds.catalog2.builder.DatasetNodeBuilder;
 import thredds.catalog2.builder.DatasetBuilder;
 
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -37,7 +39,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithIdAuthorityAsAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasAuthorityOne( catBuilder );
@@ -47,7 +49,7 @@ public class IdAuthorityInheritanceTest
   {
     StringBuilder sb = new StringBuilder()
             .append( "<dataset name='dataset' ID='DS1' authority='auth1' />" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -59,7 +61,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithIdAuthorityAsChildElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasAuthorityOne( catBuilder );
@@ -71,7 +73,7 @@ public class IdAuthorityInheritanceTest
             .append( "<dataset name='dataset 1' ID='DS1'>" )
             .append( "  <authority>auth1</authority>" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -83,7 +85,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithIdAuthorityInMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasAuthorityOne( catBuilder );
@@ -97,7 +99,7 @@ public class IdAuthorityInheritanceTest
             .append( "    <authority>auth1</authority>" )
             .append( "  </metadata>" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -109,7 +111,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithIdAuthorityInInheritedMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasAuthorityOne( catBuilder );
@@ -123,7 +125,7 @@ public class IdAuthorityInheritanceTest
             .append( "    <authority>auth1</authority>" )
             .append( "  </metadata>" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -135,7 +137,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetNotInheritingIdAuthorityFromParentAuthorityAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasNoAuthority( catBuilder );
@@ -147,7 +149,7 @@ public class IdAuthorityInheritanceTest
             .append( "<dataset name='dataset 1' ID='DS1' authority='auth1'>" )
             .append( "  <dataset name='dataset 2' ID='DS2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -159,7 +161,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetNotInheritingIdAuthorityFromParentAuthorityElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasNoAuthority( catBuilder );
@@ -172,7 +174,7 @@ public class IdAuthorityInheritanceTest
             .append( "  <authority>auth1</authority>" )
             .append( "  <dataset name='dataset 2' ID='DS2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -184,7 +186,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetNotInheritingIdAuthorityFromParentMetadataAuthorityElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasNoAuthority( catBuilder );
@@ -199,7 +201,7 @@ public class IdAuthorityInheritanceTest
             .append( "  </metadata>" )
             .append( "  <dataset name='dataset 2' ID='DS2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -211,7 +213,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetInheritingIdAuthorityFromParentInheritedMetadataAuthorityElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasAuthorityOne( catBuilder );
@@ -226,7 +228,7 @@ public class IdAuthorityInheritanceTest
             .append( "  </metadata>" )
             .append( "  <dataset name='dataset 2' ID='DS2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog(sb.toString(), null, null, null);
   }
 
   @Test
@@ -238,7 +240,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedIdAuthorityWithAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasAuthorityTwo( catBuilder );
@@ -253,7 +255,7 @@ public class IdAuthorityInheritanceTest
             .append( "  </metadata>" )
             .append( "  <dataset name='dataset 2' ID='DS2' authority='auth2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -265,7 +267,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedIdAuthorityWithChildElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasAuthorityTwo( catBuilder );
@@ -283,7 +285,7 @@ public class IdAuthorityInheritanceTest
             .append( "  </dataset>" )
             .append( "</dataset>" );
 
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -295,7 +297,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedIdAuthorityWithChildMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasAuthorityTwo( catBuilder );
@@ -315,7 +317,7 @@ public class IdAuthorityInheritanceTest
             .append( "  </dataset>" )
             .append( "</dataset>" );
 
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   @Test
@@ -327,7 +329,7 @@ public class IdAuthorityInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedIdAuthorityWithChildInheritedMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, null );
     assertDatasetTwoHasAuthorityTwo( catBuilder );
@@ -347,7 +349,7 @@ public class IdAuthorityInheritanceTest
             .append( "  </dataset>" )
             .append( "</dataset>" );
 
-    return CatalogXmlUtils.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalog( sb.toString(), null, null, null );
   }
 
   private static void assertDatasetOneHasAuthorityOne( CatalogBuilder catBuilder ) {

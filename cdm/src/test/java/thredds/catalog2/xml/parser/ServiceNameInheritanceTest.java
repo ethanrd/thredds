@@ -1,11 +1,13 @@
 package thredds.catalog2.xml.parser;
 
+import thredds.catalog.xml.testutil.CatalogXmlAsStringUtil;
 import thredds.catalog2.builder.CatalogBuilder;
 import thredds.catalog2.builder.DatasetNodeBuilder;
 import thredds.catalog2.builder.DatasetBuilder;
 import thredds.catalog2.builder.AccessBuilder;
 import thredds.catalog.ServiceType;
 
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -46,7 +48,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithServiceNameAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -56,7 +58,7 @@ public class ServiceNameInheritanceTest
   {
     StringBuilder sb = new StringBuilder()
             .append( "<dataset name='ds1' ID='DS1' urlPath='dir/file1.nc' serviceName='odap' />" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -68,7 +70,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithServiceNameInChildElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -80,7 +82,7 @@ public class ServiceNameInheritanceTest
             .append( "<dataset name='ds1' ID='DS1' urlPath='dir/file1.nc'>" )
             .append( "    <serviceName>odap</serviceName>" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -92,7 +94,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithServiceNameInMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -106,7 +108,7 @@ public class ServiceNameInheritanceTest
             .append( "    <serviceName>odap</serviceName>" )
             .append( "  </metadata>" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -118,7 +120,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetWithServiceNameInInheritedMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -132,7 +134,7 @@ public class ServiceNameInheritanceTest
             .append( "    <serviceName>odap</serviceName>" )
             .append( "  </metadata>" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -144,7 +146,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetNotInheritingServiceNameFromParentAuthorityAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -157,7 +159,7 @@ public class ServiceNameInheritanceTest
             .append( "<dataset name='ds1' ID='DS1' urlPath='dir/file1.nc' serviceName='odap'>" )
             .append( "  <dataset name='dataset 2' ID='DS2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -169,7 +171,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetNotInheritingServiceNameFromSiblingServiceElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -183,7 +185,7 @@ public class ServiceNameInheritanceTest
             .append( "    <serviceName>odap</serviceName>" )
             .append( "  <dataset name='dataset 2' ID='DS2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -195,7 +197,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetNotInheritingServiceNameFromParentMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -211,7 +213,7 @@ public class ServiceNameInheritanceTest
             .append( "  </metadata>" )
             .append( "  <dataset name='dataset 2' ID='DS2' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -223,7 +225,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetInheritingServiceNameFromParentInheritedMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -239,7 +241,7 @@ public class ServiceNameInheritanceTest
             .append( "  </metadata>" )
             .append( "  <dataset name='ds2' ID='DS2' urlPath='dir/file2.nc' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -251,7 +253,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedServiceNameWithAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -267,7 +269,7 @@ public class ServiceNameInheritanceTest
             .append( "  </metadata>" )
             .append( "  <dataset name='ds2' ID='DS2' urlPath='dir/file2.nc' serviceName='wcs' />" )
             .append( "</dataset>" );
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -279,7 +281,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedServiceNameWithChildElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -298,7 +300,7 @@ public class ServiceNameInheritanceTest
             .append( "  </dataset>" )
             .append( "</dataset>" );
 
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -310,7 +312,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedServiceNameWithChildMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -331,7 +333,7 @@ public class ServiceNameInheritanceTest
             .append( "  </dataset>" )
             .append( "</dataset>" );
 
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -343,7 +345,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetOverridingInheritedServiceWithChildInheritedMetadataElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -364,7 +366,7 @@ public class ServiceNameInheritanceTest
             .append( "  </dataset>" )
             .append( "</dataset>" );
 
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -376,7 +378,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetAccessWithLocalServiceNameAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -388,7 +390,7 @@ public class ServiceNameInheritanceTest
             .append( "<dataset name='ds1' ID='DS1'>" )
             .append( "  <access urlPath='dir/file1.nc' serviceName='odap' />")
             .append( "</dataset>");
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -400,7 +402,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetAccessWithParentServiceNameAttribute();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -412,7 +414,7 @@ public class ServiceNameInheritanceTest
             .append( "<dataset name='ds1' ID='DS1' serviceName='odap'>" )
             .append( "  <access urlPath='dir/file1.nc' />")
             .append( "</dataset>");
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -424,7 +426,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetAccessWithServiceNameElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -437,7 +439,7 @@ public class ServiceNameInheritanceTest
             .append( "  <serviceName>odap</serviceName>")
             .append( "  <access urlPath='dir/file1.nc' />")
             .append( "</dataset>");
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -449,7 +451,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetAccessWithMetadataServiceNameElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -464,7 +466,7 @@ public class ServiceNameInheritanceTest
             .append( "  </metadata>" )
             .append( "  <access urlPath='dir/file1.nc' />")
             .append( "</dataset>");
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
   }
 
   @Test
@@ -476,7 +478,7 @@ public class ServiceNameInheritanceTest
     URI docBaseUri = new URI( docBaseUriString );
     String catalogAsString = setupDatasetAccessWithInheritedMetadataServiceNameElement();
 
-    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogAsString );
+    CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
     CatalogXmlUtils.assertCatalogWithCompoundServiceAsExpected( catBuilder, docBaseUri, null );
     assertDatasetOneHasOdapAccess( catBuilder );
@@ -491,7 +493,7 @@ public class ServiceNameInheritanceTest
             .append( "  </metadata>" )
             .append( "  <access urlPath='dir/file1.nc' />")
             .append( "</dataset>");
-    return CatalogXmlUtils.wrapThreddsXmlInCatalogWithCompoundService( sb.toString(), null, null, null );
+    return CatalogXmlAsStringUtil.wrapThreddsXmlInCatalogWithCompoundService(sb.toString(), null, null, null);
   }
 
   private static void assertDatasetOneHasOdapAccess( CatalogBuilder catBuilder ) {

@@ -35,7 +35,6 @@ package thredds.catalog2.builder;
 import thredds.catalog.ServiceType;
 import thredds.catalog2.Service;
 
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -54,8 +53,8 @@ public interface ServiceBuilder extends ThreddsBuilder
   public ServiceType getType();
   public void setType( ServiceType type );
 
-  public URI getBaseUri();
-  public void setBaseUri( URI baseUri );
+  public String getBaseUri();
+  public void setBaseUri( String baseUri );
 
   public String getSuffix();
   public void setSuffix( String suffix );
@@ -90,7 +89,7 @@ public interface ServiceBuilder extends ThreddsBuilder
    * @throws IllegalArgumentException if the name, type, or base URI are null.
    * @throws IllegalStateException this ServiceBuilder has already been finished or the top container of this ServiceBuilder already contains a ServiceBuilder with the given name.
    */
-  public ServiceBuilder addService( String name, ServiceType type, URI baseUri );
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri );
   public boolean removeService( ServiceBuilder serviceBuilder );
 
 //  /**
@@ -114,7 +113,7 @@ public interface ServiceBuilder extends ThreddsBuilder
 //   * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index > getServices().size()).
 //   * @throws IllegalStateException this Service or an already added Service has the given name.
 //   */
-//  public ServiceBuilder addService( String name, ServiceType type, URI baseUri, int index );
+//  public ServiceBuilder addService( String name, ServiceType type, String baseUri, int index );
   public List<ServiceBuilder> getServiceBuilders();
   public ServiceBuilder getServiceBuilderByName( String name );
   public ServiceBuilder findServiceBuilderByNameGlobally( String name );

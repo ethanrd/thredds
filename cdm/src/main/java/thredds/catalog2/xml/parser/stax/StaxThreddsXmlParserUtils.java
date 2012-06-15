@@ -365,7 +365,7 @@ class StaxThreddsXmlParserUtils
    * @return a StreamSource for the resource located at the given File.
    * @throws ThreddsXmlParserException if there is a problem reading from the File.
    */
-  static Source getSourceFromFile( File file, URI docBaseUri )
+  static Source getSourceFromFile( File file, String docBaseUri )
           throws ThreddsXmlParserException
   {
     if ( file == null )
@@ -386,7 +386,7 @@ class StaxThreddsXmlParserUtils
         log.error( "parseIntoBuilder(): " + message, e );
         throw new ThreddsXmlParserException( message, e );
       }
-      source = new StreamSource( is, docBaseUri.toString() );
+      source = new StreamSource( is, docBaseUri );
     }
 
     return source;

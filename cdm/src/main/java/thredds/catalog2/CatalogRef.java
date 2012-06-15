@@ -43,5 +43,5 @@ import java.util.List;
  */
 public interface CatalogRef extends DatasetNode
 {
-  public URI getReference();
+  public URI getReferenceUri();
 }

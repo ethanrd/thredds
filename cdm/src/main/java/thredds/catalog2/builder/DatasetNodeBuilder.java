@@ -36,7 +36,6 @@ import thredds.catalog2.DatasetNode;
 import thredds.catalog2.ThreddsMetadata;
 
 import java.util.List;
-import java.net.URI;
 
 /**
  * _more_
@@ -74,7 +73,7 @@ public interface DatasetNodeBuilder extends ThreddsBuilder
   public boolean isCollection();
 
   public DatasetBuilder addDataset( String name );
-  public CatalogRefBuilder addCatalogRef( String name, URI reference);
+  public CatalogRefBuilder addCatalogRef( String name, String reference);
 
   public boolean removeDatasetNode( DatasetNodeBuilder datasetBuilder );
 

@@ -1,26 +1,19 @@
 package thredds.catalog2.xml.parser.stax;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.io.StringReader;
 
 import thredds.catalog2.xml.parser.ThreddsXmlParserException;
-import thredds.catalog2.xml.parser.ThreddsXmlParser;
 import thredds.catalog2.xml.parser.CatalogXmlUtils;
 import thredds.catalog2.builder.*;
 import thredds.catalog2.ThreddsMetadata;
 import thredds.catalog.DataFormatType;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import ucar.nc2.constants.FeatureType;
@@ -85,9 +78,9 @@ public class ParseMetadataTest
                    ThreddsXmlParserException
     {
         URI docBaseUri = new URI( docBaseUriString );
-        String catalogXml = CatalogXmlUtils.wrapThreddsXmlInContainerDataset( mdXml );
+        String catalogXml = CatalogXmlAsStringUtil.wrapThreddsXmlInContainerDataset( mdXml );
 
-        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogXml );
+        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogXml), docBaseUri));
 
         assertNotNull( catBuilder );
 
@@ -116,9 +109,9 @@ public class ParseMetadataTest
                    ThreddsXmlParserException
     {
         URI docBaseUri = new URI( docBaseUriString );
-        String catalogXml = CatalogXmlUtils.wrapThreddsXmlInContainerDataset( mdXml );
+        String catalogXml = CatalogXmlAsStringUtil.wrapThreddsXmlInContainerDataset( mdXml );
 
-        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogXml );
+        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogXml), docBaseUri));
 
         assertNotNull( catBuilder );
 
@@ -139,9 +132,9 @@ public class ParseMetadataTest
         String date = "2009-08-25T12:00";
         String type = ThreddsMetadata.DatePointType.Created.toString();
         String mdXml = "<date type='" + type + "'>" + date + "</date>";
-        String catalogXml = CatalogXmlUtils.wrapThreddsXmlInContainerDataset( mdXml );
+        String catalogXml = CatalogXmlAsStringUtil.wrapThreddsXmlInContainerDataset( mdXml );
 
-        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder( docBaseUri, catalogXml );
+        CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogXml), docBaseUri));
 
         assertNotNull( catBuilder );
         DatasetBuilder dsBldr = CatalogXmlUtils.assertCatalogWithContainerDatasetAsExpected( catBuilder, docBaseUri );
