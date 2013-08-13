@@ -8,68 +8,64 @@ import java.util.Collections;
  * _more_
  *
  * @author edavis
- * @since 4.0
  */
-public class BuilderIssues
-{
-  private final List<BuilderIssue> issues;
+public class BuilderIssues {
+  private List<BuilderIssue> issues;
   private int numFatalIssues = 0;
   private int numErrorIssues = 0;
   private int numWarningIssues = 0;
 
 
-  public BuilderIssues()
-  {
-    this.issues = new ArrayList<BuilderIssue>();
+  private void createIssueListIfNeeded() {
+    if ( this.issues == null )
+      this.issues = new ArrayList<BuilderIssue>();
   }
 
-  public BuilderIssues( BuilderIssue issue )
-  {
-    this();
+  public BuilderIssues() {}
+
+  public BuilderIssues( BuilderIssue issue ) {
     if ( issue == null )
       return;
+    this.issues = new ArrayList<BuilderIssue>();
     this.issues.add( issue );
   }
 
-  public void addIssue( BuilderIssue issue )
-  {
+  public void addIssue( BuilderIssue issue ) {
     if ( issue == null )
-    {
       return;
-    }
+    this.createIssueListIfNeeded();
     this.issues.add( issue );
     trackSeverity( issue.getSeverity() );
   }
 
-  public void addAllIssues( BuilderIssues issues )
-  {
-    if ( issues == null )
-    {
+  public void addAllIssues( BuilderIssues issues ) {
+    if ( issues == null || issues.isEmpty() )
       return;
-    }
-    if ( issues.isEmpty() )
-    {
-      return;
-    }
-    this.issues.addAll( issues.getIssues() );
-    for ( BuilderIssue curIssue : issues.getIssues() )
-    {
+
+    this.createIssueListIfNeeded();
+    for ( BuilderIssue curIssue : issues.getIssues() ) {
+      this.issues.add( curIssue);
       trackSeverity( curIssue.getSeverity() );
     }
   }
 
   public void clear() {
-    this.issues.clear();
+    if ( this.issues != null )
+      this.issues.clear();
     this.numWarningIssues = 0;
     this.numErrorIssues = 0;
     this.numFatalIssues = 0;
   }
 
   public boolean isEmpty() {
+    if ( this.issues == null )
+      return true;
     return this.issues.isEmpty();
   }
 
   public int size() {
+    if ( this.issues == null )
+      return 0;
     return this.issues.size();
   }
 
@@ -85,28 +81,25 @@ public class BuilderIssues
     return this.numFatalIssues;
   }
 
-  public List<BuilderIssue> getIssues()
-  {
-    if ( issues.isEmpty() )
-    {
+  public List<BuilderIssue> getIssues() {
+    if ( this.issues == null || this.issues.isEmpty() )
       return Collections.emptyList();
-    }
     return Collections.unmodifiableList( this.issues );
   }
 
   public boolean isValid() {
-    if ( this.numFatalIssues > 0 || this.numErrorIssues > 0)
+    if ( this.numFatalIssues > 0)
       return false;
     return true;
   }
 
-  public String toString()
-  {
+  public String toString() {
     StringBuilder sb = new StringBuilder();
-    for ( BuilderIssue bfi : this.issues )
-    {
-      sb.append( bfi.toString());
-    }
+    if ( this.issues == null || this.issues.isEmpty() )
+      sb.append( "No Issues.\n");
+    else
+      for ( BuilderIssue bfi : this.issues )
+        sb.append( bfi.toString());
     return sb.toString();
   }
 
@@ -119,4 +112,5 @@ public class BuilderIssues
     else if ( severity.equals( BuilderIssue.Severity.WARNING ) )
       this.numWarningIssues++;
   }
+
 }

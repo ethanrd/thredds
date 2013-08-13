@@ -379,19 +379,19 @@ class DatasetNodeImpl implements DatasetNode, DatasetNodeBuilder
     return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
   }
 
-  public boolean isBuilt()
+  public Buildable isBuildable()
   {
     return this.isBuilt;
   }
 
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
     BuilderIssues issues = this.datasetContainer.getIssues();
 
     // Check subordinates.
     if ( this.metadataImplList != null )
       for ( MetadataBuilder mb : this.metadataImplList )
-        issues.addAllIssues( mb.getIssues());
+        issues.addAllIssues( mb.checkForIssues());
 
     // ToDo Check invariants.
 

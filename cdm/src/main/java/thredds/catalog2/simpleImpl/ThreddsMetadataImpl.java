@@ -720,58 +720,58 @@ class ThreddsMetadataImpl
     return this.collectionType;
   }
 
-  public boolean isBuilt()
+  public Buildable isBuildable()
   {
     return this.isBuilt;
   }
 
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
     BuilderIssues issues = new BuilderIssues();
 
     // Check subordinates.
     if ( this.docs != null )
       for ( DocumentationImpl doc : this.docs )
-        issues.addAllIssues( doc.getIssues());
+        issues.addAllIssues( doc.checkForIssues());
     if ( this.keyphrases != null )
       for( KeyphraseImpl keyphrase : this.keyphrases )
-        issues.addAllIssues( keyphrase.getIssues());
+        issues.addAllIssues( keyphrase.checkForIssues());
     if ( this.creators != null )
       for( ContributorImpl creator : this.creators )
-        issues.addAllIssues( creator.getIssues());
+        issues.addAllIssues( creator.checkForIssues());
     if ( this.contributors != null )
       for( ContributorImpl contributor : this.contributors )
-        issues.addAllIssues( contributor.getIssues());
+        issues.addAllIssues( contributor.checkForIssues());
     if ( this.publishers != null )
       for( ContributorImpl publisher : this.publishers )
-        issues.addAllIssues( publisher.getIssues());
+        issues.addAllIssues( publisher.checkForIssues());
 
     if ( this.otherDates != null )
       for( DatePointImpl date : this.otherDates )
-        issues.addAllIssues( date.getIssues());
+        issues.addAllIssues( date.checkForIssues());
     if ( this.createdDate != null )
-      issues.addAllIssues( this.createdDate.getIssues() );
+      issues.addAllIssues( this.createdDate.checkForIssues() );
     if ( this.modifiedDate != null )
-      issues.addAllIssues( this.modifiedDate.getIssues() );
+      issues.addAllIssues( this.modifiedDate.checkForIssues() );
     if ( this.issuedDate != null )
-      issues.addAllIssues( this.issuedDate.getIssues() );
+      issues.addAllIssues( this.issuedDate.checkForIssues() );
     if ( this.validDate != null )
-      issues.addAllIssues( this.validDate.getIssues() );
+      issues.addAllIssues( this.validDate.checkForIssues() );
     if ( this.availableDate != null )
-      issues.addAllIssues( this.availableDate.getIssues() );
+      issues.addAllIssues( this.availableDate.checkForIssues() );
     if ( this.metadataCreatedDate != null )
-      issues.addAllIssues( this.metadataCreatedDate.getIssues() );
+      issues.addAllIssues( this.metadataCreatedDate.checkForIssues() );
     if ( this.metadataModifiedDate != null )
-      issues.addAllIssues( this.metadataModifiedDate.getIssues() );
+      issues.addAllIssues( this.metadataModifiedDate.checkForIssues() );
 
     if ( this.geospatialCoverage != null )
-      issues.addAllIssues( this.geospatialCoverage.getIssues() );
+      issues.addAllIssues( this.geospatialCoverage.checkForIssues() );
     if ( this.temporalCoverage != null )
-      issues.addAllIssues( this.temporalCoverage.getIssues() );
+      issues.addAllIssues( this.temporalCoverage.checkForIssues() );
 
     if ( this.variableGroups != null )
       for ( VariableGroupImpl variableGroup : this.variableGroups )
-        issues.addAllIssues( variableGroup.getIssues() );
+        issues.addAllIssues( variableGroup.checkForIssues() );
 
     return issues;
   }
@@ -893,12 +893,12 @@ class ThreddsMetadataImpl
       return this.externalReference;
     }
 
-    public boolean isBuilt()
+    public Buildable isBuildable()
     {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues()
+    public BuilderIssues checkForIssues()
     {
       return new BuilderIssues();
     }
@@ -936,12 +936,12 @@ class ThreddsMetadataImpl
       return this.phrase;
     }
 
-    public boolean isBuilt()
+    public Buildable isBuildable()
     {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues() {
+    public BuilderIssues checkForIssues() {
       if ( phrase == null || phrase.length() == 0 )
         return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null ));
       return new BuilderIssues();
@@ -977,11 +977,11 @@ class ThreddsMetadataImpl
       return this.projectName;
     }
 
-    public boolean isBuilt() {
+    public Buildable isBuildable() {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues() {
+    public BuilderIssues checkForIssues() {
       if ( projectName == null || projectName.length() == 0 )
         return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null ));
       return new BuilderIssues();
@@ -1049,11 +1049,11 @@ class ThreddsMetadataImpl
             return result;
         }
 
-        public boolean isBuilt() {
+        public Buildable isBuildable() {
             return this.isBuilt;
         }
 
-        public BuilderIssues getIssues() {
+        public BuilderIssues checkForIssues() {
           if ( this.date == null )
             return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Date may not be null.", this, null));
           return new BuilderIssues();
@@ -1144,11 +1144,11 @@ class ThreddsMetadataImpl
             return result;
         }
 
-        public boolean isBuilt() {
+        public Buildable isBuildable() {
             return this.isBuilt;
         }
 
-        public BuilderIssues getIssues()
+        public BuilderIssues checkForIssues()
         {
             int specified = 3;
             if ( this.startDate == null || this.startDate.length() == 0 )
@@ -1242,11 +1242,11 @@ class ThreddsMetadataImpl
       this.webPage = webPage;
     }
 
-    public boolean isBuilt() {
+    public Buildable isBuildable() {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues() {
+    public BuilderIssues checkForIssues() {
       if ( this.name == null )
         return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Name may not be null.", this, null));
       return new BuilderIssues();
@@ -1341,12 +1341,12 @@ class ThreddsMetadataImpl
       return variableMapUrl == null && ( this.variables == null || this.variables.isEmpty());
     }
 
-    public boolean isBuilt()
+    public Buildable isBuildable()
     {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues()
+    public BuilderIssues checkForIssues()
     {
       if ( variableMapUrl != null && this.variables != null && ! this.variables.isEmpty())
         return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "This VariableGroupBuilder has variables and variableMap.", this, null ));
@@ -1447,12 +1447,12 @@ class ThreddsMetadataImpl
       return this.parent.getVocabularyAuthorityUrl();
     }
 
-    public boolean isBuilt()
+    public Buildable isBuildable()
     {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues()
+    public BuilderIssues checkForIssues()
     {
       if ( this.name == null || this.name.length() == 0 )
         return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Variable name is null or empty.", this, null ));
@@ -1570,12 +1570,12 @@ class ThreddsMetadataImpl
       return Collections.unmodifiableList( new ArrayList<GeospatialRange>( this.extent ) );
     }
 
-    public boolean isBuilt()
+    public Buildable isBuildable()
     {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues()
+    public BuilderIssues checkForIssues()
     {
       return new BuilderIssues();
     }
@@ -1664,12 +1664,12 @@ class ThreddsMetadataImpl
       return this.units;
     }
 
-    public boolean isBuilt()
+    public Buildable isBuildable()
     {
       return this.isBuilt;
     }
 
-    public BuilderIssues getIssues()
+    public BuilderIssues checkForIssues()
     {
       return new BuilderIssues();
     }

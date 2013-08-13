@@ -161,7 +161,7 @@ public class CatalogXmlUtils
         assertEquals( dsBldr.getId(), "containerDs" );
 
         assertFalse( dsBldr.isCollection() );
-        assertFalse( dsBldr.isBuilt() );
+        assertFalse( dsBldr.isBuildable() );
 
         return dsBldr;
     }

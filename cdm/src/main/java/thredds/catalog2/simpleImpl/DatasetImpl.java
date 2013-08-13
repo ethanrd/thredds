@@ -130,20 +130,20 @@ class DatasetImpl
     return list;
   }
 
-  public boolean isBuilt()
+  public Buildable isBuildable()
   {
     return this.isBuilt;
   }
 
   @Override
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
-    BuilderIssues issues = super.getIssues();
+    BuilderIssues issues = super.checkForIssues();
 
     // Check subordinates.
     if ( this.accessImplList != null )
       for ( AccessBuilder ab : this.accessImplList )
-        issues.addAllIssues( ab.getIssues());
+        issues.addAllIssues( ab.checkForIssues());
 
     return issues;
   }

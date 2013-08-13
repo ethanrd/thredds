@@ -95,7 +95,7 @@ public class TestServiceImpl
     assertEquals( odapType, si.getType());
     assertEquals( odapBaseUri, si.getBaseUri());
 
-    BuilderIssues issues = si.getIssues();
+    BuilderIssues issues = si.checkForIssues();
     assertTrue( issues.toString(), issues.isValid());
     assertTrue( issues.toString(), issues.isEmpty());
   }
@@ -119,7 +119,7 @@ public class TestServiceImpl
     service.setSuffix( suffix );
     assertEquals( suffix, service.getSuffix() );
 
-    BuilderIssues issues = service.getIssues();
+    BuilderIssues issues = service.checkForIssues();
     assertTrue( issues.toString(), issues.isValid() );
     assertTrue( issues.toString(), issues.isEmpty() );
   }
@@ -266,7 +266,7 @@ public class TestServiceImpl
 
   @Test(expected=IllegalStateException.class)
   public void checkExceptionOnPreBuildGetPropertyByNAme() {
-    odapService.getPropertyByName( "name");
+    odapService.getProperty("name");
   }
 
   @Test(expected=IllegalStateException.class)
@@ -276,7 +276,7 @@ public class TestServiceImpl
 
   @Test(expected=IllegalStateException.class)
   public void checkExceptionOnPreBuildGetServiceByName() {
-    odapService.getServiceByName( "name");
+    odapService.getService("name");
   }
 
   // Set, add, build and test that non-build getters succeed and build add/getters/remove fail.
@@ -287,7 +287,7 @@ public class TestServiceImpl
     this.allService.addProperty( "propName2", "propValue2" );
 
     // Check if buildable
-    BuilderIssues issues = this.allService.getIssues();
+    BuilderIssues issues = this.allService.checkForIssues();
     assertTrue( issues.toString(), issues.isValid());
     assertTrue( issues.toString(), issues.isEmpty());
 
@@ -295,15 +295,15 @@ public class TestServiceImpl
     Service s = this.allService.build();
 
     assertNotNull( s);
-    assertTrue( this.allService.isBuilt() );
+    assertTrue( this.allService.isBuildable() );
 
     assertEquals( allName, s.getName() );
     assertEquals( allType, s.getType() );
     assertEquals( allBaseUri, s.getBaseUri() );
 
-    assertEquals( odapService, s.getServiceByName( odapName ) );
-    assertEquals( wcsService, s.getServiceByName( wcsName ) );
-    assertEquals( wmsService, s.getServiceByName( wmsName ) );
+    assertEquals( odapService, s.getService(odapName) );
+    assertEquals( wcsService, s.getService(wcsName) );
+    assertEquals( wmsService, s.getService(wmsName) );
 
     assertEquals( odapService, s.findServiceByNameGlobally( odapName ) );
     assertEquals( wcsService, s.findServiceByNameGlobally( wcsName ) );
@@ -410,7 +410,7 @@ public class TestServiceImpl
   {
     ServiceBuilder dupService = this.allService.addService( this.odapName, this.wcsType, this.wcsBaseUri );
 
-    BuilderIssues issues = this.allService.getIssues();
+    BuilderIssues issues = this.allService.checkForIssues();
     assertTrue( issues.toString(), issues.isValid() );
     assertFalse( issues.toString(), issues.isEmpty() );
   }

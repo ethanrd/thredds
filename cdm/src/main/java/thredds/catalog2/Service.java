@@ -89,7 +89,7 @@ public interface Service
    */
   public List<Property> getProperties();
 
-  public Property getPropertyByName( String name );
+  public Property getProperty(String name);
 
   /**
    * Return the List of Service Objects nested in this service. Nested
@@ -99,6 +99,6 @@ public interface Service
    */
   public List<Service> getServices();
 
-  public Service getServiceByName( String name );
+  public Service getService(String name);
   public Service findServiceByNameGlobally( String name );
 }

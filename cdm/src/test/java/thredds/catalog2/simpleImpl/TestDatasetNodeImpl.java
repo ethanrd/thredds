@@ -131,8 +131,8 @@ public class TestDatasetNodeImpl extends TestCase
 
   private void initBuilder()
   {
-    assertFalse( parentDataset.isBuilt() );
-    assertFalse( dsNodeBldr.isBuilt() );
+    assertFalse( parentDataset.isBuildable() );
+    assertFalse( dsNodeBldr.isBuildable() );
 
     dsNodeBldr.setId( id );
     dsNodeBldr.setIdAuthority( idAuthority );
@@ -232,7 +232,7 @@ public class TestDatasetNodeImpl extends TestCase
   private void callBuildOnBuilder()
   {
     // Check if buildable
-    BuilderIssues issues = dsNodeBldr.getIssues();
+    BuilderIssues issues = dsNodeBldr.checkForIssues();
     if ( ! issues.isValid() )
     {
       StringBuilder stringBuilder = new StringBuilder( "Invalid dsNode: " ).append( issues.toString());
@@ -245,11 +245,11 @@ public class TestDatasetNodeImpl extends TestCase
     catch ( BuilderException e )
     { fail( "Build failed: " + e.getMessage() ); }
 
-    assertFalse( parentDataset.isBuilt());
-    assertTrue( dsNodeBldr.isBuilt() );
-    assertTrue( childDsNodeBuilder1.isBuilt());
-    assertTrue( childDsNodeBuilder2.isBuilt());
-    assertTrue( catRefBldr.isBuilt());
+    assertFalse( parentDataset.isBuildable());
+    assertTrue( dsNodeBldr.isBuildable() );
+    assertTrue( childDsNodeBuilder1.isBuildable());
+    assertTrue( childDsNodeBuilder2.isBuildable());
+    assertTrue( catRefBldr.isBuildable());
   }
 
   public void testCtorBuilderSetGet()

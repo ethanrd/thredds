@@ -128,7 +128,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
   public void setCollectionType( String collectionType );
   public String getCollectionType();
 
-  ThreddsMetadata build() throws BuilderException;
+  ThreddsMetadata build() throws IllegalStateException;
 
   public interface DocumentationBuilder extends ThreddsBuilder
   {
@@ -147,7 +147,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     //public void setExternalReference( String externalReference );
     public String getExternalReference();
 
-    public ThreddsMetadata.Documentation build() throws BuilderException;
+    public ThreddsMetadata.Documentation build() throws IllegalStateException;
   }
 
   public interface KeyphraseBuilder extends ThreddsBuilder
@@ -155,7 +155,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public String getAuthority();
     public String getPhrase();
 
-    public ThreddsMetadata.Keyphrase build() throws BuilderException;
+    public ThreddsMetadata.Keyphrase build() throws IllegalStateException;
   }
 
   public interface ProjectNameBuilder extends ThreddsBuilder
@@ -163,7 +163,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public String getNamingAuthority();
     public String getName();
 
-    public ThreddsMetadata.ProjectName build() throws BuilderException;
+    public ThreddsMetadata.ProjectName build() throws IllegalStateException;
   }
 
     public interface DatePointBuilder extends ThreddsBuilder
@@ -173,7 +173,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
         public boolean isTyped();
         public String getType();
 
-        public ThreddsMetadata.DatePoint build() throws BuilderException;
+        public ThreddsMetadata.DatePoint build() throws IllegalStateException;
     }
 
     public interface DateRangeBuilder extends ThreddsBuilder
@@ -185,7 +185,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
         public String getDuration();
         public String getResolution();
 
-        public ThreddsMetadata.DateRange build() throws BuilderException;
+        public ThreddsMetadata.DateRange build() throws IllegalStateException;
     }
 
 
@@ -203,7 +203,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public String getWebPage();
     public void setWebPage( String webPage );
 
-    public ThreddsMetadata.Contributor build() throws BuilderException;
+    public ThreddsMetadata.Contributor build() throws IllegalStateException;
   }
 
   public interface VariableGroupBuilder extends ThreddsBuilder
@@ -244,7 +244,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public String getVocabularyAuthorityId();
     public String getVocabularyAuthorityUrl();
 
-    public ThreddsMetadata.Variable build() throws BuilderException;
+    public ThreddsMetadata.Variable build() throws IllegalStateException;
   }
 
   public interface GeospatialCoverageBuilder extends ThreddsBuilder
@@ -262,7 +262,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public boolean removeExtentBuilder( GeospatialRangeBuilder geospatialRangeBuilder );
     public List<GeospatialRangeBuilder> getExtentBuilders();
 
-    public ThreddsMetadata.GeospatialCoverage build() throws BuilderException;
+    public ThreddsMetadata.GeospatialCoverage build() throws IllegalStateException;
   }
 
   public interface GeospatialRangeBuilder extends ThreddsBuilder
@@ -282,6 +282,6 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public void setUnits( String units );
     public String getUnits();
 
-    public ThreddsMetadata.GeospatialRange build() throws BuilderException;
+    public ThreddsMetadata.GeospatialRange build() throws IllegalStateException;
   }
 }

@@ -185,7 +185,7 @@ class ServiceImpl implements Service, ServiceBuilder
     return this.propertyContainer.getProperties();
   }
 
-  public Property getPropertyByName( String name )
+  public Property getProperty(String name)
   {
     if ( !this.isBuilt )
       throw new IllegalStateException( "This Service has escaped from its ServiceBuilder before build() was called." );
@@ -211,7 +211,7 @@ class ServiceImpl implements Service, ServiceBuilder
     return this.serviceContainer.getServices();
   }
 
-  public Service getServiceByName( String name )
+  public Service getService(String name)
   {
     if ( !this.isBuilt )
       throw new IllegalStateException( "This Service has escaped from its ServiceBuilder without being built." );
@@ -244,7 +244,7 @@ class ServiceImpl implements Service, ServiceBuilder
     return this.globalServiceContainer.getServiceByGloballyUniqueName( name );
   }
 
-  public boolean isBuilt()
+  public Buildable isBuildable()
   {
     return this.isBuilt;
   }
@@ -254,7 +254,7 @@ class ServiceImpl implements Service, ServiceBuilder
    *
    * @return true if this ServiceBuilder is in a state where build() will succeed.
    */
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
     BuilderIssues issues = this.serviceContainer.getIssues();
 

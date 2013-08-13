@@ -33,7 +33,7 @@ public class CatalogParserIssuesTest
 
     CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
-    BuilderIssues issues = catBuilder.getIssues();
+    BuilderIssues issues = catBuilder.checkForIssues();
     assertNotNull( issues );
     assertTrue( issues.isEmpty());
     CatalogXmlUtils.assertCatalogAsExpected( catBuilder, docBaseUri, catName, catVersion, catExpires );
@@ -53,7 +53,7 @@ public class CatalogParserIssuesTest
 
     CatalogBuilder catBuilder = CatalogXmlUtils.parseCatalogIntoBuilder(cp.parseIntoBuilder(new StringReader(catalogAsString), docBaseUri));
 
-    BuilderIssues issues = catBuilder.getIssues();
+    BuilderIssues issues = catBuilder.checkForIssues();
     assertNotNull( issues );
     assertFalse( issues.toString(), issues.isEmpty());
   }

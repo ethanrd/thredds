@@ -83,5 +83,5 @@ public interface DatasetNodeBuilder extends ThreddsBuilder
 
   public boolean isDatasetIdInUseGlobally( String id );
 
-  public DatasetNode build() throws BuilderException;
+  public DatasetNode build() throws IllegalStateException;
 }

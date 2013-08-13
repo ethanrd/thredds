@@ -164,7 +164,7 @@ public class TestThreddsMetadataImpl
 
     this.buildBuilder();
 
-    assertTrue( tmb.isBuilt() );
+    assertTrue( tmb.isBuildable() );
 
     List<ThreddsMetadata.ProjectName> projectNames = tmi.getProjectNames();
     assertNotNull( projectNames);
@@ -190,7 +190,7 @@ public class TestThreddsMetadataImpl
     @Test
   public void testDocumentation()
   {
-    assertFalse( tmi.isBuilt() );
+    assertFalse( tmi.isBuildable() );
 
     List<ThreddsMetadataBuilder.DocumentationBuilder> docBldrList = tmi.getDocumentationBuilders();
     assertTrue( docBldrList.isEmpty() );
@@ -211,8 +211,8 @@ public class TestThreddsMetadataImpl
     this.checkBuilderDocumentationIllegalStateGet();
     this.buildBuilder();
 
-    assertTrue( tmb.isBuilt());
-    assertTrue( docBldr2.isBuilt());
+    assertTrue( tmb.isBuildable());
+    assertTrue( docBldr2.isBuildable());
     List<ThreddsMetadata.Documentation> docList = tm.getDocumentation();
     assertTrue( docList.size() == 1 );
     assertTrue( docList.get( 0 ) == docBldr2 );
@@ -223,7 +223,7 @@ public class TestThreddsMetadataImpl
   private void buildBuilder()
   {
     // Check if buildable
-    BuilderIssues issues = tmb.getIssues();
+    BuilderIssues issues = tmb.checkForIssues();
     if ( ! issues.isValid() )
     {
       StringBuilder stringBuilder = new StringBuilder( "Not isBuildable(): " ).append( issues.toString() );
@@ -236,7 +236,7 @@ public class TestThreddsMetadataImpl
     catch ( BuilderException e )
     { fail( "Build failed: " + e.getMessage() ); }
 
-    assertTrue( tmb.isBuilt() );
+    assertTrue( tmb.isBuildable() );
   }
 
   private void checkBuilderDocumentationIllegalStateGet()

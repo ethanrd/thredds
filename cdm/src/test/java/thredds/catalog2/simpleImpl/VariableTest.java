@@ -112,7 +112,7 @@ public class VariableTest
 
     ThreddsMetadataImpl.VariableImpl var = new ThreddsMetadataImpl.VariableImpl( "name", "descrip", "unit", "vocabId", "vocabName", mockVarGrp );
 
-    BuilderIssues bldrIssues = var.getIssues();
+    BuilderIssues bldrIssues = var.checkForIssues();
     assertTrue( bldrIssues.isEmpty());
   }
 
@@ -125,7 +125,7 @@ public class VariableTest
 
     ThreddsMetadataImpl.VariableImpl var = new ThreddsMetadataImpl.VariableImpl( null, "descrip", "unit", "vocabId", "vocabName", mockVarGrp );
 
-    BuilderIssues bldrIssues = var.getIssues();
+    BuilderIssues bldrIssues = var.checkForIssues();
     assertFalse( bldrIssues.isEmpty());
     assertEquals( 1, bldrIssues.size());
   }
@@ -139,7 +139,7 @@ public class VariableTest
 
     ThreddsMetadataImpl.VariableImpl var = new ThreddsMetadataImpl.VariableImpl( "name", null, null, null, null, mockVarGrp );
 
-    BuilderIssues bldrIssues = var.getIssues();
+    BuilderIssues bldrIssues = var.checkForIssues();
     assertTrue( bldrIssues.isEmpty());
   }
 

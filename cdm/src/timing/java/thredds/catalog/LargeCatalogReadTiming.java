@@ -72,7 +72,7 @@ public class LargeCatalogReadTiming
 
       start = System.currentTimeMillis();
       catalogBuilder = LargeCatalogReadUtils.parseCatalogIntoBuilder( catAsString, catURL );
-      BuilderIssues issues = catalogBuilder.getIssues();
+      BuilderIssues issues = catalogBuilder.checkForIssues();
       if ( ! issues.isValid() )
           System.out.println( "Invalid catalog [" + i + "]: " + bldIssues.toString() );
       catalogBuilder.build();
@@ -96,7 +96,7 @@ public class LargeCatalogReadTiming
       System.out.println( "OK check:\n" + sb );
 
       System.out.println( "thredds.catalog2" );
-      BuilderIssues bldIssues = catalogBuilder.getIssues();
+      BuilderIssues bldIssues = catalogBuilder.checkForIssues();
       if ( ! bldIssues.isValid() )
           System.out.println( "Invalid catalog: " + bldIssues.toString() );
       else

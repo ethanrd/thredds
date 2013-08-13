@@ -37,7 +37,6 @@ import junit.framework.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog2.builder.BuilderException;
 import thredds.catalog2.builder.BuilderIssues;
 import thredds.catalog2.Metadata;
@@ -79,7 +78,7 @@ public class TestMetadataImpl extends TestCase
 
   public void testCtorGet()
   {
-    assertFalse( mdImpl1.isBuilt() );
+    assertFalse( mdImpl1.isBuildable() );
 
     assertFalse( mdImpl1.isContainedContent());
     assertTrue( mdImpl1.getTitle().equals(  this.title ));
@@ -125,13 +124,13 @@ public class TestMetadataImpl extends TestCase
   public void testBuild()
   {
     // Check if buildable
-    BuilderIssues issues = mdImpl1.getIssues();
+    BuilderIssues issues = mdImpl1.checkForIssues();
     if ( ! issues.isValid() )
     {
       StringBuilder stringBuilder = new StringBuilder( "Invalid metadata: " ).append( issues.toString());
       fail( stringBuilder.toString() );
     }
-    issues = mdImpl2.getIssues();
+    issues = mdImpl2.checkForIssues();
     if ( ! issues.isValid() )
     {
       StringBuilder stringBuilder = new StringBuilder( "Invalid metadata: " ).append( issues.toString());

@@ -114,12 +114,12 @@ class AccessImpl implements Access, AccessBuilder
     return dataSize;
   }
 
-  public boolean isBuilt()
+  public Buildable isBuildable()
   {
     return this.isBuilt;
   }
 
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
     BuilderIssues issues = new BuilderIssues();
 

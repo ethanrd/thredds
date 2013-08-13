@@ -40,7 +40,6 @@ import java.net.URISyntaxException;
 import thredds.catalog.ServiceType;
 import thredds.catalog.DataFormatType;
 import thredds.catalog2.builder.ServiceBuilder;
-import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog2.builder.BuilderException;
 import thredds.catalog2.builder.BuilderIssues;
 import thredds.catalog2.Access;
@@ -91,7 +90,7 @@ public class TestAccessImpl extends TestCase
   {
     AccessImpl access = new AccessImpl( null);
 
-    assertFalse( access.isBuilt() );
+    assertFalse( access.isBuildable() );
 
     access.setServiceBuilder( serviceBuilder );
     access.setUrlPath( urlPath );
@@ -140,7 +139,7 @@ public class TestAccessImpl extends TestCase
     accessImpl.setDataFormat( formatType );
 
     // Check if buildable
-    BuilderIssues issues = accessImpl.getIssues();
+    BuilderIssues issues = accessImpl.checkForIssues();
     if ( ! issues.isValid() )
     {
       StringBuilder stringBuilder = new StringBuilder( "Invalid access: ").append( issues.toString() );
@@ -154,7 +153,7 @@ public class TestAccessImpl extends TestCase
     catch ( BuilderException e )
     { fail( "Build failed: " + e.getMessage() ); }
 
-    assertTrue( accessImpl.isBuilt());
+    assertTrue( accessImpl.isBuildable());
   }
 
   public void testPostBuildGetters()

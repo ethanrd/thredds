@@ -33,26 +33,58 @@
 package thredds.catalog2.builder;
 
 /**
- * Parent type for all THREDDS builders.
+ * Parent type for all THREDDS catalog builders.
  *
  * @author edavis
- * @since 4.0
  */
 public interface ThreddsBuilder
 {
   /**
-   * Check whether this ThreddsBuilder has been built.
-   *
-   * @return true if this ThreddsBuilder has already been built, false otherwise.
+   * {@link #isBuildable() ThreddsBuilder.isBuildable()} returns a
+   * {@link Buildable Buildable} that indicates
+   * whether the ThreddsBuilder can be built successfully or not. Whether a
+   * ThreddsBuilder can be built successfully or not is only known once
+   * {@link ThreddsBuilder#checkForIssues() ThreddsBuilder.checkForIssues()}
+   * is called and before any further changes
+   * are made to the ThreddsBuilder.
    */
-  public boolean isBuilt();
+  public enum Buildable {
+    /**
+     * The ThreddsBuilder that returned this Buildable has no FATAL
+     * BuilderIssues and can therefore be built successfully.
+     */
+    YES,
+
+    /**
+     * The ThreddsBuilder that returned this Buildable has at least one FATAL
+     * BuilderIssues which means it cannot be built successfully.
+     *
+     */
+    NO,
+
+    /**
+     * The ThreddsBuilder that returned this Buildable has not been checked
+     * since it was last changed. A call to checkForIssues() will determine if
+     * it can be built successfully.
+     */
+    DONT_KNOW
+  }
+
+  /**
+   * Check whether this ThreddsBuilder can be built successfully. Only when a
+   * ThreddsBuilder has a FATAL BuilderIssue can it not be built successfully.
+   *
+   * @return a Buildable indicating whether this ThreddsBuilder can be built successfully.
+
+   */
+  public Buildable isBuildable();
 
   /**
    * Check whether the state of this ThreddsBuilder is such that build() will succeed.
    *
    * @return true if this ThreddsBuilder is in a state where build() will succeed.
    */
-  public BuilderIssues getIssues();
+  public BuilderIssues checkForIssues();
 
   /**
    * Allow the addition of a BuilderIssue that represents an issue experienced by an external process
@@ -74,8 +106,8 @@ public interface ThreddsBuilder
    * Generate the object being built by this ThreddsBuilder.
    *
    * @return the THREDDS catalog object being built by this ThreddsBuilder.
-   * @throws BuilderException if this ThreddsBuilder is not in a valid state.
+   * @throws IllegalStateException if this ThreddsBuilder is not in a valid state.
    */
-  public Object build() throws BuilderException;
+  public Object build() throws IllegalStateException;
 
 }

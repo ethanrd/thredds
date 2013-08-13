@@ -312,11 +312,11 @@ class CatalogImpl implements Catalog, CatalogBuilder
     return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
   }
 
-  public boolean isBuilt() {
+  public Buildable isBuildable() {
     return this.isBuilt;
   }
 
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This CatalogBuilder has been built." );

@@ -256,7 +256,7 @@ public class TestCatalogImpl
     this.catImpl.addService( "wcs", ServiceType.WCS,  new URI( "http://server/thredds/wcs/"));
     this.catImpl.addService( "wms", ServiceType.WMS,  new URI( "http://server/thredds/wms/"));
 
-    BuilderIssues issues = this.catImpl.getIssues();
+    BuilderIssues issues = this.catImpl.checkForIssues();
     assertTrue( issues.toString(), issues.isValid() );
     assertTrue( issues.toString(), issues.isEmpty() );
   }
@@ -268,7 +268,7 @@ public class TestCatalogImpl
     this.catImpl.addService( "odap", ServiceType.OPENDAP, new URI( "http://server/thredds/dodsC/" ) );
     this.catImpl.addService( "odap", ServiceType.OPENDAP, new URI( "http://server/thredds/dodsC/" ) );
 
-    BuilderIssues issues = this.catImpl.getIssues();
+    BuilderIssues issues = this.catImpl.checkForIssues();
     assertTrue( issues.toString(), issues.isValid() );
     assertFalse( issues.toString(), issues.isEmpty() );
   }
@@ -282,7 +282,7 @@ public class TestCatalogImpl
     compoundService.addService( "wcs", ServiceType.WCS,  new URI( "http://server/thredds/wcs/"));
     compoundService.addService( "wms", ServiceType.WMS,  new URI( "http://server/thredds/wms/"));
 
-    BuilderIssues issues = this.catImpl.getIssues();
+    BuilderIssues issues = this.catImpl.checkForIssues();
     assertTrue( issues.toString(), issues.isValid() );
     assertTrue( issues.toString(), issues.isEmpty() );
   }
@@ -297,7 +297,7 @@ public class TestCatalogImpl
     compoundService.addService( "wms", ServiceType.WMS,  new URI( "http://server/thredds/wms/"));
     compoundService.addService( "odap", ServiceType.WMS,  new URI( "http://server/thredds/wms/"));
 
-    BuilderIssues issues = this.catImpl.getIssues();
+    BuilderIssues issues = this.catImpl.checkForIssues();
     assertTrue( issues.toString(), issues.isValid() );
     assertFalse( issues.toString(), issues.isEmpty() );
   }
@@ -314,7 +314,7 @@ public class TestCatalogImpl
 
     this.catImpl.addService( "odap", ServiceType.OPENDAP, new URI( "http://server/thredds/dodsC/" ) );
 
-    BuilderIssues issues = this.catImpl.getIssues();
+    BuilderIssues issues = this.catImpl.checkForIssues();
     assertTrue( issues.toString(), issues.isValid() );
     assertFalse( issues.toString(), issues.isEmpty() );
   }

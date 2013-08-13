@@ -83,7 +83,7 @@ public class TestCatalogRefImpl extends TestCase
 
   public void testGetSet()
   {
-    assertFalse( catRefBldr.isBuilt());
+    assertFalse( catRefBldr.isBuildable());
 
     assertTrue( catRefBldr.getName().equals( catRefName ));
     assertTrue( catRefBldr.getReference().equals( catRefUri ));
@@ -95,7 +95,7 @@ public class TestCatalogRefImpl extends TestCase
   public void testBuild()
   {
     // Check if buildable
-    BuilderIssues issues = catRefBldr.getIssues();
+    BuilderIssues issues = catRefBldr.checkForIssues();
     if ( !issues.isValid() )
     {
       StringBuilder stringBuilder = new StringBuilder( "Invalid CatRef: " ).append( issues.toString());
@@ -108,7 +108,7 @@ public class TestCatalogRefImpl extends TestCase
     catch ( BuilderException e )
     { fail( "Build failed: " + e.getMessage() ); }
 
-    assertTrue( catRefBldr.isBuilt() );
+    assertTrue( catRefBldr.isBuildable() );
 
     // Test getters of resulting CatalogRef.
     assertTrue( catRef.getName().equals( catRefName ) );

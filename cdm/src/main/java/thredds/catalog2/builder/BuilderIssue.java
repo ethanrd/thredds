@@ -33,28 +33,37 @@
 package thredds.catalog2.builder;
 
 /**
- * _more_
+ * Represents a particular issue in a given ThreddsBuilder tree.
  *
  * @author edavis
- * @since 4.0
  */
-public class BuilderIssue
-{
-  public enum Severity { FATAL, ERROR, WARNING };
+public final class BuilderIssue {
+  public enum Severity {
+    /**
+     * Indicates a non-recoverable error.
+     */
+    FATAL,
+    /**
+     * Indicates a recoverable error.
+     */
+    ERROR,
+    /**
+     * Indicates a warning.
+     */
+    WARNING
+  }
 
   private final Severity severity;
   private final String message;
   private final ThreddsBuilder builder;
-  private final Exception cause;
 
-  public BuilderIssue( Severity severity, String message, ThreddsBuilder builder, Exception cause )
+  public BuilderIssue( Severity severity, String message, ThreddsBuilder builder )
   {
     if ( severity == null || message == null || builder == null )
       throw new IllegalArgumentException( "Null severity level, message, and/or builder.");
     this.severity = severity;
     this.message = message;
     this.builder = builder;
-    this.cause = cause;
   }
 
   public Severity getSeverity() {
@@ -69,12 +78,7 @@ public class BuilderIssue
     return this.builder;
   }
 
-  public Exception getCause() {
-    return this.cause;
-  }
-
   public String toString() {
-    return new StringBuilder( this.getSeverity().toString())
-            .append( ": " ).append( this.getMessage() ).append( "\n" ).toString();
+    return this.getSeverity().toString() + ": " + this.getMessage() + "\n";
   }
 }

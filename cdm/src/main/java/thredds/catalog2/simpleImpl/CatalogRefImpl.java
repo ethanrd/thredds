@@ -70,15 +70,15 @@ class CatalogRefImpl
     return this.reference;
   }
 
-  public boolean isBuilt()
+  public Buildable isBuildable()
   {
     return this.isBuilt;
   }
 
   @Override
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
-    BuilderIssues issues = super.getIssues();
+    BuilderIssues issues = super.checkForIssues();
 
     // ToDo Check any invariants.
 

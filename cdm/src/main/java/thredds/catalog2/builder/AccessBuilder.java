@@ -57,5 +57,5 @@ public interface AccessBuilder extends ThreddsBuilder
   public long getDataSize();
   public void setDataSize( long bytes );
 
-  public Access build() throws BuilderException;
+  public Access build() throws IllegalStateException;
 }

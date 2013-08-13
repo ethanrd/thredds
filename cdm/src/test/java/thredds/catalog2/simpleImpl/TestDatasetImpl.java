@@ -146,9 +146,9 @@ public class TestDatasetImpl extends TestCase
 
   public void testBuilderGet()
   {
-    assertFalse( parentDatasetBldr.isBuilt() );
-    assertFalse( catRefBldr.isBuilt() );
-    assertFalse( dsBuilder.isBuilt() );
+    assertFalse( parentDatasetBldr.isBuildable() );
+    assertFalse( catRefBldr.isBuildable() );
+    assertFalse( dsBuilder.isBuildable() );
 
     List<AccessBuilder> abl = dsBuilder.getAccessBuilders();
     assertTrue( abl.size() == 2 );
@@ -202,7 +202,7 @@ public class TestDatasetImpl extends TestCase
   public void testBuild()
   {
     // Check if buildable
-    BuilderIssues issues = parentDatasetBldr.getIssues();
+    BuilderIssues issues = parentDatasetBldr.checkForIssues();
     if ( ! issues.isValid() )
     {
       StringBuilder stringBuilder = new StringBuilder( "Invalid dataset: " ).append( issues.toString());
@@ -215,9 +215,9 @@ public class TestDatasetImpl extends TestCase
     catch ( BuilderException e )
     { fail( "Build failed: " + e.getMessage() ); }
 
-    assertTrue( parentDatasetBldr.isBuilt() );
-    assertTrue( catRefBldr.isBuilt() );
-    assertTrue( dsBuilder.isBuilt() );
+    assertTrue( parentDatasetBldr.isBuildable() );
+    assertTrue( catRefBldr.isBuildable() );
+    assertTrue( dsBuilder.isBuildable() );
     ds = (Dataset) dsBuilder;
 
     // Test getters of resulting Dataset.

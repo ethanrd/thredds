@@ -46,5 +46,5 @@ public interface CatalogRefBuilder
   public String getReferenceUriAsString();
   public void setReferenceUri( String uriReference );
 
-  public CatalogRef build() throws BuilderException;
+  public CatalogRef build() throws IllegalStateException;
 }

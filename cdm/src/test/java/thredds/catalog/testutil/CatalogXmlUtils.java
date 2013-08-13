@@ -4,7 +4,6 @@ import thredds.catalog2.builder.*;
 import thredds.catalog2.xml.parser.ThreddsXmlParser;
 import thredds.catalog2.xml.parser.ThreddsXmlParserException;
 import thredds.catalog2.xml.parser.ThreddsXmlParserFactory;
-import thredds.catalog2.xml.parser.stax.StaxThreddsXmlParser;
 import thredds.catalog2.xml.writer.ThreddsXmlWriter;
 import thredds.catalog2.xml.writer.ThreddsXmlWriterFactory;
 import thredds.catalog2.xml.writer.ThreddsXmlWriterException;
@@ -13,7 +12,6 @@ import thredds.catalog.ServiceType;
 
 import java.util.List;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.io.StringReader;
 
 import static org.junit.Assert.*;
@@ -166,7 +164,7 @@ public class CatalogXmlUtils
         assertEquals( dsBldr.getId(), "containerDs" );
 
         assertFalse( dsBldr.isCollection() );
-        assertFalse( dsBldr.isBuilt() );
+        assertFalse( dsBldr.isBuildable() );
 
         return dsBldr;
     }

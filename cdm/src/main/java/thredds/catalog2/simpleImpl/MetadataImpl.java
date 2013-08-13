@@ -163,12 +163,12 @@ class MetadataImpl implements Metadata, MetadataBuilder
     return this.content;
   }
 
-  public boolean isBuilt()
+  public Buildable isBuildable()
   {
     return this.isBuilt;
   }
 
-  public BuilderIssues getIssues()
+  public BuilderIssues checkForIssues()
   {
     BuilderIssue issue = null;
     if ( this.isContainedContent )

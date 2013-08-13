@@ -54,5 +54,5 @@ public interface MetadataBuilder extends ThreddsBuilder
   public void setContent( String content );
   public String getContent();
 
-  public Metadata build() throws BuilderException;
+  public Metadata build() throws IllegalStateException;
 }

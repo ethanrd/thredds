@@ -123,5 +123,5 @@ public interface ServiceBuilder extends ThreddsBuilder
    *
    * @return the finished Service.
    */
-  public Service build() throws BuilderException;
+  public Service build() throws IllegalStateException;
 }

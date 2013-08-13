@@ -214,7 +214,7 @@ class ServiceContainer
     // Check on contained ServiceImpl objects.
     if ( this.services != null )
       for ( ServiceImpl sb : this.services )
-        issues.addAllIssues( sb.getIssues());
+        issues.addAllIssues( sb.checkForIssues());
 
     return issues;
   }

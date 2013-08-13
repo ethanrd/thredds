@@ -1,0 +1,294 @@
+/*
+ * Copyright 1998-2009 University Corporation for Atmospheric Research/Unidata
+ *
+ * Portions of this software were developed by the Unidata Program at the
+ * University Corporation for Atmospheric Research.
+ *
+ * Access and use of this software shall impose the following obligations
+ * and understandings on the user. The user is granted the right, without
+ * any fee or cost, to use, copy, modify, alter, enhance and distribute
+ * this software, and any derivative works thereof, and its supporting
+ * documentation for any purpose whatsoever, provided that this entire
+ * notice appears in all copies of the software, derivative works and
+ * supporting documentation.  Further, UCAR requests that the user credit
+ * UCAR/Unidata in any publications that result from the use of this
+ * software or in any product that includes this software. The names UCAR
+ * and/or Unidata, however, may not be used in any advertising or publicity
+ * to endorse or promote any products or commercial entity unless specific
+ * written permission is obtained from UCAR/Unidata. The user also
+ * understands that UCAR/Unidata is not obligated to provide the user with
+ * any support, consulting, training or assistance of any kind with regard
+ * to the use, operation and performance of this software nor to provide
+ * the user with any updates, revisions, new versions or "bug fixes."
+ *
+ * THIS SOFTWARE IS PROVIDED BY UCAR/UNIDATA "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL UCAR/UNIDATA BE LIABLE FOR ANY SPECIAL,
+ * INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING
+ * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+ * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+package thredds.catalog2.straightimpl;
+
+import thredds.catalog.ServiceType;
+import thredds.catalog2.Property;
+import thredds.catalog2.Service;
+import thredds.catalog2.builder.BuilderIssue;
+import thredds.catalog2.builder.BuilderIssues;
+import thredds.catalog2.builder.ServiceBuilder;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
+/**
+ * _more_
+ *
+ * @author edavis
+ * @since 4.0
+ */
+class ServiceBuilderImpl implements ServiceBuilder
+{
+  private String name;
+  private String description;
+  private ServiceType type;
+  private String baseUri;
+  private String suffix;
+
+  private PropertyBuilderContainer propertyBuilderContainer;
+
+  private ServiceBuilderContainer serviceBuilderContainer;
+
+  /**
+   * Generally, a CatalogBuilder will create the CatalogWideServiceBuilderTracker
+   * and pass it to ServiceBuilders to use. However, if a ServiceBuilder exists
+   * without being contained by a CatalogBuilder, it might need to create its own
+   * CatalogWideServiceBuilderTracker (in which case CatalogWide can be thought
+   * of as DocumentWide).
+   */
+  private CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
+
+  /**
+   * When isRootServiceContainer is true, it indicates that this ServiceBuilder is not
+   * contained by a CatalogBuilder and it has created a
+   * CatalogWideServiceBuilderTracker that it will pass to any contained
+   * ServiceBuilders.
+   */
+  private boolean isRootServiceContainer;
+
+  private BuilderIssues builderIssues;
+  private Buildable isBuildable;
+
+  ServiceBuilderImpl( String name, ServiceType type, String baseUri,
+                      CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker)
+  {
+    if ( name == null || name.isEmpty() )
+      throw new IllegalArgumentException( "Name must not be null or empty.");
+    if ( type == null )
+      throw new IllegalArgumentException( "Service type must not be null.");
+    if ( baseUri == null ) throw new IllegalArgumentException( "Base URI must not be null.");
+
+    this.name = name;
+    this.description = "";
+    this.type = type;
+    this.baseUri = baseUri;
+    this.suffix = "";
+    this.propertyBuilderContainer = new PropertyBuilderContainer();
+
+    if ( catalogWideServiceBuilderTracker == null ) {
+      this.isRootServiceContainer = true;
+      this.catalogWideServiceBuilderTracker = new CatalogWideServiceBuilderTracker();
+    } else {
+      this.isRootServiceContainer = false;
+      this.catalogWideServiceBuilderTracker = catalogWideServiceBuilderTracker;
+    }
+
+    this.serviceBuilderContainer = new ServiceBuilderContainer( this.catalogWideServiceBuilderTracker);
+
+    this.isBuildable = Buildable.DONT_KNOW;
+  }
+
+  // ToDo Decide on whether to support setName(). Many things key off name so it is not quite straightforward.
+  private final void setName() {}
+
+  public String getName() {
+    return this.name;
+  }
+
+  public void setDescription( String description ) {
+    this.description = description != null ? description : "";
+  }
+
+  public String getDescription() {
+    return this.description;
+  }
+
+  public void setType( ServiceType type ) {
+    if ( type == null )
+      throw new IllegalArgumentException( "Service type must not be null." );
+    this.type = type;
+  }
+
+  public ServiceType getType() {
+    return this.type;
+  }
+
+  // ToDo Test that an empty baseUri is OK for a "Compound" service.
+  public void setBaseUri( String baseUri ) {
+    if ( baseUri == null )
+      throw new IllegalArgumentException( "Base URI must not be null." );
+    this.baseUri = baseUri;
+    this.isBuildable = Buildable.DONT_KNOW;
+  }
+
+  public String getBaseUri() {
+    return this.baseUri;
+  }
+
+  public void setSuffix( String suffix ) {
+    this.suffix = suffix != null ? suffix : "";
+  }
+
+  public String getSuffix() {
+    return this.suffix;
+  }
+
+  public void addProperty( String name, String value ) {
+    this.isBuildable = Buildable.DONT_KNOW;
+    this.propertyBuilderContainer.addProperty(name, value);
+  }
+
+  public boolean removeProperty( String name ) {
+    this.isBuildable = Buildable.DONT_KNOW;
+    return null != this.propertyBuilderContainer.removeProperty( name );
+  }
+
+  public List<String> getPropertyNames() {
+    return this.propertyBuilderContainer.getPropertyNames();
+  }
+
+  public String getPropertyValue( String name ) {
+    return this.propertyBuilderContainer.getPropertyValue( name );
+  }
+
+  public List<Property> getProperties() {
+    return this.propertyBuilderContainer.getProperties();
+  }
+
+  public Property getProperty(String name) {
+    return this.propertyBuilderContainer.getProperty(name);
+  }
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
+    this.isBuildable = Buildable.DONT_KNOW;
+    return this.serviceBuilderContainer.addService( name, type, baseUri );
+  }
+
+  public boolean removeService( ServiceBuilder serviceBuilder ) {
+    if ( serviceBuilder == null )
+      return false;
+
+    this.isBuildable = Buildable.DONT_KNOW;
+    return this.serviceBuilderContainer.removeService( (ServiceBuilderImpl) serviceBuilder );
+  }
+
+  public List<ServiceBuilder> getServiceBuilders()
+  {
+    return this.serviceBuilderContainer.getServiceBuilders();
+  }
+
+  public ServiceBuilder getServiceBuilderByName( String name )
+  {
+    return this.serviceBuilderContainer.getServiceBuilderByName( name );
+  }
+
+  public ServiceBuilder findServiceBuilderByNameGlobally( String name )
+  {
+    return this.catalogWideServiceBuilderTracker.getReferenceableService( name );
+  }
+
+  public Buildable isBuildable()
+  {
+    return this.isBuildable;
+  }
+
+  /**
+   * Check whether the state of this ServiceBuilder is such that build() will succeed.
+   *
+   * @return true if this ServiceBuilder is in a state where build() will succeed.
+   */
+  public BuilderIssues checkForIssues()
+  {
+    if ( this.isBuildable != Buildable.DONT_KNOW )
+      return this.builderIssues;
+
+    builderIssues = new BuilderIssues();
+
+    // Check that the baseUri is a valid URI.
+    if ( this.baseUri != null && ! this.baseUri.isEmpty()) {
+      try {
+        URI bUri = new URI( this.baseUri);
+      } catch (URISyntaxException e) {
+        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, "The baseUri [" + this.baseUri + "] of this Service [" + this.name + "] must be a valid URI.", this));
+      }
+    }
+
+    // Check subordinates.
+    builderIssues.addAllIssues(this.serviceBuilderContainer.checkForIssues());
+    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
+
+    // ToDo Decide if need to gather issues from CatalogWideServiceBuilderTracker
+    // if ( this.isRootServiceContainer)
+    //   issues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
+
+    // Various checks on this service itself.
+    if ( this.getType() == ServiceType.COMPOUND ) {
+      // Compound services should contain nested services.
+      if ( this.serviceBuilderContainer.isEmpty()) {
+        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "No contained services in this compound service.", this));
+      }
+      // Compound services should not have a baseURI.
+      if ( this.getBaseUri() != null )
+        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "This compound service has a baseURI.", this));
+    } else {
+      // Non-compound services should have a baseUri.
+      if ( this.serviceBuilderContainer.isEmpty() && this.baseUri == null )
+        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this ));
+
+      // Non-compound services MAY NOT contain nested services
+      if ( ! this.serviceBuilderContainer.isEmpty() )
+        builderIssues.addIssue(new BuilderIssue(BuilderIssue.Severity.ERROR, "Non-compound services may not contian other services.", this ));
+    }
+
+    if ( builderIssues.isValid())
+      this.isBuildable = Buildable.YES;
+    else
+      this.isBuildable = Buildable.NO;
+
+    return builderIssues;
+  }
+
+  /**
+   * Generate the Service being built by this ServiceBuilder.
+   *
+   * @return the Service
+   * @throws IllegalStateException if this ServiceBuilder is not in a valid state.
+   */
+  public Service build() throws IllegalStateException
+  {
+    if ( this.isBuildable != Buildable.YES )
+      throw new IllegalStateException( "ServiceBuilder not buildable.");
+
+    URI baseUriAsURI = null;
+    try {
+      baseUriAsURI = new URI( this.baseUri);
+    } catch (URISyntaxException e) {
+      throw new IllegalStateException( "ServiceBuilder not buildable. (Bug here! This Builder's isBuildable() should havev been NO.)");
+    }
+
+    return new ServiceImpl( this.name, this.description, this.type, baseUri, this.suffix,
+        this.propertyBuilderContainer, this.serviceBuilderContainer,
+        this.catalogWideServiceBuilderTracker, this.isRootServiceContainer, this.builderIssues );
+  }
+}

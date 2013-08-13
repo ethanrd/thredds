@@ -85,7 +85,7 @@ public class VariableGroupTest
 
     varGrpBldr.addVariableBuilder( "name", "desc", "units", "vocabId", "vocabName" );
 
-    BuilderIssues bldrIssues = varGrpBldr.getIssues();
+    BuilderIssues bldrIssues = varGrpBldr.checkForIssues();
     assertTrue( bldrIssues.isEmpty());
   }
 
@@ -95,7 +95,7 @@ public class VariableGroupTest
     ThreddsMetadataBuilder.VariableGroupBuilder varGrpBldr = new ThreddsMetadataImpl.VariableGroupImpl();
     varGrpBldr.setVariableMapUrl( "varMapUrl" );
 
-    BuilderIssues bldrIssues = varGrpBldr.getIssues();
+    BuilderIssues bldrIssues = varGrpBldr.checkForIssues();
     assertTrue( bldrIssues.isEmpty());
     assertTrue( bldrIssues.isValid());
   }

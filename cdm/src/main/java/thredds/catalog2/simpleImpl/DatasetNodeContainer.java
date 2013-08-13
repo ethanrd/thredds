@@ -335,7 +335,7 @@ class DatasetNodeContainer
     // Check on contained DatasetNodeImpl objects.
     if ( this.datasetNodeImplList != null )
       for ( DatasetNodeBuilder dnb : this.datasetNodeImplList )
-        issues.addAllIssues( dnb.getIssues());
+        issues.addAllIssues( dnb.checkForIssues());
 
     return issues;
   }
