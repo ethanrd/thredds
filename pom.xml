@@ -855,7 +855,7 @@
 
   <properties>
     <!-- default is to skip tests. use mvn test -DskipTests=false to override on command line -->
-    <skipTests>true</skipTests>
+    <skipTests>false</skipTests>
 
     <!-- Source character encoding (different plug-ins use different sourceEncoding properties) -->
     <sourceEncoding>UTF-8</sourceEncoding>
