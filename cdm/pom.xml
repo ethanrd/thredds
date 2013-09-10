@@ -125,7 +125,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <includes>
-            <include>thredds/catalog/ServiceType.java</include>
+            <include>thredds/catalog/**/*.java</include>
             <include>thredds/catalog2/**/*.java</include>
           </includes>
           <excludes>
@@ -145,6 +145,7 @@
           </excludes>
 
           <testIncludes>
+            <include>thredds/catalog/xml/testutil/CatalogXmlAsStringUtil.java</include>
             <include>thredds/catalog2/builder/*.java</include>
             <include>thredds/catalog2/straightimpl/*.java</include>
           </testIncludes>
