@@ -42,7 +42,7 @@ import java.util.*;
  *
  * @author edavis
  */
-class PropertyContainer
+final class PropertyContainer
 {
   private final Map<String, Property> propertiesMap;
 
@@ -51,7 +51,10 @@ class PropertyContainer
   }
 
   PropertyContainer( Map<String,Property> propertiesMap) {
-    this.propertiesMap = propertiesMap;
+    if ( propertiesMap == null || propertiesMap.isEmpty())
+      this.propertiesMap = null;
+    else
+      this.propertiesMap = new HashMap<String, Property>( propertiesMap);
   }
 
   boolean isEmpty() {

@@ -208,8 +208,7 @@ class ServiceBuilderImpl implements ServiceBuilder
     return this.catalogWideServiceBuilderTracker.getReferenceableService( name );
   }
 
-  public Buildable isBuildable()
-  {
+  public Buildable isBuildable() {
     return this.isBuildable;
   }
 
@@ -218,8 +217,7 @@ class ServiceBuilderImpl implements ServiceBuilder
    *
    * @return true if this ServiceBuilder is in a state where build() will succeed.
    */
-  public BuilderIssues checkForIssues()
-  {
+  public BuilderIssues checkForIssues() {
     if ( this.isBuildable != Buildable.DONT_KNOW )
       return this.builderIssues;
 
@@ -235,12 +233,10 @@ class ServiceBuilderImpl implements ServiceBuilder
     }
 
     // Check subordinates.
-    builderIssues.addAllIssues(this.serviceBuilderContainer.checkForIssues());
+    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
     builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
-
-    // ToDo Decide if need to gather issues from CatalogWideServiceBuilderTracker
-    // if ( this.isRootServiceContainer)
-    //   issues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
+    if ( this.isRootServiceContainer )
+      builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
 
     // Various checks on this service itself.
     if ( this.getType() == ServiceType.COMPOUND ) {
@@ -249,11 +245,11 @@ class ServiceBuilderImpl implements ServiceBuilder
         builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "No contained services in this compound service.", this));
       }
       // Compound services should not have a baseURI.
-      if ( this.getBaseUri() != null )
+      if ( this.getBaseUri() != null && ! this.getBaseUri().isEmpty() )
         builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "This compound service has a baseURI.", this));
     } else {
       // Non-compound services should have a baseUri.
-      if ( this.serviceBuilderContainer.isEmpty() && this.baseUri == null )
+      if ( this.baseUri == null || this.baseUri == "" )
         builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this ));
 
       // Non-compound services MAY NOT contain nested services

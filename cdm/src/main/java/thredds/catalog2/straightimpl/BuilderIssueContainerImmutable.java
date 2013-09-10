@@ -19,8 +19,13 @@ public final class BuilderIssueContainerImmutable {
   private final List<BuilderIssue> warnIssues;
 
   BuilderIssueContainerImmutable(List<BuilderIssue> allIssues) {
-    if ( allIssues == null || allIssues.isEmpty())
-      throw new IllegalArgumentException( "Given list of issues may not be null or empty.");
+    if ( allIssues == null || allIssues.isEmpty()) {
+      this.issues = Collections.emptyList();
+      this.warnIssues = Collections.emptyList();
+      this.errorIssues = Collections.emptyList();
+      this.fatalIssues = Collections.emptyList();
+      return;
+    }
 
     List<BuilderIssue> tmpIssues = new ArrayList<BuilderIssue>();
     List<BuilderIssue> tmpFatalIssues = new ArrayList<BuilderIssue>();
@@ -37,20 +42,25 @@ public final class BuilderIssueContainerImmutable {
         tmpWarnIssues.add( issue);
     }
     this.issues = Collections.unmodifiableList( tmpIssues);
-    this.fatalIssues = Collections.unmodifiableList( tmpFatalIssues);
-    this.errorIssues = Collections.unmodifiableList( tmpErrorIssues);
-    this.warnIssues = Collections.unmodifiableList( tmpWarnIssues);
+    if (tmpFatalIssues.isEmpty() )
+      this.fatalIssues = Collections.emptyList();
+    else
+      this.fatalIssues = Collections.unmodifiableList( tmpFatalIssues);
+    if (tmpErrorIssues.isEmpty() )
+      this.errorIssues = Collections.emptyList();
+    else
+      this.errorIssues = Collections.unmodifiableList( tmpErrorIssues);
+    if (tmpWarnIssues.isEmpty() )
+      this.warnIssues = Collections.emptyList();
+    else
+      this.warnIssues = Collections.unmodifiableList( tmpWarnIssues);
   }
 
   public boolean isEmpty() {
-    if ( this.issues == null )
-      return true;
     return this.issues.isEmpty();
   }
 
   public int size() {
-    if ( this.issues == null )
-      return 0;
     return this.issues.size();
   }
 
@@ -67,8 +77,6 @@ public final class BuilderIssueContainerImmutable {
   }
 
   public List<BuilderIssue> getIssues() {
-    if ( this.issues == null || this.issues.isEmpty() )
-      return Collections.emptyList();
     return Collections.unmodifiableList( this.issues );
   }
 
@@ -81,5 +89,4 @@ public final class BuilderIssueContainerImmutable {
         sb.append( bfi.toString());
     return sb.toString();
   }
-
 }

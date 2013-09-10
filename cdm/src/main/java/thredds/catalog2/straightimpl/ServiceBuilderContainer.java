@@ -116,10 +116,7 @@ class ServiceBuilderContainer implements ThreddsBuilder
    */
   boolean removeService( ServiceBuilderImpl service )
   {
-    if ( service == null )
-      return false;
-
-    if ( this.serviceBuilders == null )
+    if ( service == null || this.serviceBuilders == null )
       return false;
 
     if ( this.serviceBuilders.remove( service)) {

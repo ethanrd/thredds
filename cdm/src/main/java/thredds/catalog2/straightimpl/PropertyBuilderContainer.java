@@ -120,6 +120,7 @@ class PropertyBuilderContainer implements ThreddsBuilder
    *
    * @param name the name of the Property to add.
    * @param value the value of the Property to add.
+   * @return the previous property with the given name.
    * @throws IllegalArgumentException if name is null or empty or if value is null.
    */
    Property addProperty( String name, String value ) {
