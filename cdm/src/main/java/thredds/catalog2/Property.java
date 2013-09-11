@@ -38,7 +38,7 @@ package thredds.catalog2;
  * @author edavis
  * @since 4.0
  */
-public interface Property
+public interface Property extends ThreddsCatalogNode
 {
   public String getName();
   public String getValue();

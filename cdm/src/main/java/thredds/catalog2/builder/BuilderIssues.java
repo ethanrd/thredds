@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * _more_
+ * Helper class for ThreddsBuilder classes and their handling of collections of BuilderIssue-s.
  *
  * @author edavis
  */
@@ -88,9 +88,7 @@ public class BuilderIssues {
   }
 
   public boolean isValid() {
-    if ( this.numFatalIssues > 0)
-      return false;
-    return true;
+    return this.numFatalIssues <= 0;
   }
 
   public String toString() {

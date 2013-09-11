@@ -35,6 +35,7 @@ package thredds.catalog2.straightimpl;
 import thredds.catalog.ServiceType;
 import thredds.catalog2.Property;
 import thredds.catalog2.Service;
+import thredds.catalog2.ThreddsCatalogIssueContainer;
 import thredds.catalog2.builder.BuilderIssues;
 import thredds.catalog2.builder.ThreddsBuilder;
 
@@ -63,7 +64,7 @@ final class ServiceImpl implements Service
   private final CatalogWideServiceTracker catalogWideServiceTracker;
   private final boolean isRootContainer;
 
-  private final BuilderIssueContainerImmutable builderIssueContainerImmutable;
+  private final ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
 
   /**
    * @throws IllegalArgumentException
@@ -108,9 +109,12 @@ final class ServiceImpl implements Service
     this.suffix = suffix == null ? "" : suffix;
     this.propertyContainer = propertyBuilderContainer.build();
     this.serviceContainer = serviceBuilderContainer.build();
-    this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
     this.isRootContainer = isRootContainer;
-    this.builderIssueContainerImmutable = new BuilderIssueContainerImmutable( builderIssues.getIssues());
+    if ( this.isRootContainer )
+      this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
+    else
+      this.catalogWideServiceTracker = null;
+    this.threddsCatalogIssueContainer = new ThreddsCatalogIssuesImpl( builderIssues);
   }
 
   public String getName() {
@@ -159,5 +163,10 @@ final class ServiceImpl implements Service
 
   public Service findServiceByNameGlobally( String name ) {
     return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
+  }
+
+  @Override
+  public ThreddsCatalogIssueContainer getIssues() {
+    return this.threddsCatalogIssueContainer;
   }
 }

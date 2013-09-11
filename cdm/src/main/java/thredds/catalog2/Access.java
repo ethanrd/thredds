@@ -43,7 +43,7 @@ import java.net.URI;
  * @author edavis
  * @since 4.0
  */
-public interface Access
+public interface Access extends ThreddsCatalogNode
 {
   public Service getService();
   public String getUrlPath();

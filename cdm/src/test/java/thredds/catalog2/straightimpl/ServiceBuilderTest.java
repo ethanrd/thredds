@@ -88,7 +88,7 @@ public class ServiceBuilderTest {
     ServiceBuilder sBWcs2 = serviceBuilder.addService( "wcs", ServiceType.ADDE, "/thredds/adde/" );
 
     BuilderIssues builderIssues = serviceBuilder.checkForIssues();
-    assertFalse(builderIssues.isEmpty());
+    assertFalse( builderIssues.isEmpty());
     assertEquals( 1, builderIssues.getNumWarningIssues());
     assertEquals( 0, builderIssues.getNumErrorIssues());
     assertEquals( 0, builderIssues.getNumFatalIssues());
@@ -99,6 +99,6 @@ public class ServiceBuilderTest {
     Service wcs = service.findServiceByNameGlobally("wcs");
     assertEquals("wcs", wcs.getName());
     assertEquals( ServiceType.WCS, wcs.getType());
-    assertEquals( "/thredds/wcs/", wcs.getBaseUri());
+    assertEquals( "/thredds/wcs/", wcs.getBaseUri().toString());
   }
 }

@@ -33,6 +33,7 @@
 package thredds.catalog2.straightimpl;
 
 import thredds.catalog2.Property;
+import thredds.catalog2.ThreddsCatalogIssueContainer;
 
 /**
  * Straight implementation of thredds.catalog2.Property.
@@ -43,8 +44,7 @@ final class PropertyImpl implements Property
 {
   private final String name;
   private final String value;
-  PropertyImpl( String name, String value)
-  {
+  PropertyImpl( String name, String value) {
     if ( name == null || name.isEmpty() )
       throw new IllegalArgumentException( "Name may not be null or empty.");
     if ( value == null )
@@ -53,13 +53,15 @@ final class PropertyImpl implements Property
     this.value = value;
   }
 
-  public String getName()
-  {
+  public String getName() {
     return this.name;
   }
 
-  public String getValue()
-  {
+  public String getValue() {
     return this.value;
+  }
+
+  public ThreddsCatalogIssueContainer getIssues() {
+    return new ThreddsCatalogIssuesImpl( null);
   }
 }

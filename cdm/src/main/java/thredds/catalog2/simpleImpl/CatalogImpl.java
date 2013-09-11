@@ -335,16 +335,16 @@ class CatalogImpl implements Catalog, CatalogBuilder
     BuilderIssues allIssues = new BuilderIssues();
     this.gatherIssues( allIssues, true );
 
-    this.threddsCatalogIssues = new ThreddsCatalogIssuesImpl( allIssues);
+    this.threddsCatalogIssueContainer = new ThreddsCatalogIssuesImpl( allIssues);
 
     this.isBuilt = true;
     return this;
   }
 
-  private ThreddsCatalogIssues threddsCatalogIssues;
-  public ThreddsCatalogIssues getCatalogIssues()
+  private ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
+  public ThreddsCatalogIssueContainer getCatalogIssues()
   {
-    return this.threddsCatalogIssues;
+    return this.threddsCatalogIssueContainer;
   }
 
   BuilderIssues externalIssues = new BuilderIssues();

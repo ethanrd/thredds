@@ -176,12 +176,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
     if (this.isBuildable != Buildable.YES)
       throw new IllegalStateException( "Not in buildable state [" + this.isBuildable +"]");
 
-//    if ( ! this.referencableServiceBuilders.isEmpty()) {
-//      Map<String,ServiceImpl> tmpServices = new HashMap<String,ServiceImpl>();
-//
-//    }
-//    return new CatalogWideServiceTracker( this.referencableServiceBuilders, this.nonReferencableServices);
-    return null;
+    return new CatalogWideServiceTracker( this.allServices, this.builderIssues);
   }
 
   private static class Counter {

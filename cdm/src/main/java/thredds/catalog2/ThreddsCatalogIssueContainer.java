@@ -1,12 +1,15 @@
 package thredds.catalog2;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * _more_
  *
  * @author edavis
- * @since 4.0
  */
-public interface ThreddsCatalogIssues
+public interface ThreddsCatalogIssueContainer
 {
   public boolean isValid();
 

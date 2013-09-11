@@ -1,6 +1,6 @@
 package thredds.catalog2.straightimpl;
 
-import thredds.catalog2.ThreddsCatalogIssues;
+import thredds.catalog2.ThreddsCatalogIssueContainer;
 import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog2.builder.BuilderIssues;
 
@@ -8,27 +8,37 @@ import thredds.catalog2.builder.BuilderIssues;
  * _more_
  *
  * @author edavis
- * @since 4.1
  */
-public class ThreddsCatalogIssuesImpl implements ThreddsCatalogIssues
+public final class ThreddsCatalogIssuesImpl implements ThreddsCatalogIssueContainer
 {
-  private boolean isValid;
+  private final boolean isValid;
 
-  private int numWarnIssues;
-  private int numErrorIssues;
-  private int numFatalIssues;
+  private final int numWarnIssues;
+  private final int numErrorIssues;
+  private final int numFatalIssues;
 
-  private String warnMessages;
-  private String errorMessages;
-  private String fatalMessages;
-  private String allMessages;
+  private final String warnMessages;
+  private final String errorMessages;
+  private final String fatalMessages;
+  private final String allMessages;
 
-  ThreddsCatalogIssuesImpl( BuilderIssues issues)
-  {
-    isValid = issues.isValid();
-    numWarnIssues = issues.getNumWarningIssues();
-    numErrorIssues = issues.getNumErrorIssues();
-    numFatalIssues = issues.getNumFatalIssues();
+  ThreddsCatalogIssuesImpl( BuilderIssues issues) {
+    if ( issues == null || issues.isEmpty() ) {
+      this.isValid = true;
+      this.numWarnIssues = 0;
+      this.numErrorIssues = 0;
+      this.numFatalIssues = 0;
+      this.warnMessages = "";
+      this.errorMessages = "";
+      this.fatalMessages = "";
+      this.allMessages = "";
+      return;
+    }
+
+    this.isValid = issues.isValid();
+    this.numWarnIssues = issues.getNumWarningIssues();
+    this.numErrorIssues = issues.getNumErrorIssues();
+    this.numFatalIssues = issues.getNumFatalIssues();
     StringBuilder warnMessagesBuilder = new StringBuilder();
     StringBuilder errorMessagesBuilder = new StringBuilder();
     StringBuilder fatalMessagesBuilder = new StringBuilder();
@@ -36,20 +46,21 @@ public class ThreddsCatalogIssuesImpl implements ThreddsCatalogIssues
 
     for ( BuilderIssue issue : issues.getIssues() )
     {
-      if ( issue.getSeverity().equals( BuilderIssue.Severity.WARNING )) {
-        warnMessagesBuilder.append( issue.toString());
-        allMessagesBuilder.append( issue.toString());
+      String msg = String.format( "%s%n", issue.toString());
+      if ( issue.getSeverity() == BuilderIssue.Severity.WARNING ) {
+        warnMessagesBuilder.append( msg );
+        allMessagesBuilder.append( msg );
       }
-      else if ( issue.getSeverity().equals( BuilderIssue.Severity.ERROR )) {
-        errorMessagesBuilder.append( issue.toString());
-        allMessagesBuilder.append( issue.toString() );
+      else if ( issue.getSeverity() == BuilderIssue.Severity.ERROR ) {
+        errorMessagesBuilder.append( msg );
+        allMessagesBuilder.append( msg );
       }
-      else if ( issue.getSeverity().equals( BuilderIssue.Severity.FATAL )) {
-        fatalMessagesBuilder.append( issue.toString());
-        allMessagesBuilder.append( issue.toString() );
+      else if ( issue.getSeverity() == BuilderIssue.Severity.FATAL ) {
+        fatalMessagesBuilder.append( msg );
+        allMessagesBuilder.append( msg );
       }
       else
-        allMessagesBuilder.append( issue.toString() );
+        allMessagesBuilder.append( msg );
     }
     this.warnMessages = warnMessagesBuilder.toString();
     this.errorMessages = errorMessagesBuilder.toString();

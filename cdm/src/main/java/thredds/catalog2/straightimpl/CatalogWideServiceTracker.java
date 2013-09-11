@@ -1,5 +1,10 @@
 package thredds.catalog2.straightimpl;
 
+import thredds.catalog2.Service;
+import thredds.catalog2.ThreddsCatalogIssueContainer;
+import thredds.catalog2.builder.BuilderIssue;
+import thredds.catalog2.builder.BuilderIssues;
+
 import java.util.*;
 
 // ToDo How does a compound service end up with a single CatalogWideServiceTracker rather than building one for each service?
@@ -14,25 +19,34 @@ import java.util.*;
 final class CatalogWideServiceTracker
 {
   /** List of all services including those with duplicate names. */
-  private final List<ServiceImpl> allServices;
+  private final List<Service> allServices;
 
   /** Map of services (keyed on their names) that will be found when referenced by a dataset access. */
-  private Map<String,ServiceImpl> referencableServiceBuilders;
+  private Map<String,Service> referencableServiceBuilders;
 
-  private BuilderIssueContainerImmutable builderIssuesImmutable;
+  private ThreddsCatalogIssueContainer threddsCatalogIssuesContainer;
 
-  CatalogWideServiceTracker( List<ServiceBuilderImpl> allServices ) {
+  CatalogWideServiceTracker( List<ServiceBuilderImpl> allServices, BuilderIssues issues ) {
     if ( allServices == null || allServices.isEmpty() ) {
       this.allServices = null;
+      this.referencableServiceBuilders = null;
       return;
     }
 
-    this.allServices = new ArrayList<ServiceImpl>();
-    for ( ServiceBuilderImpl serviceBuilder : allServices ) {
-      this.allServices.add( (ServiceImpl) serviceBuilder.build());
-    }
+    if ( issues == null || issues.isEmpty())
+      this.threddsCatalogIssuesContainer = new ThreddsCatalogIssuesImpl( null);
+    else
+      this.threddsCatalogIssuesContainer = new ThreddsCatalogIssuesImpl( issues);
 
-    return;
+    this.allServices = new ArrayList<Service>();
+    this.referencableServiceBuilders = new HashMap<String, Service>();
+    for ( ServiceBuilderImpl serviceBuilder : allServices ) {
+      Service service = serviceBuilder.build();
+      this.allServices.add( service);
+      if ( ! this.referencableServiceBuilders.containsKey( service.getName())) {
+        this.referencableServiceBuilders.put( service.getName(), service);
+      }
+    }
   }
 
   boolean isServiceNameInUseGlobally( String name ) {
@@ -43,7 +57,7 @@ final class CatalogWideServiceTracker
     return this.referencableServiceBuilders.containsKey( name );
   }
 
-  ServiceImpl getServiceByGloballyUniqueName( String name )
+  Service getServiceByGloballyUniqueName( String name )
   {
     if ( name == null
         || this.referencableServiceBuilders == null

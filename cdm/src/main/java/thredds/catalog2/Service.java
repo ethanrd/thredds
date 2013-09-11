@@ -44,7 +44,7 @@ import java.util.List;
  * @author edavis
  * @since 4.0
  */
-public interface Service
+public interface Service extends ThreddsCatalogNode
 {
   /**
    * Returns the name of this Service, may not be null.

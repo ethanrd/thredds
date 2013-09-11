@@ -79,6 +79,6 @@ public final class BuilderIssue {
   }
 
   public String toString() {
-    return this.getSeverity().toString() + ": " + this.getMessage() + "\n";
+    return String.format( "%s: %s", this.getSeverity().toString(), this.getMessage());
   }
 }

@@ -1,6 +1,6 @@
 package thredds.catalog2.simpleImpl;
 
-import thredds.catalog2.ThreddsCatalogIssues;
+import thredds.catalog2.ThreddsCatalogIssueContainer;
 import thredds.catalog2.builder.BuilderIssues;
 import thredds.catalog2.builder.BuilderIssue;
 
@@ -10,7 +10,7 @@ import thredds.catalog2.builder.BuilderIssue;
  * @author edavis
  * @since 4.1
  */
-public class ThreddsCatalogIssuesImpl implements ThreddsCatalogIssues
+public class ThreddsCatalogIssuesImpl implements ThreddsCatalogIssueContainer
 {
   private boolean isValid;
 
