@@ -24,19 +24,12 @@ final class CatalogWideServiceTracker
   /** Map of services (keyed on their names) that will be found when referenced by a dataset access. */
   private Map<String,Service> referencableServiceBuilders;
 
-  private ThreddsCatalogIssueContainer threddsCatalogIssuesContainer;
-
-  CatalogWideServiceTracker( List<ServiceBuilderImpl> allServices, BuilderIssues issues ) {
+  CatalogWideServiceTracker( List<ServiceBuilderImpl> allServices ) {
     if ( allServices == null || allServices.isEmpty() ) {
       this.allServices = null;
       this.referencableServiceBuilders = null;
       return;
     }
-
-    if ( issues == null || issues.isEmpty())
-      this.threddsCatalogIssuesContainer = new ThreddsCatalogIssuesImpl( null);
-    else
-      this.threddsCatalogIssuesContainer = new ThreddsCatalogIssuesImpl( issues);
 
     this.allServices = new ArrayList<Service>();
     this.referencableServiceBuilders = new HashMap<String, Service>();

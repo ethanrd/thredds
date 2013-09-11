@@ -176,7 +176,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
     if (this.isBuildable != Buildable.YES)
       throw new IllegalStateException( "Not in buildable state [" + this.isBuildable +"]");
 
-    return new CatalogWideServiceTracker( this.allServices, this.builderIssues);
+    return new CatalogWideServiceTracker( this.allServices);
   }
 
   private static class Counter {

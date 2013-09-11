@@ -218,9 +218,6 @@ class ServiceBuilderImpl implements ServiceBuilder
    * @return true if this ServiceBuilder is in a state where build() will succeed.
    */
   public BuilderIssues checkForIssues() {
-    if ( this.isBuildable != Buildable.DONT_KNOW )
-      return this.builderIssues;
-
     builderIssues = new BuilderIssues();
 
     // Check that the baseUri is a valid URI.
