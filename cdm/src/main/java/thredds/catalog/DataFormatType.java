@@ -40,7 +40,7 @@ package thredds.catalog;
  */
 
 public final class DataFormatType {
-    private static java.util.List<DataFormatType> members = new java.util.ArrayList<DataFormatType>(20);
+    private static java.util.List<DataFormatType> members = new java.util.ArrayList<DataFormatType>(30);
 
     public final static DataFormatType NONE = new DataFormatType("");
 
@@ -72,7 +72,7 @@ public final class DataFormatType {
     public final static DataFormatType REALTIME = new DataFormatType("video/realtime");
     public final static DataFormatType OTHER_UNKNOWN = new DataFormatType("other/unknown");
 
-    private String name;
+    private final String name;
     private DataFormatType(String s) {
       this.name = s;
       members.add(this);
@@ -88,7 +88,9 @@ public final class DataFormatType {
      *
      * @return Collection of known DataFormatType-s
      */
-    public static java.util.Collection<DataFormatType> getAllTypes() { return members; }
+    public static java.util.Collection<DataFormatType> getAllTypes() {
+      return java.util.Collections.unmodifiableCollection( members);
+    }
 
     /**
      * Find the known DataFormatType that matches the given name (ignoring case)

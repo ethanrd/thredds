@@ -46,7 +46,7 @@ import java.net.URI;
 public interface Access extends ThreddsCatalogNode
 {
   public Service getService();
-  public String getUrlPath();
+  public URI getUrlPath();
   public DataFormatType getDataFormat();
   public long getDataSize();
 }

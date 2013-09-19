@@ -45,7 +45,7 @@ import java.util.List;
  */
 public interface DatasetBuilder extends DatasetNodeBuilder
 {
-  public AccessBuilder addAccessBuilder();
+  public AccessBuilder addAccessBuilder( String urlPath, String serviceName );
   public boolean removeAccessBuilder( AccessBuilder accessBuilder );
 
   public boolean isAccessible();

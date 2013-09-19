@@ -34,8 +34,6 @@ package thredds.catalog2.straightimpl;
 
 import thredds.catalog.DataFormatType;
 import thredds.catalog2.Access;
-import thredds.catalog2.Service;
-import thredds.catalog2.ThreddsCatalogIssueContainer;
 import thredds.catalog2.builder.*;
 
 import java.net.URI;
@@ -47,53 +45,60 @@ import java.net.URISyntaxException;
  * @author edavis
  * @since 4.0
  */
-final class AccessImpl implements Access
+class AccessBuilderImpl implements AccessBuilder
 {
   //private final DatasetImpl parentDs;
-  private final Service service;
-  private final URI urlPath;
-  private final DataFormatType dataFormat;
-  private final long dataSize;
+  private ServiceBuilder service;
+  private String urlPath;
+  private DataFormatType dataFormat = DataFormatType.NONE;
+  private long dataSize = -1;
 
-  private final ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
+  private BuilderIssues builderIssues;
+  private Buildable isBuildable;
 
-  AccessImpl( ServiceBuilder serviceBuilder, String urlPathAsString,
-              DataFormatType dataFormat, long dataSize,
-              BuilderIssues builderIssues ) {
-    if ( serviceBuilder == null  )
-      throw new IllegalArgumentException( "Failed to build Access because referenced ServiceBuilder is null.");
-    if ( serviceBuilder.isBuildable() != ThreddsBuilder.Buildable.YES )
-      throw new IllegalArgumentException( "Failed to build Access because referenced ServiceBuilder is not buildable.");
+  AccessBuilderImpl( String urlPath, ServiceBuilder serviceBuilder ) {
+    this.urlPath = urlPath != null ? urlPath : "";
 
-    // TODO Service has already been built in catalog, should use serviceName instead and dereference with ?
-    this.service = null;
+    if ( serviceBuilder == null )
+      throw new IllegalArgumentException( "Referenced ServiceBuilder must not be null.");
 
-    try {
-      this.urlPath = new URI( urlPathAsString != null ? urlPathAsString : "");
-    } catch (URISyntaxException e) {
-      throw new IllegalArgumentException( String.format( "Failed to build Access because urlPath [%s] is not a valid URI", urlPathAsString));
-    }
+    this.service = serviceBuilder;
 
-    if ( dataFormat == null )
-      this.dataFormat = DataFormatType.NONE;
-    else
-      this.dataFormat = dataFormat;
-
-    this.dataSize = dataSize >= -1 ? dataSize : -1;
-
-    this.threddsCatalogIssueContainer = new ThreddsCatalogIssuesImpl( builderIssues);
-
-
+    this.isBuildable = Buildable.DONT_KNOW;
+    this.builderIssues = new BuilderIssues();
   }
-//  AccessImpl( DatasetImpl parentDataset ) {
-//    this.parentDs = parentDataset;
-//  }
 
-  public Service getService() {
+  @Override
+  public void setUrlPath( String urlPath) {
+    this.isBuildable = Buildable.DONT_KNOW;
+    this.urlPath = urlPath != null ? urlPath : "";
+  }
+
+  @Override
+  public void setServiceBuilder( ServiceBuilder serviceBuilder) {
+    if ( serviceBuilder == null )
+      throw new IllegalArgumentException( "Referenced ServiceBuilder must not be null.");
+
+    this.isBuildable = Buildable.DONT_KNOW;
+    this.service = (ServiceBuilderImpl) serviceBuilder;
+  }
+
+  public void setDataFormat( DataFormatType dataFormat ) {
+    this.dataFormat = dataFormat != null ? dataFormat : DataFormatType.NONE;
+  }
+
+  public void setDataSize( long dataSize ) {
+    if ( dataSize < -1 )
+      this.dataSize = -1;
+    else
+      this.dataSize = dataSize;
+  }
+
+  public ServiceBuilder getServiceBuilder() {
     return service;
   }
 
-  public URI getUrlPath() {
+  public String getUrlPath() {
     return urlPath;
   }
   
@@ -105,8 +110,30 @@ final class AccessImpl implements Access
     return dataSize;
   }
 
-  @Override
-  public ThreddsCatalogIssueContainer getIssues() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  public Buildable isBuildable() {
+    return this.isBuildable;
+  }
+
+  public BuilderIssues checkForIssues() {
+    this.builderIssues = new BuilderIssues();
+
+    try {
+      new URI( this.urlPath);
+    } catch (URISyntaxException e) {
+      this.builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, String.format( "UrlPath [%s] must be valid URI.", this.urlPath), this));
+    }
+    if ( this.builderIssues.isValid())
+      this.isBuildable = Buildable.YES;
+    else
+      this.isBuildable = Buildable.NO;
+
+    return this.builderIssues;
+  }
+
+  public Access build() throws IllegalStateException {
+    if ( this.isBuildable != Buildable.YES )
+      throw new IllegalStateException( "AccessBuilder not buildable.");
+
+    return new AccessImpl( this.service, this.urlPath, this.dataFormat, this.dataSize, this.builderIssues);
   }
 }
