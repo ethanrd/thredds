@@ -135,7 +135,6 @@
             <exclude>thredds/catalog2/straightimpl/CatalogImpl.java</exclude>
             <exclude>thredds/catalog2/straightimpl/CatalogRefImpl.java</exclude>
             <exclude>thredds/catalog2/straightimpl/Dataset*.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/Access*.java</exclude>
             <exclude>thredds/catalog2/straightimpl/Metadata*.java</exclude>
             <!--&lt;!&ndash; exclude>thredds/logs/**</exclude &ndash;&gt;-->
             <!--<exclude>ucar/nc2/dataset/grid/**</exclude>-->
