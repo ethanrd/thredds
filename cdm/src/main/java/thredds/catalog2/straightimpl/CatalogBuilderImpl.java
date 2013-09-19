@@ -47,7 +47,7 @@ import java.util.List;
  * @author edavis
  * @since 4.0
  */
-class CatalogBuilderImpl implements Catalog, CatalogBuilder
+class CatalogBuilderImpl implements CatalogBuilder
 {
   private String name;
   private String docBaseUri;
@@ -55,289 +55,194 @@ class CatalogBuilderImpl implements Catalog, CatalogBuilder
   private DateType expires;
   private DateType lastModified;
 
-  private final ServiceContainer serviceContainer;
-  private final CatalogWideServiceTracker catalogWideServiceTracker;
+  private ServiceBuilderContainer servicserviceBuilderContainerContainer;
+  private CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
 
-  private final DatasetNodeContainer datasetContainer;
+  private DatasetNodeContainer datasetContainer;
 
-  private final PropertyContainer propertyContainer;
+  private PropertyBuilderContainer propertyBuilderContainer;
 
-  private boolean isBuilt = false;
+  private BuilderIssues builderIssues;
+  private Buildable isBuildable;
 
-
-  CatalogBuilderImpl()
-  {
-    this.catalogWideServiceTracker = new CatalogWideServiceTracker();
-    this.serviceContainer = new ServiceContainer(catalogWideServiceTracker);
-
-    this.datasetContainer = new DatasetNodeContainer( null );
-    this.propertyContainer = new PropertyContainer();
+  CatalogBuilderImpl() {
+    this( null, null, null, null, null);
   }
 
-  CatalogBuilderImpl(String name, String docBaseUri, String version, DateType expires, DateType lastModified)
-  {
-    this();
-
+  CatalogBuilderImpl(String name, String docBaseUri, String version, DateType expires, DateType lastModified) {
     this.docBaseUri = docBaseUri != null ? docBaseUri : "";
     this.name = name;
     this.version = version;
     this.expires = expires;
     this.lastModified = lastModified;
+
+    this.catalogWideServiceBuilderTracker = new CatalogWideServiceBuilderTracker();
+    this.servicserviceBuilderContainerContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
+
+    //this.datasetContainer = new DatasetNodeContainer( null );
+    this.propertyBuilderContainer = new PropertyBuilderContainer();
   }
 
-  DatasetNodeContainer getDatasetNodeContainer()
-  {
+  DatasetNodeContainer getDatasetNodeContainer() {
     return this.datasetContainer;
   }
 
-  public void setName( String name )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public void setName( String name ) {
     this.name = name;
   }
 
-  public String getName()
-  {
+  public String getName() {
     return this.name;
   }
 
-  public void setDocBaseUri( String docBaseUri )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
-    this.docBaseUri = docBaseUri != null ? docBaseUri : "";
-  }
-
-  public URI getDocBaseUri()
-  {
+  @Override
+  public String getDocBaseUriAsString() {
     return this.docBaseUri;
   }
 
-  public void setVersion( String version )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public void setDocBaseUri( String docBaseUri ) {
+    this.docBaseUri = docBaseUri != null ? docBaseUri : "";
+  }
+
+  public void setVersion( String version ) {
     this.version = version;
   }
 
-  public String getVersion()
-  {
+  public String getVersion() {
     return this.version;
   }
 
-  public void setExpires( DateType expires )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public void setExpires( DateType expires ) {
     this.expires = expires;
   }
 
-  public DateType getExpires()
-  {
+  public DateType getExpires() {
     return this.expires;
   }
 
-  public void setLastModified( DateType lastModified )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public void setLastModified( DateType lastModified ) {
     this.lastModified = lastModified;
   }
 
-  public DateType getLastModified()
-  {
+  public DateType getLastModified() {
     return this.lastModified;
   }
 
-  public ServiceBuilder addService( String name, ServiceType type, String baseUri )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-
-    return this.serviceContainer.addService( name, type, baseUri );
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
+    return this.servicserviceBuilderContainerContainer.addService( name, type, baseUri );
   }
 
-  public boolean removeService( ServiceBuilder serviceBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public boolean removeService( ServiceBuilder serviceBuilder ) {
     if ( serviceBuilder == null )
       return false;
 
-    return this.serviceContainer.removeService( (ServiceImpl) serviceBuilder );
-  }
-
-  public List<Service> getServices()
-  {
-    if ( !isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without build() being called." );
-    return this.serviceContainer.getServices();
-  }
-
-  public Service getServiceByName( String name )
-  {
-    if ( !isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
-    return this.serviceContainer.getServiceByName( name );
-  }
-
-  public Service findServiceByNameGlobally( String name )
-  {
-    if ( !isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
-    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
+    return this.servicserviceBuilderContainerContainer.removeService( (ServiceImpl) serviceBuilder );
   }
 
   public List<ServiceBuilder> getServiceBuilders()
   {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
-    return this.serviceContainer.getServiceBuilders();
+    return this.servicserviceBuilderContainerContainer.getServiceBuilders();
   }
 
   public ServiceBuilder getServiceBuilderByName( String name )
   {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
-    return this.serviceContainer.getServiceBuilderByName( name );
+    return this.servicserviceBuilderContainerContainer.getServiceBuilderByName( name );
   }
 
   public ServiceBuilder findServiceBuilderByNameGlobally( String name )
   {
-    if ( isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
+    return this.catalogWideServiceBuilderTracker.getServiceByGloballyUniqueName( name );
   }
 
   public void addProperty( String name, String value )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-    this.propertyContainer.addProperty( name, value );
+    this.propertyBuilderContainer.addProperty(name, value);
   }
 
   public boolean removeProperty( String name )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-
-    return this.propertyContainer.removeProperty( name );
+    return this.propertyBuilderContainer.removeProperty( name );
   }
 
-  public List<String> getPropertyNames()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-    return this.propertyContainer.getPropertyNames();
+  public List<String> getPropertyNames() {
+    return this.propertyBuilderContainer.getPropertyNames();
   }
 
-  public String getPropertyValue( String name )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-    return this.propertyContainer.getPropertyValue( name );
+  public String getPropertyValue( String name ) {
+    return this.propertyBuilderContainer.getPropertyValue( name );
   }
 
-  public List<Property> getProperties()
-  {
-    if ( !this.isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped from its CatalogBuilder before build() was called." );
-    return this.propertyContainer.getProperties();
+  public List<Property> getProperties() {
+    return this.propertyBuilderContainer.getProperties();
   }
 
-  public Property getPropertyByName( String name )
-  {
-    if ( !this.isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped from its CatalogBuilder before build() was called." );
-    return this.propertyContainer.getPropertyByName( name );
+  public Property getPropertyByName( String name ) {
+    return this.propertyBuilderContainer.getPropertyByName( name );
   }
 
-  public DatasetBuilder addDataset( String name )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public DatasetBuilder addDataset( String name ) {
     DatasetImpl di = new DatasetImpl( name, this, null );
     this.datasetContainer.addDatasetNode( di );
     return di;
   }
 
-  public CatalogRefBuilder addCatalogRef( String name, String reference )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public CatalogRefBuilder addCatalogRef( String name, String reference ) {
     CatalogRefImpl crb = new CatalogRefImpl( name, reference, this, null );
     this.datasetContainer.addDatasetNode( crb );
     return crb;
   }
 
-  public boolean removeDataset( DatasetNodeBuilder builder )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public boolean removeDataset( DatasetNodeBuilder builder ) {
     if ( builder == null )
       throw new IllegalArgumentException( "DatasetNodeBuilder may not be null.");
 
     return this.datasetContainer.removeDatasetNode( (DatasetNodeImpl) builder );
   }
 
-  public List<DatasetNode> getDatasets()
-  {
-    if ( !isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
+  public List<DatasetNode> getDatasets() {
     return this.datasetContainer.getDatasets();
   }
 
-  public DatasetNode getDatasetById( String id )
-  {
-    if ( !isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
+  public DatasetNode getDatasetById( String id ) {
     return this.datasetContainer.getDatasetById( id );
   }
 
-  public DatasetNode findDatasetByIdGlobally( String id )
-  {
-    if ( !isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
+  public DatasetNode findDatasetByIdGlobally( String id ) {
     return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
   }
 
-  public List<DatasetNodeBuilder> getDatasetNodeBuilders()
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public List<DatasetNodeBuilder> getDatasetNodeBuilders() {
     return this.datasetContainer.getDatasetNodeBuilders();
   }
 
-  public DatasetNodeBuilder getDatasetNodeBuilderById( String id )
-  {
-    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public DatasetNodeBuilder getDatasetNodeBuilderById( String id ) {
     return this.datasetContainer.getDatasetNodeBuilderById( id);
   }
 
-  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id )
-  {
-    if ( isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id ) {
     return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
   }
 
   public Buildable isBuildable() {
-    return this.isBuilt;
+    return this.isBuildable;
   }
 
   public BuilderIssues checkForIssues()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-
     BuilderIssues issues = new BuilderIssues();
 
     this.gatherIssues( issues, false );
     return issues;
   }
 
-  public Catalog build() throws BuilderException
+  public Catalog build() throws IllegalStateException
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
-
     BuilderIssues allIssues = new BuilderIssues();
     this.gatherIssues( allIssues, true );
 
     this.threddsCatalogIssueContainer = new ThreddsCatalogIssuesImpl( allIssues);
 
-    this.isBuilt = true;
-    return this;
+    return new CatalogImpl();
   }
 
   private ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
@@ -370,10 +275,10 @@ class CatalogBuilderImpl implements Catalog, CatalogBuilder
     if ( externalIssues != null && ! externalIssues.isEmpty())
       container.addAllIssues( externalIssues );
 
-//    this.catalogWideServiceTracker.gatherIssues( container, build, this ) ;
-//    this.serviceContainer.gatherIssues( container, build);
+//    this.catalogWideServiceBuilderTracker.gatherIssues( container, build, this ) ;
+//    this.servicserviceBuilderContainerContainer.gatherIssues( container, build);
 //    this.datasetContainer.gatherIssues( container, build);
-//    this.propertyContainer.gatherIssues( container, build);
+//    this.propertyBuilderContainer.gatherIssues( container, build);
 
     if ( build) {
       isBuilt = true;

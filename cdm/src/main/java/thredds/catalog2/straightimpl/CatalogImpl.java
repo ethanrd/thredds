@@ -47,10 +47,10 @@ import java.util.List;
  * @author edavis
  * @since 4.0
  */
-class CatalogImpl implements Catalog, CatalogBuilder
+class CatalogImpl implements Catalog
 {
   private String name;
-  private String docBaseUri;
+  private URI docBaseUri;
   private String version;
   private DateType expires;
   private DateType lastModified;
@@ -58,31 +58,28 @@ class CatalogImpl implements Catalog, CatalogBuilder
   private final ServiceContainer serviceContainer;
   private final CatalogWideServiceTracker catalogWideServiceTracker;
 
-  private final DatasetNodeContainer datasetContainer;
+  //private final DatasetNodeContainer datasetContainer;
 
   private final PropertyContainer propertyContainer;
 
-  private boolean isBuilt = false;
-
-
-  CatalogImpl()
-  {
-    this.catalogWideServiceTracker = new CatalogWideServiceTracker();
-    this.serviceContainer = new ServiceContainer(catalogWideServiceTracker);
-
-    this.datasetContainer = new DatasetNodeContainer( null );
-    this.propertyContainer = new PropertyContainer();
-  }
-
   CatalogImpl( String name, String docBaseUri, String version, DateType expires, DateType lastModified )
   {
-    this();
-
-    this.docBaseUri = docBaseUri != null ? docBaseUri : "";
     this.name = name;
+    try {
+      this.docBaseUri = new URI( docBaseUri != null ? docBaseUri : "");
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException( String.format( "Failed to build Catalog, document base URI [%s] must be valid URI.", docBaseUri));
+    }
     this.version = version;
     this.expires = expires;
     this.lastModified = lastModified;
+
+    this.catalogWideServiceTracker = new CatalogWideServiceTracker();
+    this.serviceContainer = new ServiceContainer(catalogWideServiceTracker);
+
+    //this.datasetContainer = new DatasetNodeContainer( null );
+    this.propertyContainer = new PropertyContainer();
+
   }
 
   DatasetNodeContainer getDatasetNodeContainer()
