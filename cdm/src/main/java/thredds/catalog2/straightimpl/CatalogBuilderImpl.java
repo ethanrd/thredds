@@ -55,7 +55,7 @@ class CatalogBuilderImpl implements CatalogBuilder
   private DateType expires;
   private DateType lastModified;
 
-  private ServiceBuilderContainer servicserviceBuilderContainerContainer;
+  private ServiceBuilderContainer serviceBuilderContainer;
   private CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
 
   private DatasetNodeContainer datasetContainer;
@@ -65,10 +65,6 @@ class CatalogBuilderImpl implements CatalogBuilder
   private BuilderIssues builderIssues;
   private Buildable isBuildable;
 
-  CatalogBuilderImpl() {
-    this( null, null, null, null, null);
-  }
-
   CatalogBuilderImpl(String name, String docBaseUri, String version, DateType expires, DateType lastModified) {
     this.docBaseUri = docBaseUri != null ? docBaseUri : "";
     this.name = name;
@@ -77,7 +73,7 @@ class CatalogBuilderImpl implements CatalogBuilder
     this.lastModified = lastModified;
 
     this.catalogWideServiceBuilderTracker = new CatalogWideServiceBuilderTracker();
-    this.servicserviceBuilderContainerContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
+    this.serviceBuilderContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
 
     //this.datasetContainer = new DatasetNodeContainer( null );
     this.propertyBuilderContainer = new PropertyBuilderContainer();
@@ -129,39 +125,36 @@ class CatalogBuilderImpl implements CatalogBuilder
   }
 
   public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
-    return this.servicserviceBuilderContainerContainer.addService( name, type, baseUri );
+    return this.serviceBuilderContainer.addService( name, type, baseUri );
   }
 
   public boolean removeService( ServiceBuilder serviceBuilder ) {
     if ( serviceBuilder == null )
       return false;
 
-    return this.servicserviceBuilderContainerContainer.removeService( (ServiceImpl) serviceBuilder );
+    return this.serviceBuilderContainer.removeService( serviceBuilder );
   }
 
   public List<ServiceBuilder> getServiceBuilders()
   {
-    return this.servicserviceBuilderContainerContainer.getServiceBuilders();
+    return this.serviceBuilderContainer.getServiceBuilders();
   }
 
   public ServiceBuilder getServiceBuilderByName( String name )
   {
-    return this.servicserviceBuilderContainerContainer.getServiceBuilderByName( name );
+    return this.serviceBuilderContainer.getServiceBuilderByName( name );
   }
 
-  public ServiceBuilder findServiceBuilderByNameGlobally( String name )
-  {
-    return this.catalogWideServiceBuilderTracker.getServiceByGloballyUniqueName( name );
+  public ServiceBuilder findServiceBuilderByNameGlobally( String name ) {
+    return this.catalogWideServiceBuilderTracker.getReferenceableService(name);
   }
 
-  public void addProperty( String name, String value )
-  {
+  public void addProperty( String name, String value ) {
     this.propertyBuilderContainer.addProperty(name, value);
   }
 
-  public boolean removeProperty( String name )
-  {
-    return this.propertyBuilderContainer.removeProperty( name );
+  public boolean removeProperty( String name ) {
+    return this.propertyBuilderContainer.removeProperty( name ) != null;
   }
 
   public List<String> getPropertyNames() {
@@ -177,19 +170,21 @@ class CatalogBuilderImpl implements CatalogBuilder
   }
 
   public Property getPropertyByName( String name ) {
-    return this.propertyBuilderContainer.getPropertyByName( name );
+    return this.propertyBuilderContainer.getProperty(name);
   }
 
   public DatasetBuilder addDataset( String name ) {
-    DatasetImpl di = new DatasetImpl( name, this, null );
-    this.datasetContainer.addDatasetNode( di );
-    return di;
+//    DatasetImpl di = new DatasetImpl( name, this, null );
+//    this.datasetContainer.addDatasetNode( di );
+//    return di;
+    return null;
   }
 
   public CatalogRefBuilder addCatalogRef( String name, String reference ) {
-    CatalogRefImpl crb = new CatalogRefImpl( name, reference, this, null );
-    this.datasetContainer.addDatasetNode( crb );
-    return crb;
+//    CatalogRefImpl crb = new CatalogRefImpl( name, reference, this, null );
+//    this.datasetContainer.addDatasetNode( crb );
+//    return crb;
+    return null;
   }
 
   public boolean removeDataset( DatasetNodeBuilder builder ) {
@@ -229,59 +224,38 @@ class CatalogBuilderImpl implements CatalogBuilder
 
   public BuilderIssues checkForIssues()
   {
-    BuilderIssues issues = new BuilderIssues();
+    builderIssues = new BuilderIssues();
 
-    this.gatherIssues( issues, false );
-    return issues;
+    // Check that the baseUri is a valid URI.
+    URI tstDocBaseUri = null;
+    try {
+      tstDocBaseUri = new URI( this.docBaseUri == null ? "" : this.docBaseUri );
+    } catch (URISyntaxException e) {
+      builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, String.format( "The document base URI [%s] must be a valid URI.", this.docBaseUri), this));
+    }
+    if ( tstDocBaseUri == null || ! tstDocBaseUri.isAbsolute())
+      builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, String.format( "The document base URI [%s} is not absolute.", this.docBaseUri), this));
+
+    // Check subordinates.
+    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
+    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
+    builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
+
+    if ( builderIssues.isValid())
+      this.isBuildable = Buildable.YES;
+    else
+      this.isBuildable = Buildable.NO;
+
+    return builderIssues;
   }
 
   public Catalog build() throws IllegalStateException
   {
-    BuilderIssues allIssues = new BuilderIssues();
-    this.gatherIssues( allIssues, true );
+    if ( this.isBuildable != Buildable.YES )
+      throw new IllegalStateException( "CatalogBuilder not buildable.");
 
-    this.threddsCatalogIssueContainer = new ThreddsCatalogIssuesImpl( allIssues);
-
-    return new CatalogImpl();
-  }
-
-  private ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
-  public ThreddsCatalogIssueContainer getCatalogIssues()
-  {
-    return this.threddsCatalogIssueContainer;
-  }
-
-  BuilderIssues externalIssues = new BuilderIssues();
-
-  BuilderIssues getLocalIssues()
-  {
-    BuilderIssues localIssues = new BuilderIssues();
-
-    try {
-      new URI( this.docBaseUri );
-    }
-    catch ( URISyntaxException e ) {
-      localIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Document base URI [" + this.docBaseUri + "] has bad URI syntax.", this, e ) );
-    }
-    return localIssues;
-  }
-
-  void gatherIssues( BuilderIssues container, boolean build)
-  {
-    if ( this.isBuilt)
-      return;
-
-    container.addAllIssues( getLocalIssues() );
-    if ( externalIssues != null && ! externalIssues.isEmpty())
-      container.addAllIssues( externalIssues );
-
-//    this.catalogWideServiceBuilderTracker.gatherIssues( container, build, this ) ;
-//    this.servicserviceBuilderContainerContainer.gatherIssues( container, build);
-//    this.datasetContainer.gatherIssues( container, build);
-//    this.propertyBuilderContainer.gatherIssues( container, build);
-
-    if ( build) {
-      isBuilt = true;
-    }
+    return new CatalogImpl( this.name, this.docBaseUri, this.version, this.expires, this.lastModified,
+        this.propertyBuilderContainer, this.serviceBuilderContainer,
+        this.catalogWideServiceBuilderTracker, this.builderIssues );
   }
 }

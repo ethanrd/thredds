@@ -1,9 +1,7 @@
 package thredds.catalog2.straightimpl;
 
 import thredds.catalog2.Service;
-import thredds.catalog2.ThreddsCatalogIssueContainer;
-import thredds.catalog2.builder.BuilderIssue;
-import thredds.catalog2.builder.BuilderIssues;
+import thredds.catalog2.builder.ServiceBuilder;
 
 import java.util.*;
 
@@ -24,7 +22,7 @@ final class CatalogWideServiceTracker
   /** Map of services (keyed on their names) that will be found when referenced by a dataset access. */
   private Map<String,Service> referencableServiceBuilders;
 
-  CatalogWideServiceTracker( List<ServiceBuilderImpl> allServices ) {
+  CatalogWideServiceTracker( List<ServiceBuilder> allServices ) {
     if ( allServices == null || allServices.isEmpty() ) {
       this.allServices = null;
       this.referencableServiceBuilders = null;
@@ -33,7 +31,7 @@ final class CatalogWideServiceTracker
 
     this.allServices = new ArrayList<Service>();
     this.referencableServiceBuilders = new HashMap<String, Service>();
-    for ( ServiceBuilderImpl serviceBuilder : allServices ) {
+    for ( ServiceBuilder serviceBuilder : allServices ) {
       Service service = serviceBuilder.build();
       this.allServices.add( service);
       if ( ! this.referencableServiceBuilders.containsKey( service.getName())) {

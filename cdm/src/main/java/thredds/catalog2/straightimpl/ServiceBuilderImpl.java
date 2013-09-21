@@ -190,7 +190,7 @@ class ServiceBuilderImpl implements ServiceBuilder
       return false;
 
     this.isBuildable = Buildable.DONT_KNOW;
-    return this.serviceBuilderContainer.removeService( (ServiceBuilderImpl) serviceBuilder );
+    return this.serviceBuilderContainer.removeService( serviceBuilder );
   }
 
   public List<ServiceBuilder> getServiceBuilders()
@@ -272,13 +272,6 @@ class ServiceBuilderImpl implements ServiceBuilder
   {
     if ( this.isBuildable != Buildable.YES )
       throw new IllegalStateException( "ServiceBuilder not buildable.");
-
-    URI baseUriAsURI = null;
-    try {
-      baseUriAsURI = new URI( this.baseUri);
-    } catch (URISyntaxException e) {
-      throw new IllegalStateException( "ServiceBuilder not buildable. (Bug here! This Builder's isBuildable() should havev been NO.)");
-    }
 
     return new ServiceImpl( this.name, this.description, this.type, baseUri, this.suffix,
         this.propertyBuilderContainer, this.serviceBuilderContainer,

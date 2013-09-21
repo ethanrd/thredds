@@ -33,6 +33,7 @@
 package thredds.catalog2.straightimpl;
 
 import thredds.catalog2.Service;
+import thredds.catalog2.builder.ServiceBuilder;
 import thredds.catalog2.builder.ThreddsBuilder;
 
 import java.util.ArrayList;
@@ -48,16 +49,16 @@ class ServiceContainer
 {
   private final List<Service> services;
 
-  ServiceContainer( List<ServiceBuilderImpl> serviceBuilders ) {
+  ServiceContainer( List<ServiceBuilder> serviceBuilders ) {
     if ( serviceBuilders == null || serviceBuilders.isEmpty() )
       this.services = null;
     else {
-      for ( ServiceBuilderImpl serviceBuilder : serviceBuilders)
+      for ( ServiceBuilder serviceBuilder : serviceBuilders)
         if ( serviceBuilder.isBuildable() != ThreddsBuilder.Buildable.YES )
           throw new IllegalArgumentException( "Can't construct ServiceContainer with ServiceBuilders [" + serviceBuilder.getName() + "] that are not buildable.");
 
       this.services = new ArrayList<Service>();
-      for ( ServiceBuilderImpl serviceBuilder : serviceBuilders ) {
+      for ( ServiceBuilder serviceBuilder : serviceBuilders ) {
         if ( serviceBuilder.isBuildable() != ThreddsBuilder.Buildable.YES) {
           //this.services = null;
           throw new IllegalArgumentException( "Can't construct ServiceContainer when contained SserviceBuilder is not buildable.");

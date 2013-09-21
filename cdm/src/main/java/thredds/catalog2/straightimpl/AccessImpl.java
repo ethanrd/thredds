@@ -107,6 +107,6 @@ final class AccessImpl implements Access
 
   @Override
   public ThreddsCatalogIssueContainer getIssues() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return this.threddsCatalogIssueContainer;
   }
 }

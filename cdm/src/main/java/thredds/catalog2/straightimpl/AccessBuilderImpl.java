@@ -80,7 +80,7 @@ class AccessBuilderImpl implements AccessBuilder
       throw new IllegalArgumentException( "Referenced ServiceBuilder must not be null.");
 
     this.isBuildable = Buildable.DONT_KNOW;
-    this.service = (ServiceBuilderImpl) serviceBuilder;
+    this.service = serviceBuilder;
   }
 
   public void setDataFormat( DataFormatType dataFormat ) {

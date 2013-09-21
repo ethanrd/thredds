@@ -89,8 +89,6 @@ final class ServiceImpl implements Service
       throw new IllegalArgumentException( "Name must not be null or empty.");
     if ( type == null )
       throw new IllegalArgumentException( "Service type must not be null.");
-    if ( baseUriAsString == null )
-      throw new IllegalArgumentException( "Base URI must not be null.");
     if ( propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
       throw new IllegalArgumentException( "ServiceBuilder can't be built when PropertyBuilderContainer is not buildable.");
     if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
@@ -102,7 +100,7 @@ final class ServiceImpl implements Service
     this.description = description == null ? "" : description;
     this.type = type;
     try {
-      this.baseUri = new URI( baseUriAsString);
+      this.baseUri = new URI( baseUriAsString == null ? "" : baseUriAsString );
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException( "ServiceBuilder can't be built when baseUri not a valid URI.");
     }

@@ -2,6 +2,7 @@ package thredds.catalog2.straightimpl;
 
 import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog2.builder.BuilderIssues;
+import thredds.catalog2.builder.ServiceBuilder;
 import thredds.catalog2.builder.ThreddsBuilder;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Helper class for tracking all services in a catalog by globally unique names.
+ * Helper class for tracking all services in a catalog by "unique" names.
  * The THREDDS Catalog specification (and XML Schema) does not allow multiple
  * services with the same name. However, in practice, we allow services with
  * duplicate names and we track those here as well. When an accessible dataset
@@ -22,10 +23,10 @@ import java.util.Map;
 class CatalogWideServiceBuilderTracker implements ThreddsBuilder
 {
   /** List of all services including those with duplicate names. */
-  private List<ServiceBuilderImpl> allServices;
+  private List<ServiceBuilder> allServices;
 
   /** Map of service names to the service with that name that will be found when referenced by a dataset access. */
-  private Map<String,ServiceBuilderImpl> referencableServiceBuilders;
+  private Map<String,ServiceBuilder> referencableServiceBuilders;
 
   /** Map of service names to the number of services with each name. */
   private Map<String,Counter> sameNameServiceBuildersCounter;
@@ -37,7 +38,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
     this.isBuildable = Buildable.YES;
   }
 
-  boolean isServiceNameInUseGlobally( String name ) {
+  boolean isServiceNameReferenceable( String name ) {
     if ( name == null || name.isEmpty()
         || this.referencableServiceBuilders == null
         || this.referencableServiceBuilders.isEmpty() )
@@ -45,7 +46,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
     return this.referencableServiceBuilders.containsKey( name );
   }
 
-  ServiceBuilderImpl getReferenceableService( String name) {
+  ServiceBuilder getReferenceableService( String name) {
     if ( name == null || name.isEmpty()
         || this.referencableServiceBuilders == null
         || this.referencableServiceBuilders.isEmpty())
@@ -54,20 +55,20 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
     return this.referencableServiceBuilders.get( name );
   }
 
-  void addService( ServiceBuilderImpl service ) {
+  void addService( ServiceBuilder service ) {
     if ( service == null )
       return;
 
     this.isBuildable = Buildable.DONT_KNOW;
     if ( this.allServices == null ) {
-      this.allServices = new ArrayList<ServiceBuilderImpl>();
-      this.referencableServiceBuilders = new HashMap<String,ServiceBuilderImpl>();
+      this.allServices = new ArrayList<ServiceBuilder>();
+      this.referencableServiceBuilders = new HashMap<String,ServiceBuilder>();
       this.sameNameServiceBuildersCounter = new HashMap<String,Counter>();
     }
 
     this.allServices.add(service);
     if ( ! this.referencableServiceBuilders.containsKey( service.getName() ) ) {
-      ServiceBuilderImpl previousValue = this.referencableServiceBuilders.put( service.getName(), service );
+      ServiceBuilder previousValue = this.referencableServiceBuilders.put( service.getName(), service );
       Counter previousCount = this.sameNameServiceBuildersCounter.put(service.getName(), new Counter());
       assert null == previousValue;
       assert null == previousCount;
@@ -77,7 +78,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
     }
   }
 
-  boolean removeService( ServiceBuilderImpl service ) {
+  boolean removeService( ServiceBuilder service ) {
     if ( service == null || this.allServices == null || this.allServices.isEmpty())
       return false;
 
@@ -88,17 +89,17 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
       boolean removedFromAll = this.allServices.remove( service);
       if ( removedFromAll ) {
         if ( numWithName == 1 ) {
-          ServiceBuilderImpl previousReferencableService = this.referencableServiceBuilders.remove(service.getName());
+          ServiceBuilder previousReferencableService = this.referencableServiceBuilders.remove(service.getName());
           assert previousReferencableService == service;
         }
         else // if ( numWithName > 1)
         {
-          ServiceBuilderImpl foundByNameInRefServices = this.referencableServiceBuilders.get( service.getName());
+          ServiceBuilder foundByNameInRefServices = this.referencableServiceBuilders.get( service.getName());
           assert foundByNameInRefServices != null;
           if ( foundByNameInRefServices == service ) {
-            ServiceBuilderImpl previousReferencableService = this.referencableServiceBuilders.remove(service.getName());
+            ServiceBuilder previousReferencableService = this.referencableServiceBuilders.remove(service.getName());
             assert previousReferencableService == service;
-            ServiceBuilderImpl nextServiceWithName = this.findFirstServiceWithGivenNameInAllServicesList( service.getName());
+            ServiceBuilder nextServiceWithName = this.findFirstServiceWithGivenNameInAllServicesList( service.getName());
             assert nextServiceWithName != null;
             this.referencableServiceBuilders.put( nextServiceWithName.getName(), nextServiceWithName);
           }
@@ -111,10 +112,10 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
     }
   }
 
-  private ServiceBuilderImpl findFirstServiceWithGivenNameInAllServicesList( String name) {
+  private ServiceBuilder findFirstServiceWithGivenNameInAllServicesList( String name) {
     if ( name == null || name.isEmpty() || this.allServices == null || this.allServices.isEmpty())
       return null;
-    for ( ServiceBuilderImpl serviceBuilder : this.allServices) {
+    for ( ServiceBuilder serviceBuilder : this.allServices) {
       if (serviceBuilder.getName().equalsIgnoreCase( name))
         return serviceBuilder;
     }
@@ -154,7 +155,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
 
     for ( String serviceName : this.sameNameServiceBuildersCounter.keySet() ) {
       if ( this.sameNameServiceBuildersCounter.get( serviceName).getCount() > 1 ) {
-        ServiceBuilderImpl referencableService = this.referencableServiceBuilders.get( serviceName);
+        ServiceBuilder referencableService = this.referencableServiceBuilders.get( serviceName);
         this.builderIssues.addIssue(
             new BuilderIssue( BuilderIssue.Severity.WARNING, "Catalog contains duplicate service name [" + serviceName + "].", referencableService));
       }

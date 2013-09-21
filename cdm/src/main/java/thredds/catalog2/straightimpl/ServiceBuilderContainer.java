@@ -42,14 +42,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Helper class for those classes that contain ServiceBuilders:
- * CatalogBuilderImpl and ServiceBuilderImpl.
+ * Helper class for those ThreddsBuilder classes that have child ServiceBuilder classes:
+ * CatalogBuilder and ServiceBuilder.
  *
  * @author edavis
  */
 class ServiceBuilderContainer implements ThreddsBuilder
 {
-  private List<ServiceBuilderImpl> serviceBuilders;
+  private List<ServiceBuilder> serviceBuilders;
 
   private final CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
 
@@ -65,7 +65,7 @@ class ServiceBuilderContainer implements ThreddsBuilder
     this.isBuildable = Buildable.YES;
   }
 
-  ServiceBuilderImpl getServiceByGloballyUniqueName( String name ) {
+  ServiceBuilder getServiceByGloballyUniqueName( String name ) {
     return this.catalogWideServiceBuilderTracker.getReferenceableService(name);
   }
 
@@ -82,21 +82,21 @@ class ServiceBuilderContainer implements ThreddsBuilder
   }
 
   /**
-   * Create a new ServiceBuilderImpl and add it to this container.
+   * Create a new ServiceBuilder and add it to this container.
    *
-   * @param name the name of the ServiceBuilderImpl.
-   * @param type the ServiceType of the ServiceBuilderImpl.
-   * @param baseUri the base URI of the ServiceBuilderImpl.
-   * @return the ServiceBuilderImpl that was created and added to this container.
+   * @param name the name of the ServiceBuilder.
+   * @param type the ServiceType of the ServiceBuilder.
+   * @param baseUri the base URI of the ServiceBuilder.
+   * @return the ServiceBuilder that was created and added to this container.
    * @throws IllegalArgumentException if name, type, or baseUri are null.
    * @throws IllegalStateException if build() has been called on this ServiceContainer.
    */
-  ServiceBuilderImpl addService( String name, ServiceType type, String baseUri )
+  ServiceBuilder addService( String name, ServiceType type, String baseUri )
   {
     if ( this.serviceBuilders == null )
-      this.serviceBuilders = new ArrayList<ServiceBuilderImpl>();
+      this.serviceBuilders = new ArrayList<ServiceBuilder>();
 
-    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( name, type, baseUri, this.catalogWideServiceBuilderTracker);
+    ServiceBuilder serviceBuilder = new ServiceBuilderImpl( name, type, baseUri, this.catalogWideServiceBuilderTracker);
 
     boolean addedService = this.serviceBuilders.add( serviceBuilder );
     assert addedService;
@@ -114,7 +114,7 @@ class ServiceBuilderContainer implements ThreddsBuilder
    * @return true if the Service was present and has been removed, otherwise false.
    * @throws IllegalStateException if build() has been called on this ServiceContainer.
    */
-  boolean removeService( ServiceBuilderImpl service )
+  boolean removeService( ServiceBuilder service )
   {
     if ( service == null || this.serviceBuilders == null )
       return false;
@@ -136,23 +136,19 @@ class ServiceBuilderContainer implements ThreddsBuilder
   }
 
   ServiceBuilder getServiceBuilderByName( String name ) {
-    return this.getServiceBuilderImplByName(name);
-  }
-
-  boolean containsServiceName( String name ) {
-    return null != this.getServiceBuilderImplByName(name);
-  }
-
-  private ServiceBuilderImpl getServiceBuilderImplByName( String name ) {
     if ( name == null || this.serviceBuilders == null)
       return null;
 
-    for ( ServiceBuilderImpl s : this.serviceBuilders ) {
+    for ( ServiceBuilder s : this.serviceBuilders ) {
       if ( s.getName().equals( name ))
         return s;
     }
 
     return null;
+  }
+
+  boolean containsServiceName( String name ) {
+    return null != this.getServiceBuilderByName(name);
   }
 
   public Buildable isBuildable() {
@@ -168,9 +164,9 @@ class ServiceBuilderContainer implements ThreddsBuilder
   {
     this.builderIssues = new BuilderIssues();
 
-    // Check on contained ServiceBuilderImpl objects.
+    // Check on contained ServiceBuilder objects.
     if ( this.serviceBuilders != null )
-      for ( ServiceBuilderImpl sb : this.serviceBuilders )
+      for ( ServiceBuilder sb : this.serviceBuilders )
         this.builderIssues.addAllIssues( sb.checkForIssues());
 
     if ( this.builderIssues.isValid())
