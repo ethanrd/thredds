@@ -598,63 +598,23 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public ThreddsMetadata build() throws IllegalStateException
   {
-    // Check subordinates.
-    if ( this.docs != null )
-      for ( DocumentationBuilderImpl doc : this.docs )
-        doc.build();
-    if ( this.keyphrases != null )
-      for ( KeyphraseBuilderImpl keyphrase : this.keyphrases )
-        keyphrase.build();
-    if ( this.creators != null )
-      for ( ContributorBuilderImpl creator : this.creators )
-        creator.build();
-    if ( this.contributors != null )
-      for ( ContributorBuilderImpl contributor : this.contributors )
-        contributor.build();
-    if ( this.publishers != null )
-      for ( ContributorBuilderImpl publisher : this.publishers )
-        publisher.build();
-
-    if ( this.otherDates != null )
-      for ( DatePointBuilderImpl date : this.otherDates )
-        date.build();
-    if ( this.createdDate != null )
-      this.createdDate.build();
-    if ( this.modifiedDate != null )
-      this.modifiedDate.build();
-    if ( this.issuedDate != null )
-      this.issuedDate.build();
-    if ( this.validDate != null )
-      this.validDate.build();
-    if ( this.availableDate != null )
-      this.availableDate.build();
-    if ( this.metadataCreatedDate != null )
-      this.metadataCreatedDate.build();
-    if ( this.metadataModifiedDate != null )
-      this.metadataModifiedDate.build();
-
-    if ( this.geospatialCoverage != null )
-      this.geospatialCoverage.build();
-    if ( this.temporalCoverage != null )
-      this.temporalCoverage.build();
-
-    if ( this.variableGroups != null )
-      for ( VariableGroupBuilderImpl variableGroup : this.variableGroups )
-        variableGroup.build();
-
-    return this;
+    return new ThreddsMetadataImpl(this.docs, this.keyphrases, this.creators, this.contributors,
+        this.publishers, this.otherDates, this.createdDate, this.modifiedDate, this.issuedDate,
+        this.validDate, this.availableDate, this.metadataCreatedDate, this.metadataModifiedDate,
+        this.geospatialCoverage, this.temporalCoverage, this.variableGroups );
   }
 
   static class DocumentationBuilderImpl implements DocumentationBuilder
   {
-    private boolean isBuilt = false;
-
     private final boolean isContainedContent;
 
     private final String docType;
     private final String title;
     private final String externalReferenceUriAsString;
     private final String content;
+
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
 
     DocumentationBuilderImpl(String docType, String title, String externalReferenceUriAsString)
     {
@@ -677,32 +637,27 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       this.content = content;
     }
 
-    public boolean isContainedContent()
-    {
+    public boolean isContainedContent() {
       return this.isContainedContent;
     }
 
-    public String getDocType()
-    {
+    public String getDocType() {
       return this.docType;
     }
 
-    public String getContent()
-    {
+    public String getContent() {
       if ( ! this.isContainedContent )
         throw new IllegalStateException( "No contained content, use externally reference to access documentation content." );
       return this.content;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
       if ( this.isContainedContent )
         throw new IllegalStateException( "Documentation with contained content has no title." );
       return this.title;
     }
 
-    public String getExternalReferenceUriAsString()
-    {
+    public String getExternalReferenceUriAsString() {
       if ( this.isContainedContent )
         throw new IllegalStateException( "Documentation with contained content has no external reference.");
       return this.externalReferenceUriAsString;
@@ -710,7 +665,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
     public Buildable isBuildable()
     {
-      return this.isBuilt;
+      return this.isBuildable;
     }
 
     public BuilderIssues checkForIssues()
@@ -730,6 +685,9 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
     private boolean isBuilt;
     private final String authority;
     private final String phrase;
+
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
 
     KeyphraseBuilderImpl(String authority, String phrase)
     {
@@ -773,6 +731,9 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
     private String namingAuthority;
     private String projectName;
 
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
+
     ProjectNameBuilderImpl(String namingAuthority, String projectName)
     {
         if ( projectName == null || projectName.length() == 0)
@@ -806,13 +767,14 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
     }
   }
 
-    static class DatePointBuilderImpl implements DatePointBuilder
-    {
-        private boolean isBuilt = false;
-
+  static class DatePointBuilderImpl implements DatePointBuilder
+  {
         private final String date;
         private final String format;
         private final String type;
+
+      private BuilderIssues builderIssues;
+      private Buildable isBuildable;
 
         DatePointBuilderImpl(String date, String format, String type)
         {
@@ -880,14 +842,15 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   static class DateRangeBuilderImpl implements DateRangeBuilder
   {
-    private boolean isBuilt = false;
-
     private final String startDateFormat;
     private final String startDate;
     private final String endDateFormat;
     private final String endDate;
     private final String duration;
     private final String resolution;
+
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
 
     DateRangeBuilderImpl(String startDate, String startDateFormat,
                          String endDate, String endDateFormat,
@@ -985,13 +948,14 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   static class ContributorBuilderImpl implements ContributorBuilder
   {
-    private boolean isBuilt;
-
     private String authority;
     private String name;
     private String role;
     private String email;
     private String webPage;
+
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
 
     ContributorBuilderImpl() {}
 
@@ -1071,14 +1035,15 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   static class VariableGroupBuilderImpl implements VariableGroupBuilder
   {
-    private boolean isBuilt = false;
-
     private String vocabularyAuthorityId;
     private String vocabularyAuthorityUrl;
 
     private List<VariableBuilderImpl> variables;
 
     private String variableMapUrl;
+
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
 
     VariableGroupBuilderImpl() {}
 
@@ -1172,8 +1137,6 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   static class VariableBuilderImpl implements VariableBuilder
   {
-    private boolean isBuilt;
-
     private String name;
     private String description;
     private String units;
@@ -1181,6 +1144,9 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
     private String vocabularyName;
 
     private VariableGroupBuilder parent;
+
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
 
     VariableBuilderImpl(String name, String description, String units,
                         String vocabId, String vocabName, VariableGroupBuilder parent)
@@ -1277,8 +1243,6 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   static class GeospatialCoverageBuilderImpl implements GeospatialCoverageBuilder
   {
-    private boolean isBuilt;
-
     private URI defaultCrsUri;
 
     private URI crsUri;
@@ -1287,6 +1251,9 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
     private boolean isGlobal;
     private List<GeospatialRangeBuilderImpl> extent;
+
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
 
     GeospatialCoverageBuilderImpl()
     {
@@ -1395,18 +1362,18 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   static class GeospatialRangeBuilderImpl implements GeospatialRangeBuilder
   {
-    private boolean isBuilt;
-
     private boolean isHorizontal;
     private double start;
     private double size;
     private double resolution;
     private String units;
 
+    private BuilderIssues builderIssues;
+    private Buildable isBuildable;
+
     GeospatialRangeBuilderImpl()
     {
-      this.isBuilt = false;
-      
+      this.isBuildable = Buildable.DONT_KNOW;
       this.isHorizontal = false;
       this.start = 0.0;
       this.size = 0.0;
@@ -1414,75 +1381,66 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       this.units = "";
     }
 
-    public void setHorizontal( boolean isHorizontal )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built.");
+    public void setHorizontal( boolean isHorizontal ) {
+      this.isBuildable = Buildable.DONT_KNOW;
       this.isHorizontal = isHorizontal;
     }
 
-    public boolean isHorizontal()
-    {
+    public boolean isHorizontal() {
       return this.isHorizontal;
     }
 
-    public void setStart( double start )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
+    public void setStart( double start ) {
+      this.isBuildable = Buildable.DONT_KNOW;
       this.start = start;
     }
 
-    public double getStart()
-    {
+    public double getStart() {
       return this.start;
     }
 
-    public void setSize( double size )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
+    public void setSize( double size ) {
+      this.isBuildable = Buildable.DONT_KNOW;
       this.size = size;
     }
 
-    public double getSize()
-    {
+    public double getSize() {
       return this.size;
     }
 
-    public void setResolution( double resolution )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
+    public void setResolution( double resolution ) {
+      this.isBuildable = Buildable.DONT_KNOW;
       this.resolution = resolution;
     }
 
-    public double getResolution()
-    {
+    public double getResolution() {
       return this.resolution;
     }
 
-    public void setUnits( String units )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
+    public void setUnits( String units ) {
+      this.isBuildable = Buildable.DONT_KNOW;
       this.units = units == null ? "" : units;
     }
 
-    public String getUnits()
-    {
+    public String getUnits() {
       return this.units;
     }
 
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
+    public Buildable isBuildable() {
+      return this.isBuildable;
     }
 
     public BuilderIssues checkForIssues()
     {
-      return new BuilderIssues();
+      this.builderIssues = new BuilderIssues();
+      // ToDo all the checks.
+      return this.builderIssues;
     }
 
-    public GeospatialRange build() throws IllegalStateException
+    public ThreddsMetadata.GeospatialRange build() throws IllegalStateException
     {
-      this.isBuilt = true;
-      return this;
+      return new ThreddsMetadataImpl.GeospatialRangeImpl( this.isHorizontal,
+          this.start, this.size, this.resolution, this.units);
     }
   }
 }
