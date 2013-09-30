@@ -77,6 +77,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 
     //this.datasetContainer = new DatasetNodeContainer( null );
     this.propertyBuilderContainer = new PropertyBuilderContainer();
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   DatasetNodeContainer getDatasetNodeContainer() {
@@ -85,6 +86,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 
   public void setName( String name ) {
     this.name = name;
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   public String getName() {
@@ -98,10 +100,12 @@ class CatalogBuilderImpl implements CatalogBuilder
 
   public void setDocBaseUri( String docBaseUri ) {
     this.docBaseUri = docBaseUri != null ? docBaseUri : "";
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   public void setVersion( String version ) {
     this.version = version;
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   public String getVersion() {
@@ -110,6 +114,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 
   public void setExpires( DateType expires ) {
     this.expires = expires;
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   public DateType getExpires() {
@@ -118,6 +123,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 
   public void setLastModified( DateType lastModified ) {
     this.lastModified = lastModified;
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   public DateType getLastModified() {
@@ -125,6 +131,7 @@ class CatalogBuilderImpl implements CatalogBuilder
   }
 
   public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
+    this.isBuildable = Buildable.DONT_KNOW;
     return this.serviceBuilderContainer.addService( name, type, baseUri );
   }
 
@@ -132,6 +139,7 @@ class CatalogBuilderImpl implements CatalogBuilder
     if ( serviceBuilder == null )
       return false;
 
+    this.isBuildable = Buildable.DONT_KNOW;
     return this.serviceBuilderContainer.removeService( serviceBuilder );
   }
 
@@ -150,10 +158,12 @@ class CatalogBuilderImpl implements CatalogBuilder
   }
 
   public void addProperty( String name, String value ) {
+    this.isBuildable = Buildable.DONT_KNOW;
     this.propertyBuilderContainer.addProperty(name, value);
   }
 
   public boolean removeProperty( String name ) {
+    this.isBuildable = Buildable.DONT_KNOW;
     return this.propertyBuilderContainer.removeProperty( name ) != null;
   }
 
@@ -174,6 +184,7 @@ class CatalogBuilderImpl implements CatalogBuilder
   }
 
   public DatasetBuilder addDataset( String name ) {
+    this.isBuildable = Buildable.DONT_KNOW;
 //    DatasetImpl di = new DatasetImpl( name, this, null );
 //    this.datasetContainer.addDatasetNode( di );
 //    return di;
@@ -181,6 +192,7 @@ class CatalogBuilderImpl implements CatalogBuilder
   }
 
   public CatalogRefBuilder addCatalogRef( String name, String reference ) {
+    this.isBuildable = Buildable.DONT_KNOW;
 //    CatalogRefImpl crb = new CatalogRefImpl( name, reference, this, null );
 //    this.datasetContainer.addDatasetNode( crb );
 //    return crb;
@@ -191,6 +203,7 @@ class CatalogBuilderImpl implements CatalogBuilder
     if ( builder == null )
       throw new IllegalArgumentException( "DatasetNodeBuilder may not be null.");
 
+    this.isBuildable = Buildable.DONT_KNOW;
     return this.datasetContainer.removeDatasetNode( (DatasetNodeImpl) builder );
   }
 

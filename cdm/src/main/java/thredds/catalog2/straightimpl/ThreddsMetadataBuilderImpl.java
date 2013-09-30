@@ -79,10 +79,14 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
   private FeatureType dataType;
   private String collectionType;
 
+  private BuilderIssues builderIssues;
+  private Buildable isBuildable;
+
+
   ThreddsMetadataBuilderImpl()
   {
-    this.isBuilt = false;
     this.dataSizeInBytes = -1;
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   public boolean isEmpty()
@@ -117,8 +121,8 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public DocumentationBuilder addDocumentation( String docType, String title, String externalReference )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built.");
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( this.docs == null )
       this.docs = new ArrayList<DocumentationBuilderImpl>();
     DocumentationBuilderImpl doc = new DocumentationBuilderImpl( docType, title, externalReference );
@@ -126,11 +130,11 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
     return doc;
   }
 
-  public DocumentationBuilder addDocumentation( String docType, String content )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( content == null ) throw new IllegalArgumentException( "Content may not be null." );
+  public DocumentationBuilder addDocumentation( String docType, String content ) {
+    if ( content == null )
+      throw new IllegalArgumentException( "Content may not be null." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( this.docs == null )
       this.docs = new ArrayList<DocumentationBuilderImpl>();
     DocumentationBuilderImpl doc = new DocumentationBuilderImpl( docType, content );
@@ -140,37 +144,24 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public boolean removeDocumentation( DocumentationBuilder docBuilder )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( docBuilder == null )
       return false;
     if ( this.docs == null )
       return false;
+    this.isBuildable = Buildable.DONT_KNOW;
     return this.docs.remove( (DocumentationBuilderImpl) docBuilder );
   }
 
   public List<DocumentationBuilder> getDocumentationBuilders()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( this.docs == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<DocumentationBuilder>( this.docs) );
   }
 
-  public List<Documentation> getDocumentation()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-    if ( this.docs == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<Documentation>( this.docs ) );
-  }
-
   public KeyphraseBuilder addKeyphrase( String authority, String phrase )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
     if ( phrase == null )
       throw new IllegalArgumentException( "Phrase may not be null.");
     if ( this.keyphrases == null )
@@ -182,8 +173,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public boolean removeKeyphrase( KeyphraseBuilder keyphraseBuilder )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
     if ( keyphraseBuilder == null )
       return false;
     if ( this.keyphrases == null )
@@ -193,26 +183,14 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public List<KeyphraseBuilder> getKeyphraseBuilders()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( this.keyphrases == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<KeyphraseBuilder>( this.keyphrases ) );
   }
 
-  public List<Keyphrase> getKeyphrases()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-    if ( this.keyphrases == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<Keyphrase>( this.keyphrases ) );
-  }
-
   public ProjectNameBuilder addProjectName( String namingAuthority, String name )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
     if ( name == null )
       throw new IllegalArgumentException( "Project name may not be null.");
     if ( this.projectNames == null )
@@ -224,8 +202,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public boolean removeProjectName( ProjectNameBuilder projectNameBuilder )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
     if ( projectNameBuilder == null )
       return false;
     if ( this.projectNames == null )
@@ -235,26 +212,15 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public List<ProjectNameBuilder> getProjectNameBuilders()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( this.projectNames == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<ProjectNameBuilder>( this.projectNames ) );
   }
 
-  public List<ProjectName> getProjectNames()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-    if ( this.projectNames == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<ProjectName>( this.projectNames ) );
-  }
-
   public ContributorBuilder addCreator()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( this.creators == null )
       this.creators = new ArrayList<ContributorBuilderImpl>();
     ContributorBuilderImpl contributor = new ContributorBuilderImpl();
@@ -264,8 +230,8 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public boolean removeCreator( ContributorBuilder creatorBuilder )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( creatorBuilder == null )
       return false;
     if ( this.creators == null )
@@ -275,26 +241,15 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public List<ContributorBuilder> getCreatorBuilder()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( this.creators == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<ContributorBuilder>( this.creators ) );
   }
 
-  public List<Contributor> getCreator()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-    if ( this.creators == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<Contributor>( this.creators ) );
-  }
-
   public ContributorBuilder addContributor()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( this.contributors == null )
       this.contributors = new ArrayList<ContributorBuilderImpl>();
     ContributorBuilderImpl contributor = new ContributorBuilderImpl();
@@ -304,8 +259,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public boolean removeContributor( ContributorBuilder contributorBuilder )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
     if ( contributorBuilder == null )
       return false;
     if ( this.contributors == null )
@@ -315,26 +269,15 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public List<ContributorBuilder> getContributorBuilder()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( this.contributors == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<ContributorBuilder>( this.contributors ) );
   }
 
-  public List<Contributor> getContributor()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-    if ( this.contributors == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<Contributor>( this.contributors ) );
-  }
-
   public ContributorBuilder addPublisher()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( this.publishers == null )
       this.publishers = new ArrayList<ContributorBuilderImpl>();
     ContributorBuilderImpl contributor = new ContributorBuilderImpl();
@@ -344,40 +287,28 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public boolean removePublisher( ContributorBuilder publisherBuilder )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( publisherBuilder == null )
       return false;
     if ( this.publishers == null )
       return false;
+    this.isBuildable = Buildable.DONT_KNOW;
     return this.publishers.remove( (ContributorBuilderImpl) publisherBuilder );
   }
 
   public List<ContributorBuilder> getPublisherBuilder()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( this.publishers == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<ContributorBuilder>( this.publishers ) );
   }
 
-  public List<Contributor> getPublisher()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-    if ( this.publishers == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<Contributor>( this.publishers ) );
-  }
-
     public DatePointBuilder addOtherDatePointBuilder( String date, String format, String type )
     {
-        if ( this.isBuilt )
-            throw new IllegalStateException( "This Builder has been built." );
-        DatePointType datePointType = DatePointType.getTypeForLabel( type );
-        if ( datePointType != DatePointType.Other
-             && datePointType != DatePointType.Untyped )
+      this.isBuildable = Buildable.DONT_KNOW;
+
+        ThreddsMetadata.DatePointType datePointType = ThreddsMetadata.DatePointType.getTypeForLabel(type);
+        if ( datePointType != ThreddsMetadata.DatePointType.Other
+             && datePointType != ThreddsMetadata.DatePointType.Untyped )
             throw new IllegalArgumentException( "Must use explicit setter method for given type [" + type + "]." );
         if ( this.otherDates == null )
             this.otherDates = new ArrayList<DatePointBuilderImpl>();
@@ -388,190 +319,108 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
     public boolean removeOtherDatePointBuilder( DatePointBuilder builder )
     {
-        if ( this.isBuilt )
-            throw new IllegalStateException( "This Builder has been built." );
         if ( builder == null )
             return false;
         if ( this.otherDates == null )
             return false;
+      this.isBuildable = Buildable.DONT_KNOW;
         return this.otherDates.remove( (DatePointBuilderImpl) builder );
     }
 
     public List<DatePointBuilder> getOtherDatePointBuilders()
     {
-        if ( this.isBuilt )
-            throw new IllegalStateException( "This Builder has been built." );
         if ( this.otherDates == null )
             return Collections.emptyList();
         return Collections.unmodifiableList( new ArrayList<DatePointBuilder>( this.otherDates) );
     }
 
-    public List<DatePoint> getOtherDates()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        if ( this.otherDates == null )
-            return Collections.emptyList();
-        return Collections.unmodifiableList( new ArrayList<DatePoint>( this.otherDates ) );
-    }
-
     public DatePointBuilder setCreatedDatePointBuilder( String date, String format )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.createdDate = new DatePointBuilderImpl( date, format, DatePointType.Created.toString());
+    this.isBuildable = Buildable.DONT_KNOW;
+    this.createdDate = new DatePointBuilderImpl( date, format, ThreddsMetadata.DatePointType.Created.toString());
     return this.createdDate;
   }
 
-  public DatePointBuilder getCreatedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePointBuilder getCreatedDatePointBuilder() {
       return this.createdDate;
   }
 
-    public DatePoint getCreatedDate()
-    {
-        if ( ! this.isBuilt)
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.createdDate;
-    }
-
   public DatePointBuilder setModifiedDatePointBuilder( String date, String format )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.modifiedDate = new DatePointBuilderImpl( date, format, DatePointType.Modified.toString() );
+    this.isBuildable = Buildable.DONT_KNOW;
+
+    this.modifiedDate = new DatePointBuilderImpl( date, format, ThreddsMetadata.DatePointType.Modified.toString() );
     return this.modifiedDate;
   }
 
-  public DatePointBuilder getModifiedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePointBuilder getModifiedDatePointBuilder() {
       return this.modifiedDate;
   }
 
-    public DatePoint getModifiedDate() {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.modifiedDate;
-    }
-
   public DatePointBuilder setIssuedDatePointBuilder( String date, String format )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.issuedDate = new DatePointBuilderImpl( date, format, DatePointType.Issued.toString() );
+    this.isBuildable = Buildable.DONT_KNOW;
+
+    this.issuedDate = new DatePointBuilderImpl( date, format, ThreddsMetadata.DatePointType.Issued.toString() );
     return this.issuedDate;
   }
 
-  public DatePointBuilder getIssuedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePointBuilder getIssuedDatePointBuilder() {
       return this.issuedDate;
   }
 
-    public DatePoint getIssuedDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.issuedDate;
-    }
-
-    public DatePointBuilder setValidDatePointBuilder( String date, String format )
+  public DatePointBuilder setValidDatePointBuilder( String date, String format )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.validDate = new DatePointBuilderImpl( date, format, DatePointType.Valid.toString() );
+    this.isBuildable = Buildable.DONT_KNOW;
+
+    this.validDate = new DatePointBuilderImpl( date, format, ThreddsMetadata.DatePointType.Valid.toString() );
     return this.validDate;
   }
 
-  public DatePointBuilder getValidDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePointBuilder getValidDatePointBuilder() {
       return this.validDate;
   }
 
-    public DatePoint getValidDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.validDate;
-    }
-
   public DatePointBuilder setAvailableDatePointBuilder( String date, String format )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.availableDate = new DatePointBuilderImpl( date, format, DatePointType.Available.toString() );
+    this.isBuildable = Buildable.DONT_KNOW;
+
+    this.availableDate = new DatePointBuilderImpl( date, format, ThreddsMetadata.DatePointType.Available.toString() );
     return this.availableDate;
   }
 
-  public DatePointBuilder getAvailableDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePointBuilder getAvailableDatePointBuilder() {
       return this.availableDate;
   }
 
-    public DatePoint getAvailableDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.availableDate;
-    }
-
   public DatePointBuilder setMetadataCreatedDatePointBuilder( String date, String format )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.metadataCreatedDate = new DatePointBuilderImpl( date, format, DatePointType.MetadataCreated.toString() );
+    this.isBuildable = Buildable.DONT_KNOW;
+
+    this.metadataCreatedDate = new DatePointBuilderImpl( date, format, ThreddsMetadata.DatePointType.MetadataCreated.toString() );
     return this.metadataCreatedDate;
   }
 
-  public DatePointBuilder getMetadataCreatedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePointBuilder getMetadataCreatedDatePointBuilder() {
       return this.metadataCreatedDate;
   }
 
-    public DatePoint getMetadataCreatedDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.metadataCreatedDate;
-    }
-
   public DatePointBuilder setMetadataModifiedDatePointBuilder( String date, String format )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.metadataModifiedDate = new DatePointBuilderImpl( date, format, DatePointType.MetadataModified.toString() );
+    this.isBuildable = Buildable.DONT_KNOW;
+
+    this.metadataModifiedDate = new DatePointBuilderImpl( date, format, ThreddsMetadata.DatePointType.MetadataModified.toString() );
     return this.metadataModifiedDate;
   }
 
-  public DatePointBuilder getMetadataModifiedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePointBuilder getMetadataModifiedDatePointBuilder() {
       return this.metadataModifiedDate;
   }
 
-    public DatePoint getMetadataModifiedDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.metadataModifiedDate;
-    }
-
-    public GeospatialCoverageBuilder setNewGeospatialCoverageBuilder( URI crsUri )
+  public GeospatialCoverageBuilder setNewGeospatialCoverageBuilder( URI crsUri )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     GeospatialCoverageBuilderImpl gci = new GeospatialCoverageBuilderImpl();
     gci.setCRS( crsUri );
     this.geospatialCoverage = gci;
@@ -580,22 +429,12 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public void removeGeospatialCoverageBuilder()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    if ( this.geospatialCoverage != null)
+      this.isBuildable = Buildable.DONT_KNOW;
     this.geospatialCoverage = null;
   }
 
-  public GeospatialCoverageBuilder getGeospatialCoverageBuilder()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    return this.geospatialCoverage;
-  }
-
-  public GeospatialCoverage getGeospatialCoverage()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
+  public GeospatialCoverageBuilder getGeospatialCoverageBuilder() {
     return this.geospatialCoverage;
   }
 
@@ -603,29 +442,20 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
                                                       String endDate, String endDateFormat,
                                                       String duration, String resolution )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     this.temporalCoverage = new DateRangeBuilderImpl( startDate, startDateFormat, endDate, endDateFormat, duration, resolution );
     return this.temporalCoverage;
   }
 
-  public DateRangeBuilder getTemporalCoverageBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DateRangeBuilder getTemporalCoverageBuilder() {
       return this.temporalCoverage;
   }
 
-    public DateRange getTemporalCoverage() {
-        if ( ! this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built.");
-        return this.temporalCoverage;
-    }
-
   public VariableGroupBuilder addVariableGroupBuilder()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( this.variableGroups == null )
       this.variableGroups = new ArrayList<VariableGroupBuilderImpl>();
     VariableGroupBuilderImpl varGroup = new VariableGroupBuilderImpl();
@@ -635,8 +465,8 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public boolean removeVariableGroupBuilder( VariableGroupBuilder variableGroupBuilder )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     if ( variableGroupBuilder == null )
       return false;
     if ( this.variableGroups == null )
@@ -646,26 +476,15 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public List<VariableGroupBuilder> getVariableGroupBuilders()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
     if ( this.variableGroups == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<VariableGroupBuilder>( this.variableGroups ) );
   }
 
-  public List<VariableGroup> getVariableGroups()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-    if ( this.variableGroups == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<VariableGroup>( this.variableGroups ) );
-  }
-
   public void setDataSizeInBytes( long dataSizeInBytes )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     this.dataSizeInBytes = dataSizeInBytes;
   }
 
@@ -676,12 +495,13 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public void setDataFormat( DataFormatType dataFormat )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
+
     this.dataFormat = dataFormat;
   }
   public void setDataFormat( String dataFormat )
   {
+    this.isBuildable = Buildable.DONT_KNOW;
     this.setDataFormat( DataFormatType.getType( dataFormat));
   }
 
@@ -692,93 +512,92 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public void setDataType( FeatureType dataType )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
     this.dataType = dataType;
   }
     public void setDataType( String dataType)
     {
-        this.setDataType( FeatureType.getType( dataType ));
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.setDataType( FeatureType.getType( dataType ));
     }
 
-  public FeatureType getDataType()
-  {
+  public FeatureType getDataType() {
     return this.dataType;
   }
 
   public void setCollectionType( String collectionType )
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
+    this.isBuildable = Buildable.DONT_KNOW;
     this.collectionType = collectionType;
   }
 
-  public String getCollectionType() // ?????
-  {
+  public String getCollectionType() { // ?????
     return this.collectionType;
   }
 
-  public Buildable isBuildable()
-  {
-    return this.isBuilt;
+  public Buildable isBuildable() {
+    return this.isBuildable;
   }
 
   public BuilderIssues checkForIssues()
   {
-    BuilderIssues issues = new BuilderIssues();
+    builderIssues = new BuilderIssues();
 
     // Check subordinates.
     if ( this.docs != null )
       for ( DocumentationBuilderImpl doc : this.docs )
-        issues.addAllIssues( doc.checkForIssues());
+        builderIssues.addAllIssues( doc.checkForIssues());
     if ( this.keyphrases != null )
       for( KeyphraseBuilderImpl keyphrase : this.keyphrases )
-        issues.addAllIssues( keyphrase.checkForIssues());
+        builderIssues.addAllIssues( keyphrase.checkForIssues());
     if ( this.creators != null )
       for( ContributorBuilderImpl creator : this.creators )
-        issues.addAllIssues( creator.checkForIssues());
+        builderIssues.addAllIssues( creator.checkForIssues());
     if ( this.contributors != null )
       for( ContributorBuilderImpl contributor : this.contributors )
-        issues.addAllIssues( contributor.checkForIssues());
+        builderIssues.addAllIssues( contributor.checkForIssues());
     if ( this.publishers != null )
       for( ContributorBuilderImpl publisher : this.publishers )
-        issues.addAllIssues( publisher.checkForIssues());
+        builderIssues.addAllIssues( publisher.checkForIssues());
 
     if ( this.otherDates != null )
       for( DatePointBuilderImpl date : this.otherDates )
-        issues.addAllIssues( date.checkForIssues());
+        builderIssues.addAllIssues( date.checkForIssues());
     if ( this.createdDate != null )
-      issues.addAllIssues( this.createdDate.checkForIssues() );
+      builderIssues.addAllIssues( this.createdDate.checkForIssues() );
     if ( this.modifiedDate != null )
-      issues.addAllIssues( this.modifiedDate.checkForIssues() );
+      builderIssues.addAllIssues( this.modifiedDate.checkForIssues() );
     if ( this.issuedDate != null )
-      issues.addAllIssues( this.issuedDate.checkForIssues() );
+      builderIssues.addAllIssues( this.issuedDate.checkForIssues() );
     if ( this.validDate != null )
-      issues.addAllIssues( this.validDate.checkForIssues() );
+      builderIssues.addAllIssues( this.validDate.checkForIssues() );
     if ( this.availableDate != null )
-      issues.addAllIssues( this.availableDate.checkForIssues() );
+      builderIssues.addAllIssues( this.availableDate.checkForIssues() );
     if ( this.metadataCreatedDate != null )
-      issues.addAllIssues( this.metadataCreatedDate.checkForIssues() );
+      builderIssues.addAllIssues( this.metadataCreatedDate.checkForIssues() );
     if ( this.metadataModifiedDate != null )
-      issues.addAllIssues( this.metadataModifiedDate.checkForIssues() );
+      builderIssues.addAllIssues( this.metadataModifiedDate.checkForIssues() );
 
     if ( this.geospatialCoverage != null )
-      issues.addAllIssues( this.geospatialCoverage.checkForIssues() );
+      builderIssues.addAllIssues( this.geospatialCoverage.checkForIssues() );
     if ( this.temporalCoverage != null )
-      issues.addAllIssues( this.temporalCoverage.checkForIssues() );
+      builderIssues.addAllIssues( this.temporalCoverage.checkForIssues() );
 
     if ( this.variableGroups != null )
       for ( VariableGroupBuilderImpl variableGroup : this.variableGroups )
-        issues.addAllIssues( variableGroup.checkForIssues() );
+        builderIssues.addAllIssues( variableGroup.checkForIssues() );
 
-    return issues;
+
+    if ( builderIssues.isValid())
+      this.isBuildable = Buildable.YES;
+    else
+      this.isBuildable = Buildable.NO;
+
+    return builderIssues;
   }
 
-  public ThreddsMetadata build() throws BuilderException
+  public ThreddsMetadata build() throws IllegalStateException
   {
-    if ( this.isBuilt )
-      return this;
-
     // Check subordinates.
     if ( this.docs != null )
       for ( DocumentationBuilderImpl doc : this.docs )
@@ -823,7 +642,6 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       for ( VariableGroupBuilderImpl variableGroup : this.variableGroups )
         variableGroup.build();
 
-    this.isBuilt = true;
     return this;
   }
 
@@ -943,7 +761,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public Keyphrase build() throws BuilderException {
+    public Keyphrase build() throws IllegalStateException {
         this.isBuilt = true;
         return this;
     }
@@ -982,7 +800,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public ProjectName build() throws BuilderException {
+    public ProjectName build() throws IllegalStateException {
         this.isBuilt = true;
         return this;
     }
@@ -1053,7 +871,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
           return new BuilderIssues();
         }
 
-        public DatePoint build() throws BuilderException {
+        public DatePoint build() throws IllegalStateException {
             this.isBuilt = true;
             return this;
         }
@@ -1159,7 +977,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
             return new BuilderIssues();
         }
 
-        public DateRange build() throws BuilderException {
+        public DateRange build() throws IllegalStateException {
             this.isBuilt = true;
             return this;
         }
@@ -1244,7 +1062,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public Contributor build() throws BuilderException
+    public Contributor build() throws IllegalStateException
     {
       this.isBuilt = true;
       return this;
@@ -1345,7 +1163,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public Object build() throws BuilderException
+    public Object build() throws IllegalStateException
     {
       this.isBuilt = true;
       return this;
@@ -1450,7 +1268,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public Variable build() throws BuilderException
+    public Variable build() throws IllegalStateException
     {
       this.isBuilt = true;
       return this;
@@ -1569,7 +1387,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public GeospatialCoverage build() throws BuilderException
+    public GeospatialCoverage build() throws IllegalStateException
     {
       return this;
     }
@@ -1661,7 +1479,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public GeospatialRange build() throws BuilderException
+    public GeospatialRange build() throws IllegalStateException
     {
       this.isBuilt = true;
       return this;
