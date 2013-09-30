@@ -30,20 +30,21 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package thredds.catalog2.simpleImpl;
+package thredds.catalog2.straightimpl;
 
-import thredds.catalog2.ThreddsMetadata;
-import thredds.catalog2.builder.ThreddsMetadataBuilder;
-import thredds.catalog2.builder.BuilderException;
-import thredds.catalog2.builder.BuilderIssues;
-import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog.DataFormatType;
+import thredds.catalog2.ThreddsMetadata;
+import thredds.catalog2.builder.BuilderException;
+import thredds.catalog2.builder.BuilderIssue;
+import thredds.catalog2.builder.BuilderIssues;
+import thredds.catalog2.builder.ThreddsMetadataBuilder;
+import ucar.nc2.constants.FeatureType;
 
-import java.util.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import ucar.nc2.constants.FeatureType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * _more_
@@ -51,37 +52,34 @@ import ucar.nc2.constants.FeatureType;
  * @author edavis
  * @since 4.0
  */
-class ThreddsMetadataImpl
-        implements ThreddsMetadata, ThreddsMetadataBuilder
+class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 {
-  private boolean isBuilt;
+  private List<DocumentationBuilderImpl> docs;
+  private List<KeyphraseBuilderImpl> keyphrases;
+  private List<ProjectNameBuilderImpl> projectNames;
+  private List<ContributorBuilderImpl> creators;
+  private List<ContributorBuilderImpl> contributors;
+  private List<ContributorBuilderImpl> publishers;
 
-  private List<DocumentationImpl> docs;
-  private List<KeyphraseImpl> keyphrases;
-  private List<ProjectNameImpl> projectNames;
-  private List<ContributorImpl> creators;
-  private List<ContributorImpl> contributors;
-  private List<ContributorImpl> publishers;
+  private List<DatePointBuilderImpl> otherDates;
+  private DatePointBuilderImpl createdDate;
+  private DatePointBuilderImpl modifiedDate;
+  private DatePointBuilderImpl issuedDate;
+  private DatePointBuilderImpl validDate;
+  private DatePointBuilderImpl availableDate;
+  private DatePointBuilderImpl metadataCreatedDate;
+  private DatePointBuilderImpl metadataModifiedDate;
 
-  private List<DatePointImpl> otherDates;
-  private DatePointImpl createdDate;
-  private DatePointImpl modifiedDate;
-  private DatePointImpl issuedDate;
-  private DatePointImpl validDate;
-  private DatePointImpl availableDate;
-  private DatePointImpl metadataCreatedDate;
-  private DatePointImpl metadataModifiedDate;
+  private GeospatialCoverageBuilderImpl geospatialCoverage;
+  private DateRangeBuilderImpl temporalCoverage;
 
-  private GeospatialCoverageImpl geospatialCoverage;
-  private DateRangeImpl temporalCoverage;
-
-  private List<VariableGroupImpl> variableGroups;
+  private List<VariableGroupBuilderImpl> variableGroups;
   private long dataSizeInBytes;
   private DataFormatType dataFormat;
   private FeatureType dataType;
   private String collectionType;
 
-  ThreddsMetadataImpl()
+  ThreddsMetadataBuilderImpl()
   {
     this.isBuilt = false;
     this.dataSizeInBytes = -1;
@@ -122,8 +120,8 @@ class ThreddsMetadataImpl
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built.");
     if ( this.docs == null )
-      this.docs = new ArrayList<DocumentationImpl>();
-    DocumentationImpl doc = new DocumentationImpl( docType, title, externalReference );
+      this.docs = new ArrayList<DocumentationBuilderImpl>();
+    DocumentationBuilderImpl doc = new DocumentationBuilderImpl( docType, title, externalReference );
     this.docs.add( doc );
     return doc;
   }
@@ -134,8 +132,8 @@ class ThreddsMetadataImpl
       throw new IllegalStateException( "This Builder has been built." );
     if ( content == null ) throw new IllegalArgumentException( "Content may not be null." );
     if ( this.docs == null )
-      this.docs = new ArrayList<DocumentationImpl>();
-    DocumentationImpl doc = new DocumentationImpl( docType, content );
+      this.docs = new ArrayList<DocumentationBuilderImpl>();
+    DocumentationBuilderImpl doc = new DocumentationBuilderImpl( docType, content );
     this.docs.add( doc );
     return doc;
   }
@@ -148,7 +146,7 @@ class ThreddsMetadataImpl
       return false;
     if ( this.docs == null )
       return false;
-    return this.docs.remove( (DocumentationImpl) docBuilder );
+    return this.docs.remove( (DocumentationBuilderImpl) docBuilder );
   }
 
   public List<DocumentationBuilder> getDocumentationBuilders()
@@ -176,8 +174,8 @@ class ThreddsMetadataImpl
     if ( phrase == null )
       throw new IllegalArgumentException( "Phrase may not be null.");
     if ( this.keyphrases == null )
-      this.keyphrases = new ArrayList<KeyphraseImpl>();
-    KeyphraseImpl keyphrase = new KeyphraseImpl( authority, phrase);
+      this.keyphrases = new ArrayList<KeyphraseBuilderImpl>();
+    KeyphraseBuilderImpl keyphrase = new KeyphraseBuilderImpl( authority, phrase);
     this.keyphrases.add( keyphrase );
     return keyphrase;
   }
@@ -190,7 +188,7 @@ class ThreddsMetadataImpl
       return false;
     if ( this.keyphrases == null )
       return false;
-    return this.keyphrases.remove( (KeyphraseImpl) keyphraseBuilder );
+    return this.keyphrases.remove( (KeyphraseBuilderImpl) keyphraseBuilder );
   }
 
   public List<KeyphraseBuilder> getKeyphraseBuilders()
@@ -218,8 +216,8 @@ class ThreddsMetadataImpl
     if ( name == null )
       throw new IllegalArgumentException( "Project name may not be null.");
     if ( this.projectNames == null )
-      this.projectNames = new ArrayList<ProjectNameImpl>();
-    ProjectNameImpl projectName = new ProjectNameImpl( namingAuthority, name);
+      this.projectNames = new ArrayList<ProjectNameBuilderImpl>();
+    ProjectNameBuilderImpl projectName = new ProjectNameBuilderImpl( namingAuthority, name);
     this.projectNames.add( projectName );
     return projectName;
   }
@@ -232,7 +230,7 @@ class ThreddsMetadataImpl
       return false;
     if ( this.projectNames == null )
       return false;
-    return this.projectNames.remove( (ProjectNameImpl) projectNameBuilder );
+    return this.projectNames.remove( (ProjectNameBuilderImpl) projectNameBuilder );
   }
 
   public List<ProjectNameBuilder> getProjectNameBuilders()
@@ -258,8 +256,8 @@ class ThreddsMetadataImpl
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
     if ( this.creators == null )
-      this.creators = new ArrayList<ContributorImpl>();
-    ContributorImpl contributor = new ContributorImpl();
+      this.creators = new ArrayList<ContributorBuilderImpl>();
+    ContributorBuilderImpl contributor = new ContributorBuilderImpl();
     this.creators.add( contributor );
     return contributor;
   }
@@ -272,7 +270,7 @@ class ThreddsMetadataImpl
       return false;
     if ( this.creators == null )
       return false;
-    return this.creators.remove( (ContributorImpl) creatorBuilder );
+    return this.creators.remove( (ContributorBuilderImpl) creatorBuilder );
   }
 
   public List<ContributorBuilder> getCreatorBuilder()
@@ -298,8 +296,8 @@ class ThreddsMetadataImpl
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
     if ( this.contributors == null )
-      this.contributors = new ArrayList<ContributorImpl>();
-    ContributorImpl contributor = new ContributorImpl();
+      this.contributors = new ArrayList<ContributorBuilderImpl>();
+    ContributorBuilderImpl contributor = new ContributorBuilderImpl();
     this.contributors.add( contributor );
     return contributor;
   }
@@ -312,7 +310,7 @@ class ThreddsMetadataImpl
       return false;
     if ( this.contributors == null )
       return false;
-    return this.contributors.remove( (ContributorImpl) contributorBuilder );
+    return this.contributors.remove( (ContributorBuilderImpl) contributorBuilder );
   }
 
   public List<ContributorBuilder> getContributorBuilder()
@@ -338,8 +336,8 @@ class ThreddsMetadataImpl
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
     if ( this.publishers == null )
-      this.publishers = new ArrayList<ContributorImpl>();
-    ContributorImpl contributor = new ContributorImpl();
+      this.publishers = new ArrayList<ContributorBuilderImpl>();
+    ContributorBuilderImpl contributor = new ContributorBuilderImpl();
     this.publishers.add( contributor );
     return contributor;
   }
@@ -352,7 +350,7 @@ class ThreddsMetadataImpl
       return false;
     if ( this.publishers == null )
       return false;
-    return this.publishers.remove( (ContributorImpl) publisherBuilder );
+    return this.publishers.remove( (ContributorBuilderImpl) publisherBuilder );
   }
 
   public List<ContributorBuilder> getPublisherBuilder()
@@ -382,8 +380,8 @@ class ThreddsMetadataImpl
              && datePointType != DatePointType.Untyped )
             throw new IllegalArgumentException( "Must use explicit setter method for given type [" + type + "]." );
         if ( this.otherDates == null )
-            this.otherDates = new ArrayList<DatePointImpl>();
-        DatePointImpl dp = new DatePointImpl( date, format, type);
+            this.otherDates = new ArrayList<DatePointBuilderImpl>();
+        DatePointBuilderImpl dp = new DatePointBuilderImpl( date, format, type);
         this.otherDates.add( dp );
         return dp;
     }
@@ -396,7 +394,7 @@ class ThreddsMetadataImpl
             return false;
         if ( this.otherDates == null )
             return false;
-        return this.otherDates.remove( (DatePointImpl) builder );
+        return this.otherDates.remove( (DatePointBuilderImpl) builder );
     }
 
     public List<DatePointBuilder> getOtherDatePointBuilders()
@@ -421,7 +419,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.createdDate = new DatePointImpl( date, format, DatePointType.Created.toString());
+    this.createdDate = new DatePointBuilderImpl( date, format, DatePointType.Created.toString());
     return this.createdDate;
   }
 
@@ -443,7 +441,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.modifiedDate = new DatePointImpl( date, format, DatePointType.Modified.toString() );
+    this.modifiedDate = new DatePointBuilderImpl( date, format, DatePointType.Modified.toString() );
     return this.modifiedDate;
   }
 
@@ -464,7 +462,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.issuedDate = new DatePointImpl( date, format, DatePointType.Issued.toString() );
+    this.issuedDate = new DatePointBuilderImpl( date, format, DatePointType.Issued.toString() );
     return this.issuedDate;
   }
 
@@ -486,7 +484,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.validDate = new DatePointImpl( date, format, DatePointType.Valid.toString() );
+    this.validDate = new DatePointBuilderImpl( date, format, DatePointType.Valid.toString() );
     return this.validDate;
   }
 
@@ -508,7 +506,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.availableDate = new DatePointImpl( date, format, DatePointType.Available.toString() );
+    this.availableDate = new DatePointBuilderImpl( date, format, DatePointType.Available.toString() );
     return this.availableDate;
   }
 
@@ -530,7 +528,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.metadataCreatedDate = new DatePointImpl( date, format, DatePointType.MetadataCreated.toString() );
+    this.metadataCreatedDate = new DatePointBuilderImpl( date, format, DatePointType.MetadataCreated.toString() );
     return this.metadataCreatedDate;
   }
 
@@ -552,7 +550,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.metadataModifiedDate = new DatePointImpl( date, format, DatePointType.MetadataModified.toString() );
+    this.metadataModifiedDate = new DatePointBuilderImpl( date, format, DatePointType.MetadataModified.toString() );
     return this.metadataModifiedDate;
   }
 
@@ -574,7 +572,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    GeospatialCoverageImpl gci = new GeospatialCoverageImpl();
+    GeospatialCoverageBuilderImpl gci = new GeospatialCoverageBuilderImpl();
     gci.setCRS( crsUri );
     this.geospatialCoverage = gci;
     return null;
@@ -607,7 +605,7 @@ class ThreddsMetadataImpl
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
-    this.temporalCoverage = new DateRangeImpl( startDate, startDateFormat, endDate, endDateFormat, duration, resolution );
+    this.temporalCoverage = new DateRangeBuilderImpl( startDate, startDateFormat, endDate, endDateFormat, duration, resolution );
     return this.temporalCoverage;
   }
 
@@ -629,8 +627,8 @@ class ThreddsMetadataImpl
     if ( this.isBuilt )
       throw new IllegalStateException( "This Builder has been built." );
     if ( this.variableGroups == null )
-      this.variableGroups = new ArrayList<VariableGroupImpl>();
-    VariableGroupImpl varGroup = new VariableGroupImpl();
+      this.variableGroups = new ArrayList<VariableGroupBuilderImpl>();
+    VariableGroupBuilderImpl varGroup = new VariableGroupBuilderImpl();
     this.variableGroups.add( varGroup);
     return varGroup;
   }
@@ -643,7 +641,7 @@ class ThreddsMetadataImpl
       return false;
     if ( this.variableGroups == null )
       return false;
-    return this.variableGroups.remove( (VariableGroupImpl) variableGroupBuilder );
+    return this.variableGroups.remove( (VariableGroupBuilderImpl) variableGroupBuilder );
   }
 
   public List<VariableGroupBuilder> getVariableGroupBuilders()
@@ -731,23 +729,23 @@ class ThreddsMetadataImpl
 
     // Check subordinates.
     if ( this.docs != null )
-      for ( DocumentationImpl doc : this.docs )
+      for ( DocumentationBuilderImpl doc : this.docs )
         issues.addAllIssues( doc.checkForIssues());
     if ( this.keyphrases != null )
-      for( KeyphraseImpl keyphrase : this.keyphrases )
+      for( KeyphraseBuilderImpl keyphrase : this.keyphrases )
         issues.addAllIssues( keyphrase.checkForIssues());
     if ( this.creators != null )
-      for( ContributorImpl creator : this.creators )
+      for( ContributorBuilderImpl creator : this.creators )
         issues.addAllIssues( creator.checkForIssues());
     if ( this.contributors != null )
-      for( ContributorImpl contributor : this.contributors )
+      for( ContributorBuilderImpl contributor : this.contributors )
         issues.addAllIssues( contributor.checkForIssues());
     if ( this.publishers != null )
-      for( ContributorImpl publisher : this.publishers )
+      for( ContributorBuilderImpl publisher : this.publishers )
         issues.addAllIssues( publisher.checkForIssues());
 
     if ( this.otherDates != null )
-      for( DatePointImpl date : this.otherDates )
+      for( DatePointBuilderImpl date : this.otherDates )
         issues.addAllIssues( date.checkForIssues());
     if ( this.createdDate != null )
       issues.addAllIssues( this.createdDate.checkForIssues() );
@@ -770,7 +768,7 @@ class ThreddsMetadataImpl
       issues.addAllIssues( this.temporalCoverage.checkForIssues() );
 
     if ( this.variableGroups != null )
-      for ( VariableGroupImpl variableGroup : this.variableGroups )
+      for ( VariableGroupBuilderImpl variableGroup : this.variableGroups )
         issues.addAllIssues( variableGroup.checkForIssues() );
 
     return issues;
@@ -783,23 +781,23 @@ class ThreddsMetadataImpl
 
     // Check subordinates.
     if ( this.docs != null )
-      for ( DocumentationImpl doc : this.docs )
+      for ( DocumentationBuilderImpl doc : this.docs )
         doc.build();
     if ( this.keyphrases != null )
-      for ( KeyphraseImpl keyphrase : this.keyphrases )
+      for ( KeyphraseBuilderImpl keyphrase : this.keyphrases )
         keyphrase.build();
     if ( this.creators != null )
-      for ( ContributorImpl creator : this.creators )
+      for ( ContributorBuilderImpl creator : this.creators )
         creator.build();
     if ( this.contributors != null )
-      for ( ContributorImpl contributor : this.contributors )
+      for ( ContributorBuilderImpl contributor : this.contributors )
         contributor.build();
     if ( this.publishers != null )
-      for ( ContributorImpl publisher : this.publishers )
+      for ( ContributorBuilderImpl publisher : this.publishers )
         publisher.build();
 
     if ( this.otherDates != null )
-      for ( DatePointImpl date : this.otherDates )
+      for ( DatePointBuilderImpl date : this.otherDates )
         date.build();
     if ( this.createdDate != null )
       this.createdDate.build();
@@ -822,15 +820,14 @@ class ThreddsMetadataImpl
       this.temporalCoverage.build();
 
     if ( this.variableGroups != null )
-      for ( VariableGroupImpl variableGroup : this.variableGroups )
+      for ( VariableGroupBuilderImpl variableGroup : this.variableGroups )
         variableGroup.build();
 
     this.isBuilt = true;
     return this;
   }
 
-  static class DocumentationImpl
-          implements Documentation, DocumentationBuilder
+  static class DocumentationBuilderImpl implements DocumentationBuilder
   {
     private boolean isBuilt = false;
 
@@ -838,27 +835,27 @@ class ThreddsMetadataImpl
 
     private final String docType;
     private final String title;
-    private final String externalReference;
+    private final String externalReferenceUriAsString;
     private final String content;
 
-    DocumentationImpl( String docType, String title, String externalReference )
+    DocumentationBuilderImpl(String docType, String title, String externalReferenceUriAsString)
     {
       //if ( title == null ) throw new IllegalArgumentException( "Title may not be null.");
-      //if ( externalReference == null ) throw new IllegalArgumentException( "External reference may not be null.");
+      //if ( externalReferenceUriAsString == null ) throw new IllegalArgumentException( "External reference may not be null.");
       this.isContainedContent = false;
       this.docType = docType;
       this.title = title;
-      this.externalReference = externalReference;
+      this.externalReferenceUriAsString = externalReferenceUriAsString;
       this.content = null;
     }
 
-    DocumentationImpl( String docType, String content )
+    DocumentationBuilderImpl(String docType, String content)
     {
       if ( content == null ) throw new IllegalArgumentException( "Content may not be null." );
       this.isContainedContent = true;
       this.docType = docType;
       this.title = null;
-      this.externalReference = null;
+      this.externalReferenceUriAsString = null;
       this.content = content;
     }
 
@@ -886,11 +883,11 @@ class ThreddsMetadataImpl
       return this.title;
     }
 
-    public URI getExternalReferenceUri()
+    public String getExternalReferenceUriAsString()
     {
       if ( this.isContainedContent )
         throw new IllegalStateException( "Documentation with contained content has no external reference.");
-      return this.externalReference;
+      return this.externalReferenceUriAsString;
     }
 
     public Buildable isBuildable()
@@ -903,21 +900,20 @@ class ThreddsMetadataImpl
       return new BuilderIssues();
     }
 
-    public Documentation build() throws BuilderException
+    public ThreddsMetadata.Documentation build() throws IllegalStateException
     {
         this.isBuilt = true;
         return this;
     }
   }
 
-  static class KeyphraseImpl
-          implements Keyphrase, KeyphraseBuilder
+  static class KeyphraseBuilderImpl implements KeyphraseBuilder
   {
     private boolean isBuilt;
     private final String authority;
     private final String phrase;
 
-    KeyphraseImpl( String authority, String phrase)
+    KeyphraseBuilderImpl(String authority, String phrase)
     {
         if ( phrase == null || phrase.length() == 0)
             throw new IllegalArgumentException( "Phrase may not be null.");
@@ -953,14 +949,13 @@ class ThreddsMetadataImpl
     }
   }
 
-  static class ProjectNameImpl
-          implements ProjectName, ProjectNameBuilder
+  static class ProjectNameBuilderImpl implements ProjectNameBuilder
   {
     private boolean isBuilt;
     private String namingAuthority;
     private String projectName;
 
-    ProjectNameImpl( String namingAuthority, String projectName )
+    ProjectNameBuilderImpl(String namingAuthority, String projectName)
     {
         if ( projectName == null || projectName.length() == 0)
             throw new IllegalArgumentException( "Phrase may not be null.");
@@ -993,8 +988,7 @@ class ThreddsMetadataImpl
     }
   }
 
-    static class DatePointImpl
-            implements DatePoint, DatePointBuilder
+    static class DatePointBuilderImpl implements DatePointBuilder
     {
         private boolean isBuilt = false;
 
@@ -1002,7 +996,7 @@ class ThreddsMetadataImpl
         private final String format;
         private final String type;
 
-        DatePointImpl( String date, String format, String type)
+        DatePointBuilderImpl(String date, String format, String type)
         {
             if ( date == null )
                 throw new IllegalArgumentException( "Date may not be null.");
@@ -1032,7 +1026,7 @@ class ThreddsMetadataImpl
         public boolean equals( Object obj )
         {
             if ( this == obj ) return true;
-            if ( ! ( obj instanceof DatePointImpl )) return false;
+            if ( ! ( obj instanceof DatePointBuilderImpl)) return false;
             return obj.hashCode() == this.hashCode();
         }
 
@@ -1066,8 +1060,7 @@ class ThreddsMetadataImpl
     }
 
 
-  static class DateRangeImpl
-          implements DateRange, DateRangeBuilder
+  static class DateRangeBuilderImpl implements DateRangeBuilder
   {
     private boolean isBuilt = false;
 
@@ -1078,9 +1071,9 @@ class ThreddsMetadataImpl
     private final String duration;
     private final String resolution;
 
-    DateRangeImpl( String startDate, String startDateFormat,
-                   String endDate, String endDateFormat,
-                   String duration, String resolution )
+    DateRangeBuilderImpl(String startDate, String startDateFormat,
+                         String endDate, String endDateFormat,
+                         String duration, String resolution)
     {
       this.startDateFormat = startDateFormat;
       this.startDate = startDate;
@@ -1123,7 +1116,7 @@ class ThreddsMetadataImpl
         public boolean equals( Object obj )
         {
             if ( this == obj ) return true;
-            if ( !( obj instanceof DateRangeImpl ) ) return false;
+            if ( !( obj instanceof DateRangeBuilderImpl) ) return false;
             return obj.hashCode() == this.hashCode();
         }
 
@@ -1172,8 +1165,7 @@ class ThreddsMetadataImpl
         }
     }
 
-  static class ContributorImpl
-          implements Contributor, ContributorBuilder
+  static class ContributorBuilderImpl implements ContributorBuilder
   {
     private boolean isBuilt;
 
@@ -1183,7 +1175,7 @@ class ThreddsMetadataImpl
     private String email;
     private String webPage;
 
-    ContributorImpl() {}
+    ContributorBuilderImpl() {}
 
     public String getNamingAuthority() {
       return this.authority;
@@ -1231,7 +1223,7 @@ class ThreddsMetadataImpl
       this.email = email;
     }
 
-    public URI getWebPageUrl() {
+    public String getWebPageUrlAsString() {
       return this.webPage;
     }
 
@@ -1259,18 +1251,18 @@ class ThreddsMetadataImpl
     }
   }
 
-  static class VariableGroupImpl implements VariableGroup, VariableGroupBuilder
+  static class VariableGroupBuilderImpl implements VariableGroupBuilder
   {
     private boolean isBuilt = false;
 
     private String vocabularyAuthorityId;
     private String vocabularyAuthorityUrl;
 
-    private List<VariableImpl> variables;
+    private List<VariableBuilderImpl> variables;
 
     private String variableMapUrl;
 
-    VariableGroupImpl() {}
+    VariableGroupBuilderImpl() {}
 
     public String getVocabularyAuthorityId() {
       return this.vocabularyAuthorityId;
@@ -1282,7 +1274,7 @@ class ThreddsMetadataImpl
       this.vocabularyAuthorityId = vocabAuthId;
     }
 
-    public URI getVocabularyAuthorityUrlAsString() {
+    public String getVocabularyAuthorityUrlAsString() {
       return this.vocabularyAuthorityUrl;
     }
 
@@ -1316,15 +1308,15 @@ class ThreddsMetadataImpl
       if ( this.variableMapUrl != null )
         throw new IllegalStateException( "Already contains variableMap, can't add variables." );
 
-      VariableImpl newVar = new VariableImpl( name, description, units, vocabId, vocabName, this );
+      VariableBuilderImpl newVar = new VariableBuilderImpl( name, description, units, vocabId, vocabName, this );
 
       if ( this.variables == null)
-        this.variables = new ArrayList<VariableImpl>();
+        this.variables = new ArrayList<VariableBuilderImpl>();
       this.variables.add( newVar );
       return newVar;
     }
 
-    public URI getVariableMapUrlAsString() {
+    public String getVariableMapUrlAsString() {
       return this.variableMapUrl;
     }
 
@@ -1360,8 +1352,7 @@ class ThreddsMetadataImpl
     }
   }
 
-  static class VariableImpl
-          implements Variable, VariableBuilder
+  static class VariableBuilderImpl implements VariableBuilder
   {
     private boolean isBuilt;
 
@@ -1373,8 +1364,8 @@ class ThreddsMetadataImpl
 
     private VariableGroupBuilder parent;
 
-    VariableImpl( String name, String description, String units,
-                  String vocabId, String vocabName, VariableGroupBuilder parent )
+    VariableBuilderImpl(String name, String description, String units,
+                        String vocabId, String vocabName, VariableGroupBuilder parent)
     {
       this.name = name;
       this.description = description;
@@ -1443,7 +1434,7 @@ class ThreddsMetadataImpl
       return this.parent.getVocabularyAuthorityId();
     }
 
-    public URI getVocabularyAuthorityUrlAsString() {
+    public String getVocabularyAuthorityUrlAsString() {
       return this.parent.getVocabularyAuthorityUrlAsString();
     }
 
@@ -1466,9 +1457,7 @@ class ThreddsMetadataImpl
     }
   }
 
-  static class GeospatialCoverageImpl
-          implements GeospatialCoverage,
-                     GeospatialCoverageBuilder
+  static class GeospatialCoverageBuilderImpl implements GeospatialCoverageBuilder
   {
     private boolean isBuilt;
 
@@ -1479,9 +1468,9 @@ class ThreddsMetadataImpl
     private boolean isZPositiveUp;
 
     private boolean isGlobal;
-    private List<GeospatialRangeImpl> extent;
+    private List<GeospatialRangeBuilderImpl> extent;
 
-    GeospatialCoverageImpl()
+    GeospatialCoverageBuilderImpl()
     {
       this.isBuilt = false;
       String defaultCrsUriString = "urn:x-mycrs:2D-WGS84-ellipsoid";
@@ -1535,8 +1524,8 @@ class ThreddsMetadataImpl
       if ( this.isBuilt )
         throw new IllegalStateException( "This Builder has been built." );
       if ( this.extent == null )
-        this.extent = new ArrayList<GeospatialRangeImpl>();
-      GeospatialRangeImpl gri = new GeospatialRangeImpl();
+        this.extent = new ArrayList<GeospatialRangeBuilderImpl>();
+      GeospatialRangeBuilderImpl gri = new GeospatialRangeBuilderImpl();
       this.extent.add( gri );
       return gri;
     }
@@ -1549,7 +1538,7 @@ class ThreddsMetadataImpl
         return true;
       if ( this.extent == null )
         return false;
-      return this.extent.remove( (GeospatialRangeImpl) geospatialRangeBuilder );
+      return this.extent.remove( (GeospatialRangeBuilderImpl) geospatialRangeBuilder );
     }
 
     public List<GeospatialRangeBuilder> getExtentBuilders()
@@ -1586,9 +1575,7 @@ class ThreddsMetadataImpl
     }
   }
 
-  static class GeospatialRangeImpl
-          implements GeospatialRange,
-                     GeospatialRangeBuilder
+  static class GeospatialRangeBuilderImpl implements GeospatialRangeBuilder
   {
     private boolean isBuilt;
 
@@ -1598,7 +1585,7 @@ class ThreddsMetadataImpl
     private double resolution;
     private String units;
 
-    GeospatialRangeImpl()
+    GeospatialRangeBuilderImpl()
     {
       this.isBuilt = false;
       

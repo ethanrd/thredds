@@ -46,8 +46,8 @@ public class VariableGroupTest
 
 
     assertEquals( vocabAuthId, varGrpBldr.getVocabularyAuthorityId());
-    assertEquals( vocabAuthUrl, varGrpBldr.getVocabularyAuthorityUrl());
-    assertNull( varGrpBldr.getVariableMapUrl());
+    assertEquals( vocabAuthUrl, varGrpBldr.getVocabularyAuthorityUrlAsString());
+    assertNull( varGrpBldr.getVariableMapUrlAsString());
     assertFalse( varGrpBldr.isEmpty());
 
     List<ThreddsMetadataBuilder.VariableBuilder> varBldrs = varGrpBldr.getVariableBuilders();
@@ -70,8 +70,8 @@ public class VariableGroupTest
     varGrpBldr.setVariableMapUrl( varMapUrl );
 
     assertEquals( vocabAuthId, varGrpBldr.getVocabularyAuthorityId());
-    assertEquals( vocabAuthUrl, varGrpBldr.getVocabularyAuthorityUrl());
-    assertEquals( varMapUrl, varGrpBldr.getVariableMapUrl());
+    assertEquals( vocabAuthUrl, varGrpBldr.getVocabularyAuthorityUrlAsString());
+    assertEquals( varMapUrl, varGrpBldr.getVariableMapUrlAsString());
 
     assertFalse( varGrpBldr.isEmpty());
     assertNotNull( varGrpBldr.getVariableBuilders());

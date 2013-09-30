@@ -37,11 +37,13 @@ import thredds.catalog2.ThreddsMetadata;
 import thredds.catalog2.builder.BuilderException;
 import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog2.builder.BuilderIssues;
-import thredds.catalog2.builder.ThreddsMetadataBuilder;
 import ucar.nc2.constants.FeatureType;
+import ucar.nc2.units.DateType;
+import ucar.nc2.units.TimeDuration;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,11 +54,8 @@ import java.util.List;
  * @author edavis
  * @since 4.0
  */
-class ThreddsMetadataImpl
-        implements ThreddsMetadata, ThreddsMetadataBuilder
+class ThreddsMetadataImpl implements ThreddsMetadata
 {
-  private boolean isBuilt;
-
   private List<DocumentationImpl> docs;
   private List<KeyphraseImpl> keyphrases;
   private List<ProjectNameImpl> projectNames;
@@ -82,9 +81,7 @@ class ThreddsMetadataImpl
   private FeatureType dataType;
   private String collectionType;
 
-  ThreddsMetadataImpl()
-  {
-    this.isBuilt = false;
+  ThreddsMetadataImpl() {
     this.dataSizeInBytes = -1;
   }
 
@@ -118,856 +115,202 @@ class ThreddsMetadataImpl
     return true;
   }
 
-  public DocumentationBuilder addDocumentation( String docType, String title, String externalReference )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built.");
-    if ( this.docs == null )
-      this.docs = new ArrayList<DocumentationImpl>();
-    DocumentationImpl doc = new DocumentationImpl( docType, title, externalReference );
-    this.docs.add( doc );
-    return doc;
-  }
-
-  public DocumentationBuilder addDocumentation( String docType, String content )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( content == null ) throw new IllegalArgumentException( "Content may not be null." );
-    if ( this.docs == null )
-      this.docs = new ArrayList<DocumentationImpl>();
-    DocumentationImpl doc = new DocumentationImpl( docType, content );
-    this.docs.add( doc );
-    return doc;
-  }
-
-  public boolean removeDocumentation( DocumentationBuilder docBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( docBuilder == null )
-      return false;
-    if ( this.docs == null )
-      return false;
-    return this.docs.remove( (DocumentationImpl) docBuilder );
-  }
-
-  public List<DocumentationBuilder> getDocumentationBuilders()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.docs == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<DocumentationBuilder>( this.docs) );
-  }
-
   public List<Documentation> getDocumentation()
   {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
     if ( this.docs == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<Documentation>( this.docs ) );
   }
 
-  public KeyphraseBuilder addKeyphrase( String authority, String phrase )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( phrase == null )
-      throw new IllegalArgumentException( "Phrase may not be null.");
-    if ( this.keyphrases == null )
-      this.keyphrases = new ArrayList<KeyphraseImpl>();
-    KeyphraseImpl keyphrase = new KeyphraseImpl( authority, phrase);
-    this.keyphrases.add( keyphrase );
-    return keyphrase;
-  }
-
-  public boolean removeKeyphrase( KeyphraseBuilder keyphraseBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( keyphraseBuilder == null )
-      return false;
-    if ( this.keyphrases == null )
-      return false;
-    return this.keyphrases.remove( (KeyphraseImpl) keyphraseBuilder );
-  }
-
-  public List<KeyphraseBuilder> getKeyphraseBuilders()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.keyphrases == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<KeyphraseBuilder>( this.keyphrases ) );
-  }
-
   public List<Keyphrase> getKeyphrases()
   {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
     if ( this.keyphrases == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<Keyphrase>( this.keyphrases ) );
   }
 
-  public ProjectNameBuilder addProjectName( String namingAuthority, String name )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( name == null )
-      throw new IllegalArgumentException( "Project name may not be null.");
-    if ( this.projectNames == null )
-      this.projectNames = new ArrayList<ProjectNameImpl>();
-    ProjectNameImpl projectName = new ProjectNameImpl( namingAuthority, name);
-    this.projectNames.add( projectName );
-    return projectName;
-  }
-
-  public boolean removeProjectName( ProjectNameBuilder projectNameBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( projectNameBuilder == null )
-      return false;
-    if ( this.projectNames == null )
-      return false;
-    return this.projectNames.remove( (ProjectNameImpl) projectNameBuilder );
-  }
-
-  public List<ProjectNameBuilder> getProjectNameBuilders()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.projectNames == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<ProjectNameBuilder>( this.projectNames ) );
-  }
-
   public List<ProjectName> getProjectNames()
   {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
     if ( this.projectNames == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<ProjectName>( this.projectNames ) );
   }
 
-  public ContributorBuilder addCreator()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.creators == null )
-      this.creators = new ArrayList<ContributorImpl>();
-    ContributorImpl contributor = new ContributorImpl();
-    this.creators.add( contributor );
-    return contributor;
-  }
-
-  public boolean removeCreator( ContributorBuilder creatorBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( creatorBuilder == null )
-      return false;
-    if ( this.creators == null )
-      return false;
-    return this.creators.remove( (ContributorImpl) creatorBuilder );
-  }
-
-  public List<ContributorBuilder> getCreatorBuilder()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.creators == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<ContributorBuilder>( this.creators ) );
-  }
-
   public List<Contributor> getCreator()
   {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
     if ( this.creators == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<Contributor>( this.creators ) );
   }
 
-  public ContributorBuilder addContributor()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.contributors == null )
-      this.contributors = new ArrayList<ContributorImpl>();
-    ContributorImpl contributor = new ContributorImpl();
-    this.contributors.add( contributor );
-    return contributor;
-  }
-
-  public boolean removeContributor( ContributorBuilder contributorBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( contributorBuilder == null )
-      return false;
-    if ( this.contributors == null )
-      return false;
-    return this.contributors.remove( (ContributorImpl) contributorBuilder );
-  }
-
-  public List<ContributorBuilder> getContributorBuilder()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.contributors == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<ContributorBuilder>( this.contributors ) );
-  }
-
   public List<Contributor> getContributor()
   {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
     if ( this.contributors == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<Contributor>( this.contributors ) );
   }
 
-  public ContributorBuilder addPublisher()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.publishers == null )
-      this.publishers = new ArrayList<ContributorImpl>();
-    ContributorImpl contributor = new ContributorImpl();
-    this.publishers.add( contributor );
-    return contributor;
-  }
-
-  public boolean removePublisher( ContributorBuilder publisherBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( publisherBuilder == null )
-      return false;
-    if ( this.publishers == null )
-      return false;
-    return this.publishers.remove( (ContributorImpl) publisherBuilder );
-  }
-
-  public List<ContributorBuilder> getPublisherBuilder()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.publishers == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<ContributorBuilder>( this.publishers ) );
-  }
-
   public List<Contributor> getPublisher()
   {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
     if ( this.publishers == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<Contributor>( this.publishers ) );
   }
 
-    public DatePointBuilder addOtherDatePointBuilder( String date, String format, String type )
-    {
-        if ( this.isBuilt )
-            throw new IllegalStateException( "This Builder has been built." );
-        DatePointType datePointType = DatePointType.getTypeForLabel( type );
-        if ( datePointType != DatePointType.Other
-             && datePointType != DatePointType.Untyped )
-            throw new IllegalArgumentException( "Must use explicit setter method for given type [" + type + "]." );
-        if ( this.otherDates == null )
-            this.otherDates = new ArrayList<DatePointImpl>();
-        DatePointImpl dp = new DatePointImpl( date, format, type);
-        this.otherDates.add( dp );
-        return dp;
-    }
-
-    public boolean removeOtherDatePointBuilder( DatePointBuilder builder )
-    {
-        if ( this.isBuilt )
-            throw new IllegalStateException( "This Builder has been built." );
-        if ( builder == null )
-            return false;
-        if ( this.otherDates == null )
-            return false;
-        return this.otherDates.remove( (DatePointImpl) builder );
-    }
-
-    public List<DatePointBuilder> getOtherDatePointBuilders()
-    {
-        if ( this.isBuilt )
-            throw new IllegalStateException( "This Builder has been built." );
-        if ( this.otherDates == null )
-            return Collections.emptyList();
-        return Collections.unmodifiableList( new ArrayList<DatePointBuilder>( this.otherDates) );
-    }
-
-    public List<DatePoint> getOtherDates()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        if ( this.otherDates == null )
-            return Collections.emptyList();
-        return Collections.unmodifiableList( new ArrayList<DatePoint>( this.otherDates ) );
-    }
-
-    public DatePointBuilder setCreatedDatePointBuilder( String date, String format )
+  public List<DatePoint> getOtherDates()
   {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.createdDate = new DatePointImpl( date, format, DatePointType.Created.toString());
+      if ( this.otherDates == null )
+          return Collections.emptyList();
+      return Collections.unmodifiableList( new ArrayList<DatePoint>( this.otherDates ) );
+  }
+
+  public DatePoint getCreatedDate() {
     return this.createdDate;
   }
 
-  public DatePointBuilder getCreatedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
-      return this.createdDate;
-  }
-
-    public DatePoint getCreatedDate()
-    {
-        if ( ! this.isBuilt)
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.createdDate;
-    }
-
-  public DatePointBuilder setModifiedDatePointBuilder( String date, String format )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.modifiedDate = new DatePointImpl( date, format, DatePointType.Modified.toString() );
-    return this.modifiedDate;
-  }
-
-  public DatePointBuilder getModifiedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePoint getModifiedDate() {
       return this.modifiedDate;
   }
 
-    public DatePoint getModifiedDate() {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.modifiedDate;
-    }
-
-  public DatePointBuilder setIssuedDatePointBuilder( String date, String format )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.issuedDate = new DatePointImpl( date, format, DatePointType.Issued.toString() );
-    return this.issuedDate;
-  }
-
-  public DatePointBuilder getIssuedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePoint getIssuedDate() {
       return this.issuedDate;
   }
 
-    public DatePoint getIssuedDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.issuedDate;
-    }
-
-    public DatePointBuilder setValidDatePointBuilder( String date, String format )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.validDate = new DatePointImpl( date, format, DatePointType.Valid.toString() );
+  public DatePoint getValidDate() {
     return this.validDate;
   }
 
-  public DatePointBuilder getValidDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
-      return this.validDate;
-  }
-
-    public DatePoint getValidDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.validDate;
-    }
-
-  public DatePointBuilder setAvailableDatePointBuilder( String date, String format )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.availableDate = new DatePointImpl( date, format, DatePointType.Available.toString() );
+  public DatePoint getAvailableDate() {
     return this.availableDate;
   }
 
-  public DatePointBuilder getAvailableDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
-      return this.availableDate;
-  }
-
-    public DatePoint getAvailableDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.availableDate;
-    }
-
-  public DatePointBuilder setMetadataCreatedDatePointBuilder( String date, String format )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.metadataCreatedDate = new DatePointImpl( date, format, DatePointType.MetadataCreated.toString() );
-    return this.metadataCreatedDate;
-  }
-
-  public DatePointBuilder getMetadataCreatedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePoint getMetadataCreatedDate() {
       return this.metadataCreatedDate;
   }
 
-    public DatePoint getMetadataCreatedDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.metadataCreatedDate;
-    }
-
-  public DatePointBuilder setMetadataModifiedDatePointBuilder( String date, String format )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.metadataModifiedDate = new DatePointImpl( date, format, DatePointType.MetadataModified.toString() );
-    return this.metadataModifiedDate;
-  }
-
-  public DatePointBuilder getMetadataModifiedDatePointBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DatePoint getMetadataModifiedDate() {
       return this.metadataModifiedDate;
-  }
-
-    public DatePoint getMetadataModifiedDate()
-    {
-        if ( !this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-        return this.metadataModifiedDate;
-    }
-
-    public GeospatialCoverageBuilder setNewGeospatialCoverageBuilder( URI crsUri )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    GeospatialCoverageImpl gci = new GeospatialCoverageImpl();
-    gci.setCRS( crsUri );
-    this.geospatialCoverage = gci;
-    return null;
-  }
-
-  public void removeGeospatialCoverageBuilder()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.geospatialCoverage = null;
-  }
-
-  public GeospatialCoverageBuilder getGeospatialCoverageBuilder()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    return this.geospatialCoverage;
   }
 
   public GeospatialCoverage getGeospatialCoverage()
   {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
     return this.geospatialCoverage;
   }
 
-  public DateRangeBuilder setTemporalCoverageBuilder( String startDate, String startDateFormat,
-                                                      String endDate, String endDateFormat,
-                                                      String duration, String resolution )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.temporalCoverage = new DateRangeImpl( startDate, startDateFormat, endDate, endDateFormat, duration, resolution );
-    return this.temporalCoverage;
-  }
-
-  public DateRangeBuilder getTemporalCoverageBuilder()
-  {
-      if ( this.isBuilt )
-          throw new IllegalStateException( "This Builder has been built." );
+  public DateRange getTemporalCoverage() {
       return this.temporalCoverage;
   }
 
-    public DateRange getTemporalCoverage() {
-        if ( ! this.isBuilt )
-            throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built.");
-        return this.temporalCoverage;
-    }
-
-  public VariableGroupBuilder addVariableGroupBuilder()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.variableGroups == null )
-      this.variableGroups = new ArrayList<VariableGroupImpl>();
-    VariableGroupImpl varGroup = new VariableGroupImpl();
-    this.variableGroups.add( varGroup);
-    return varGroup;
-  }
-
-  public boolean removeVariableGroupBuilder( VariableGroupBuilder variableGroupBuilder )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( variableGroupBuilder == null )
-      return false;
-    if ( this.variableGroups == null )
-      return false;
-    return this.variableGroups.remove( (VariableGroupImpl) variableGroupBuilder );
-  }
-
-  public List<VariableGroupBuilder> getVariableGroupBuilders()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    if ( this.variableGroups == null )
-      return Collections.emptyList();
-    return Collections.unmodifiableList( new ArrayList<VariableGroupBuilder>( this.variableGroups ) );
-  }
-
-  public List<VariableGroup> getVariableGroups()
-  {
-    if ( ! this.isBuilt )
-      throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
+  public List<VariableGroup> getVariableGroups() {
     if ( this.variableGroups == null )
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<VariableGroup>( this.variableGroups ) );
   }
 
-  public void setDataSizeInBytes( long dataSizeInBytes )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.dataSizeInBytes = dataSizeInBytes;
-  }
-
-  public long getDataSizeInBytes()
-  {
+  public long getDataSizeInBytes() {
     return this.dataSizeInBytes;
   }
 
-  public void setDataFormat( DataFormatType dataFormat )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.dataFormat = dataFormat;
-  }
-  public void setDataFormat( String dataFormat )
-  {
-    this.setDataFormat( DataFormatType.getType( dataFormat));
-  }
-
-  public DataFormatType getDataFormat()
-  {
+  public DataFormatType getDataFormat() {
     return this.dataFormat;
   }
 
-  public void setDataType( FeatureType dataType )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.dataType = dataType;
-  }
-    public void setDataType( String dataType)
-    {
-        this.setDataType( FeatureType.getType( dataType ));
-    }
-
-  public FeatureType getDataType()
-  {
+  public FeatureType getDataType() {
     return this.dataType;
   }
 
-  public void setCollectionType( String collectionType )
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This Builder has been built." );
-    this.collectionType = collectionType;
-  }
-
-  public String getCollectionType() // ?????
-  {
+  public String getCollectionType() { // ?????
     return this.collectionType;
   }
 
-  public Buildable isBuildable()
+  static class DocumentationImpl implements Documentation
   {
-    return this.isBuilt;
-  }
-
-  public BuilderIssues checkForIssues()
-  {
-    BuilderIssues issues = new BuilderIssues();
-
-    // Check subordinates.
-    if ( this.docs != null )
-      for ( DocumentationImpl doc : this.docs )
-        issues.addAllIssues( doc.checkForIssues());
-    if ( this.keyphrases != null )
-      for( KeyphraseImpl keyphrase : this.keyphrases )
-        issues.addAllIssues( keyphrase.checkForIssues());
-    if ( this.creators != null )
-      for( ContributorImpl creator : this.creators )
-        issues.addAllIssues( creator.checkForIssues());
-    if ( this.contributors != null )
-      for( ContributorImpl contributor : this.contributors )
-        issues.addAllIssues( contributor.checkForIssues());
-    if ( this.publishers != null )
-      for( ContributorImpl publisher : this.publishers )
-        issues.addAllIssues( publisher.checkForIssues());
-
-    if ( this.otherDates != null )
-      for( DatePointImpl date : this.otherDates )
-        issues.addAllIssues( date.checkForIssues());
-    if ( this.createdDate != null )
-      issues.addAllIssues( this.createdDate.checkForIssues() );
-    if ( this.modifiedDate != null )
-      issues.addAllIssues( this.modifiedDate.checkForIssues() );
-    if ( this.issuedDate != null )
-      issues.addAllIssues( this.issuedDate.checkForIssues() );
-    if ( this.validDate != null )
-      issues.addAllIssues( this.validDate.checkForIssues() );
-    if ( this.availableDate != null )
-      issues.addAllIssues( this.availableDate.checkForIssues() );
-    if ( this.metadataCreatedDate != null )
-      issues.addAllIssues( this.metadataCreatedDate.checkForIssues() );
-    if ( this.metadataModifiedDate != null )
-      issues.addAllIssues( this.metadataModifiedDate.checkForIssues() );
-
-    if ( this.geospatialCoverage != null )
-      issues.addAllIssues( this.geospatialCoverage.checkForIssues() );
-    if ( this.temporalCoverage != null )
-      issues.addAllIssues( this.temporalCoverage.checkForIssues() );
-
-    if ( this.variableGroups != null )
-      for ( VariableGroupImpl variableGroup : this.variableGroups )
-        issues.addAllIssues( variableGroup.checkForIssues() );
-
-    return issues;
-  }
-
-  public ThreddsMetadata build() throws BuilderException
-  {
-    if ( this.isBuilt )
-      return this;
-
-    // Check subordinates.
-    if ( this.docs != null )
-      for ( DocumentationImpl doc : this.docs )
-        doc.build();
-    if ( this.keyphrases != null )
-      for ( KeyphraseImpl keyphrase : this.keyphrases )
-        keyphrase.build();
-    if ( this.creators != null )
-      for ( ContributorImpl creator : this.creators )
-        creator.build();
-    if ( this.contributors != null )
-      for ( ContributorImpl contributor : this.contributors )
-        contributor.build();
-    if ( this.publishers != null )
-      for ( ContributorImpl publisher : this.publishers )
-        publisher.build();
-
-    if ( this.otherDates != null )
-      for ( DatePointImpl date : this.otherDates )
-        date.build();
-    if ( this.createdDate != null )
-      this.createdDate.build();
-    if ( this.modifiedDate != null )
-      this.modifiedDate.build();
-    if ( this.issuedDate != null )
-      this.issuedDate.build();
-    if ( this.validDate != null )
-      this.validDate.build();
-    if ( this.availableDate != null )
-      this.availableDate.build();
-    if ( this.metadataCreatedDate != null )
-      this.metadataCreatedDate.build();
-    if ( this.metadataModifiedDate != null )
-      this.metadataModifiedDate.build();
-
-    if ( this.geospatialCoverage != null )
-      this.geospatialCoverage.build();
-    if ( this.temporalCoverage != null )
-      this.temporalCoverage.build();
-
-    if ( this.variableGroups != null )
-      for ( VariableGroupImpl variableGroup : this.variableGroups )
-        variableGroup.build();
-
-    this.isBuilt = true;
-    return this;
-  }
-
-  static class DocumentationImpl
-          implements Documentation, DocumentationBuilder
-  {
-    private boolean isBuilt = false;
-
     private final boolean isContainedContent;
 
     private final String docType;
     private final String title;
-    private final String externalReference;
+    private final URI externalRefereneUri;
     private final String content;
 
-    DocumentationImpl( String docType, String title, String externalReference )
+    DocumentationImpl( String docType, String title, String externalReferenceUriAsString)
     {
-      //if ( title == null ) throw new IllegalArgumentException( "Title may not be null.");
-      //if ( externalReference == null ) throw new IllegalArgumentException( "External reference may not be null.");
       this.isContainedContent = false;
-      this.docType = docType;
-      this.title = title;
-      this.externalReference = externalReference;
+      this.docType = docType == null ? "" : docType;
+      this.title = title == null ? "" : title;
+      try {
+        this.externalRefereneUri = new URI( externalReferenceUriAsString != null ? externalReferenceUriAsString : "");
+      } catch (URISyntaxException e) {
+        throw new IllegalArgumentException( String.format( "Failed to build Documentation because externalReferenceUri [%s] is not a valid URI", externalReferenceUriAsString));
+      }
+
       this.content = null;
     }
 
     DocumentationImpl( String docType, String content )
     {
-      if ( content == null ) throw new IllegalArgumentException( "Content may not be null." );
       this.isContainedContent = true;
-      this.docType = docType;
+      this.docType = docType == null ? "" : docType;
+      this.content = content == null ? "" : content;
       this.title = null;
-      this.externalReference = null;
-      this.content = content;
+      this.externalRefereneUri = null;
     }
 
-    public boolean isContainedContent()
-    {
+    public boolean isContainedContent() {
       return this.isContainedContent;
     }
 
-    public String getDocType()
-    {
+    public String getDocType() {
       return this.docType;
     }
 
-    public String getContent()
-    {
+    public String getContent() {
       if ( ! this.isContainedContent )
-        throw new IllegalStateException( "No contained content, use externally reference to access documentation content." );
+        throw new IllegalStateException( "No contained content, use external reference to access documentation content." );
       return this.content;
     }
 
-    public String getTitle()
-    {
-      if ( this.isContainedContent )
+    public String getTitle() { if (this.isContainedContent )
         throw new IllegalStateException( "Documentation with contained content has no title." );
       return this.title;
     }
 
-    public String getExternalReference()
-    {
+    @Override
+    public URI getExternalReferenceUri() {
       if ( this.isContainedContent )
         throw new IllegalStateException( "Documentation with contained content has no external reference.");
-      return this.externalReference;
-    }
-
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
-    }
-
-    public BuilderIssues checkForIssues()
-    {
-      return new BuilderIssues();
-    }
-
-    public Documentation build() throws BuilderException
-    {
-        this.isBuilt = true;
-        return this;
+      return this.externalRefereneUri;
     }
   }
 
-  static class KeyphraseImpl
-          implements Keyphrase, KeyphraseBuilder
+  static class KeyphraseImpl implements Keyphrase
   {
-    private boolean isBuilt;
     private final String authority;
     private final String phrase;
 
     KeyphraseImpl( String authority, String phrase)
     {
-        if ( phrase == null || phrase.length() == 0)
-            throw new IllegalArgumentException( "Phrase may not be null.");
-        this.authority = authority;
-        this.phrase = phrase;
-        this.isBuilt = false;
+        this.authority = authority == null ? "" : authority;
+        this.phrase = phrase == null ? "" : phrase;
     }
 
-    public String getAuthority()
-    {
+    public String getAuthority() {
       return this.authority;
     }
 
-    public String getPhrase()
-    {
+    public String getPhrase() {
       return this.phrase;
     }
 
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
-    }
-
-    public BuilderIssues checkForIssues() {
-      if ( phrase == null || phrase.length() == 0 )
-        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null ));
-      return new BuilderIssues();
-    }
-
-    public Keyphrase build() throws BuilderException {
-        this.isBuilt = true;
-        return this;
-    }
   }
 
-  static class ProjectNameImpl
-          implements ProjectName, ProjectNameBuilder
+  static class ProjectNameImpl implements ProjectName
   {
-    private boolean isBuilt;
     private String namingAuthority;
     private String projectName;
 
-    ProjectNameImpl( String namingAuthority, String projectName )
-    {
-        if ( projectName == null || projectName.length() == 0)
-            throw new IllegalArgumentException( "Phrase may not be null.");
-        this.namingAuthority = namingAuthority;
-        this.projectName = projectName;
-        this.isBuilt = false;
+    ProjectNameImpl( String namingAuthority, String projectName ) {
+      this.namingAuthority = namingAuthority == null ? "" : namingAuthority;
+      this.projectName = projectName == null ? "" : projectName;
     }
 
     public String getNamingAuthority() {
@@ -977,395 +320,268 @@ class ThreddsMetadataImpl
     public String getName() {
       return this.projectName;
     }
+  }
 
-    public Buildable isBuildable() {
-      return this.isBuilt;
+  static class DatePointImpl implements DatePoint {
+    private final String date;
+    private final String format;
+    private final String type;
+
+    DatePointImpl(String date, String format, String type) {
+      this.date = date == null ? "" : date;
+      this.format = format == null ? "" : format;
+      this.type = type == null ? "" : type;
     }
 
-    public BuilderIssues checkForIssues() {
-      if ( projectName == null || projectName.length() == 0 )
-        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null ));
-      return new BuilderIssues();
+    public String getDate() {
+      return this.date;
     }
 
-    public ProjectName build() throws BuilderException {
-        this.isBuilt = true;
-        return this;
+    public String getDateFormat() {
+      return this.format;
+    }
+
+    public boolean isTyped() {
+      return this.type != null || this.type.length() == 0;
+    }
+
+    public String getType() {
+      return this.type;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof DatePointImpl)) return false;
+      return obj.hashCode() == this.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+      int result = 17;
+      if (this.date != null)
+        result = 37 * result + this.date.hashCode();
+      if (this.format != null)
+        result = 37 * result + this.format.hashCode();
+      if (this.type != null)
+        result = 37 * result + this.type.hashCode();
+      return result;
     }
   }
 
-    static class DatePointImpl
-            implements DatePoint, DatePointBuilder
-    {
-        private boolean isBuilt = false;
-
-        private final String date;
-        private final String format;
-        private final String type;
-
-        DatePointImpl( String date, String format, String type)
-        {
-            if ( date == null )
-                throw new IllegalArgumentException( "Date may not be null.");
-
-            this.date = date;
-            this.format = format;
-            this.type = type;
-        }
-
-        public String getDate() {
-            return this.date;
-        }
-
-        public String getDateFormat() {
-            return this.format;
-        }
-
-        public boolean isTyped() {
-            return this.type != null || this.type.length() == 0;
-        }
-
-        public String getType() {
-            return this.type;
-        }
-
-        @Override
-        public boolean equals( Object obj )
-        {
-            if ( this == obj ) return true;
-            if ( ! ( obj instanceof DatePointImpl )) return false;
-            return obj.hashCode() == this.hashCode();
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int result = 17;
-            if ( this.date != null )
-                result = 37*result + this.date.hashCode();
-            if ( this.format != null )
-                result = 37*result + this.format.hashCode();
-            if ( this.type != null )
-                result = 37*result + this.type.hashCode();
-            return result;
-        }
-
-        public Buildable isBuildable() {
-            return this.isBuilt;
-        }
-
-        public BuilderIssues checkForIssues() {
-          if ( this.date == null )
-            return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Date may not be null.", this, null));
-          return new BuilderIssues();
-        }
-
-        public DatePoint build() throws BuilderException {
-            this.isBuilt = true;
-            return this;
-        }
-    }
-
-
-  static class DateRangeImpl
-          implements DateRange, DateRangeBuilder
-  {
-    private boolean isBuilt = false;
-
-    private final String startDateFormat;
+  static class DateRangeImpl implements DateRange {
     private final String startDate;
-    private final String endDateFormat;
+    private final String startDateFormat;
     private final String endDate;
+    private final String endDateFormat;
     private final String duration;
     private final String resolution;
 
-    DateRangeImpl( String startDate, String startDateFormat,
-                   String endDate, String endDateFormat,
-                   String duration, String resolution )
+    public DateRangeImpl( String startDate, String startDateFormat,
+                          String endDate, String endDateFormat,
+                          String duration, String resolution )
     {
-      this.startDateFormat = startDateFormat;
+      boolean useStart = startDate != null && !startDate.isEmpty();
+      boolean useEnd = endDate != null && !endDate.isEmpty();
+      boolean useDuration = duration != null;
+      boolean useResolution = resolution != null;
+
+      boolean invalid = true;
+      if (useStart && useEnd) {
+        invalid = false;
+        useDuration = false; // ToDo Test what happens if all three are given and not consistent.
+      } else if (useStart && useDuration) {
+        invalid = false;
+      } else if (useEnd && useDuration) {
+        invalid = false;
+      }
+      if ( invalid)
+        throw new IllegalStateException( "Failed to build DateRange, must have two of start date, end date, and duration.");
+
+      DateType startDateType = null;
+      if ( useStart ) {
+        try {
+          startDateType = new DateType( startDate, startDateFormat, null);
+        } catch (ParseException e) {
+          throw new IllegalArgumentException( String.format( "Failed to build DateRange, could not parse start date [%s] or start date format [%s]: %s", startDate, startDateFormat, e.getMessage()));
+        }
+      }
+
+      DateType endDateType = null;
+      if ( useEnd ) {
+        try {
+          endDateType = new DateType( endDate, endDateFormat, null);
+        } catch (ParseException e) {
+          throw new IllegalArgumentException( String.format( "Failed to build DateRange, could not parse end date [%s] or end date format [%s]: %s", endDate, endDateFormat, e.getMessage()));
+        }
+      }
+
+      TimeDuration durationTimeDuration = null;
+      if ( useDuration) {
+        try {
+          durationTimeDuration = new TimeDuration( duration );
+        } catch (ParseException e) {
+          throw new IllegalArgumentException( String.format( "Failed to build DateRange, could not parse duration [%s]: %s", duration, e.getMessage()));
+        }
+      }
+
+      TimeDuration resolutionTimeDuration = null;
+      if ( useResolution) {
+        try {
+          resolutionTimeDuration = new TimeDuration( resolution );
+        } catch (ParseException e) {
+          throw new IllegalArgumentException( String.format( "Failed to build DateRange, could not parse resolution [%s]: %s", resolution, e.getMessage()));
+        }
+      }
+
+      try {
+        new ucar.nc2.units.DateRange( startDateType, endDateType, durationTimeDuration, resolutionTimeDuration );
+      } catch (IllegalArgumentException e) {
+        throw new IllegalStateException( "Failed to build DateRange, must have two of start date, end date, and duration.");
+      }
       this.startDate = startDate;
-      this.endDateFormat = endDateFormat;
+      this.startDateFormat = startDateFormat;
       this.endDate = endDate;
+      this.endDateFormat = endDateFormat;
       this.duration = duration;
       this.resolution = resolution;
     }
 
-        public String getStartDateFormat() {
-          return this.startDateFormat;
-        }
-
-        public String getStartDate() {
-          return this.startDate;
-        }
-
-        public String getEndDateFormat() {
-          return this.endDateFormat;
-        }
-
-        public String getEndDate() {
-          return this.endDate;
-        }
-
-        public String getDuration() {
-          return this.duration;
-        }
-
-        public String getResolution() {
-          return this.resolution;
-        }
-
-        public String toString() {
-          return (this.isBuilt ? "DateRange" : "DateRangeBuilder") +
-                   " [" + this.startDate + " <-- " + this.duration + " --> " + this.endDate + "]";
-        }
-
-        @Override
-        public boolean equals( Object obj )
-        {
-            if ( this == obj ) return true;
-            if ( !( obj instanceof DateRangeImpl ) ) return false;
-            return obj.hashCode() == this.hashCode();
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int result = 17;
-            if ( this.startDate != null )
-                result = 37 * result + this.startDate.hashCode();
-            if ( this.startDateFormat != null )
-                result = 37 * result + this.startDateFormat.hashCode();
-            if ( this.endDate != null )
-                result = 37 * result + this.endDate.hashCode();
-            if ( this.endDateFormat != null )
-                result = 37 * result + this.endDateFormat.hashCode();
-            if ( this.duration != null )
-                result = 37 * result + this.duration.hashCode();
-            return result;
-        }
-
-        public Buildable isBuildable() {
-            return this.isBuilt;
-        }
-
-        public BuilderIssues checkForIssues()
-        {
-            int specified = 3;
-            if ( this.startDate == null || this.startDate.length() == 0 )
-                specified--;
-            if ( this.endDate == null || this.endDate.length() == 0 )
-                specified--;
-            if ( this.duration == null || this.duration.length() == 0 )
-                specified--;
-
-          if ( specified < 2)
-            return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Underspecified " + this.toString(), this, null));
-          else  if ( specified > 2)
-            return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Overspecified " + this.toString(), this, null));
-          else
-            return new BuilderIssues();
-        }
-
-        public DateRange build() throws BuilderException {
-            this.isBuilt = true;
-            return this;
-        }
+    public String getStartDateFormat() {
+      return this.startDateFormat;
     }
 
-  static class ContributorImpl
-          implements Contributor, ContributorBuilder
+    public String getStartDate() {
+      return this.startDate;
+    }
+
+    public String getEndDateFormat() {
+      return this.endDateFormat;
+    }
+
+    public String getEndDate() {
+      return this.endDate;
+    }
+
+    public String getDuration() {
+      return this.duration;
+    }
+
+    public String getResolution() {
+      return this.resolution;
+    }
+
+    public String toString() {
+      return ( String.format( "DateRange [%s <-- %s --> %s]", this.startDate, this.duration, this.endDate ));
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+      if ( this == obj ) return true;
+      if ( !( obj instanceof DateRangeImpl ) ) return false;
+      return obj.hashCode() == this.hashCode();
+    }
+
+    @Override
+    public int hashCode()
+    {
+      int result = 17;
+      if ( this.startDate != null )
+        result = 37 * result + this.startDate.hashCode();
+      if ( this.startDateFormat != null )
+        result = 37 * result + this.startDateFormat.hashCode();
+      if ( this.endDate != null )
+        result = 37 * result + this.endDate.hashCode();
+      if ( this.endDateFormat != null )
+        result = 37 * result + this.endDateFormat.hashCode();
+      if ( this.duration != null )
+        result = 37 * result + this.duration.hashCode();
+      return result;
+    }
+
+  }
+
+  static class ContributorImpl implements Contributor
   {
-    private boolean isBuilt;
+    private final String authority;
+    private final String name;
+    private final String role;
+    private final String email;
+    private final URI webPageUrl;
 
-    private String authority;
-    private String name;
-    private String role;
-    private String email;
-    private String webPage;
-
-    ContributorImpl() {}
+    ContributorImpl( String authority, String name, String role, String email, String webPageUrlAsString) {
+      this.authority = authority == null ? "" : authority;
+      this.name = name == null ? "" : name;
+      this.role = role == null ? "" : role;
+      this.email = email == null ? "" : email;
+      try {
+        this.webPageUrl = new URI( webPageUrlAsString == null ? "" : webPageUrlAsString);
+      } catch (URISyntaxException e) {
+        throw new IllegalArgumentException( String.format( "Failed to build Contributor because webPageUrlAsString [%s] is not a valid URI", webPageUrlAsString));
+      }
+    }
 
     public String getNamingAuthority() {
       return this.authority;
-    }
-
-    public void setNamingAuthority( String authority )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.authority = authority;
     }
 
     public String getName() {
       return this.name;
     }
 
-    public void setName( String name )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      if ( name == null )
-        throw new IllegalArgumentException( "Name may not be null.");
-      this.name = name;
-    }
-
     public String getRole() {
       return this.role;
-    }
-
-    public void setRole( String role )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.role = role;
     }
 
     public String getEmail() {
       return this.email;
     }
 
-    public void setEmail( String email )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.email = email;
-    }
-
-    public String getWebPage() {
-      return this.webPage;
-    }
-
-    public void setWebPage( String webPage )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.webPage = webPage;
-    }
-
-    public Buildable isBuildable() {
-      return this.isBuilt;
-    }
-
-    public BuilderIssues checkForIssues() {
-      if ( this.name == null )
-        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "Name may not be null.", this, null));
-      return new BuilderIssues();
-    }
-
-    public Contributor build() throws BuilderException
-    {
-      this.isBuilt = true;
-      return this;
+    public URI getWebPageUrl() {
+      return this.webPageUrl;
     }
   }
 
-  static class VariableGroupImpl implements VariableGroup, VariableGroupBuilder
+  static class VariableGroupImpl implements VariableGroup
   {
-    private boolean isBuilt = false;
+    private final String vocabularyAuthorityId;
+    private final URI vocabularyAuthorityUrl;
 
-    private String vocabularyAuthorityId;
-    private String vocabularyAuthorityUrl;
+    private final List<VariableImpl> variables;
 
-    private List<VariableImpl> variables;
+    private final URI variableMapUrl;
 
-    private String variableMapUrl;
+    VariableGroupImpl( String vocabularyAuthorityId, String vocabularyAuthorityUrlAsString,
+                       List<VariableBuilderImpl> variableBuilderList, String variableMapUrlAsString) {
 
-    VariableGroupImpl() {}
+    }
 
     public String getVocabularyAuthorityId() {
       return this.vocabularyAuthorityId;
     }
 
-    public void setVocabularyAuthorityId( String vocabAuthId) {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has already been built." );
-      this.vocabularyAuthorityId = vocabAuthId;
-    }
-
-    public String getVocabularyAuthorityUrl() {
+    public URI getVocabularyAuthorityUrl() {
       return this.vocabularyAuthorityUrl;
     }
 
-    public void setVocabularyAuthorityUrl( String vocabAuthUrl) {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has already been built." );
-      this.vocabularyAuthorityUrl = vocabAuthUrl;
-    }
-
     public List<Variable> getVariables() {
-      if ( ! this.isBuilt)
-        throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
       if ( this.variables == null )
         return Collections.emptyList();
       return Collections.unmodifiableList( new ArrayList<Variable>( variables) );
     }
 
-    public List<VariableBuilder> getVariableBuilders() {
-      if ( this.isBuilt)
-        throw new IllegalStateException( "This Builder has already been built." );
-      if ( this.variables == null )
-        return Collections.emptyList();
-      return Collections.unmodifiableList( new ArrayList<VariableBuilder>( variables ) );
-    }
-
-    public VariableBuilder addVariableBuilder( String name, String description, String units,
-                                               String vocabId, String vocabName )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has already been built." );
-      if ( this.variableMapUrl != null )
-        throw new IllegalStateException( "Already contains variableMap, can't add variables." );
-
-      VariableImpl newVar = new VariableImpl( name, description, units, vocabId, vocabName, this );
-
-      if ( this.variables == null)
-        this.variables = new ArrayList<VariableImpl>();
-      this.variables.add( newVar );
-      return newVar;
-    }
-
-    public String getVariableMapUrl() {
+    public URI getVariableMapUrl() {
       return this.variableMapUrl;
-    }
-
-    public void setVariableMapUrl( String variableMapUrl)
-    {
-      if ( this.isBuilt)
-        throw new IllegalStateException( "This Builder has already been built.");
-      if ( variableMapUrl != null && this.variables != null && ! this.variables.isEmpty())
-        throw new IllegalStateException( "Already contains variables, can't set variableMap.");
-      this.variableMapUrl = variableMapUrl;
     }
 
     public boolean isEmpty() {
       return variableMapUrl == null && ( this.variables == null || this.variables.isEmpty());
     }
-
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
-    }
-
-    public BuilderIssues checkForIssues()
-    {
-      if ( variableMapUrl != null && this.variables != null && ! this.variables.isEmpty())
-        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.ERROR, "This VariableGroupBuilder has variables and variableMap.", this, null ));
-      return new BuilderIssues();
-    }
-
-    public Object build() throws BuilderException
-    {
-      this.isBuilt = true;
-      return this;
-    }
   }
 
-  static class VariableImpl
-          implements Variable, VariableBuilder
+  static class VariableImpl implements Variable
   {
-    private boolean isBuilt;
-
     private String name;
     private String description;
     private String units;
@@ -1389,90 +605,33 @@ class ThreddsMetadataImpl
       return this.name;
     }
 
-    public void setName( String name )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.name = name;
-    }
-
     public String getDescription() {
       return this.description;
-    }
-
-    public void setDescription( String description )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.description = description;
     }
 
     public String getUnits() {
       return this.units;
     }
 
-    public void setUnits( String units )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.units = units;
-    }
-
     public String getVocabularyId() {
       return this.vocabularyId;
-    }
-
-    public void setVocabularyId( String vocabularyId )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.vocabularyId = vocabularyId;
     }
 
     public String getVocabularyName() {
       return this.vocabularyName;
     }
 
-    public void setVocabularyName( String vocabularyName )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.vocabularyName = vocabularyName;
-    }
-
     public String getVocabularyAuthorityId() {
       return this.parent.getVocabularyAuthorityId();
     }
 
-    public String getVocabularyAuthorityUrl() {
+    public URI getVocabularyAuthorityUrl() {
       return this.parent.getVocabularyAuthorityUrl();
-    }
-
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
-    }
-
-    public BuilderIssues checkForIssues()
-    {
-      if ( this.name == null || this.name.length() == 0 )
-        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Variable name is null or empty.", this, null ));
-      return new BuilderIssues();
-    }
-
-    public Variable build() throws BuilderException
-    {
-      this.isBuilt = true;
-      return this;
     }
   }
 
-  static class GeospatialCoverageImpl
-          implements GeospatialCoverage,
-                     GeospatialCoverageBuilder
+  static class GeospatialCoverageImpl implements GeospatialCoverage
   {
-    private boolean isBuilt;
-
     private URI defaultCrsUri;
 
     private URI crsUri;
@@ -1484,7 +643,6 @@ class ThreddsMetadataImpl
 
     GeospatialCoverageImpl()
     {
-      this.isBuilt = false;
       String defaultCrsUriString = "urn:x-mycrs:2D-WGS84-ellipsoid";
       try
       { this.defaultCrsUri = new URI( defaultCrsUriString ); }
@@ -1493,37 +651,12 @@ class ThreddsMetadataImpl
       this.crsUri = this.defaultCrsUri;
     }
 
-    public void setCRS( URI crsUri )
-    {
-      if ( this.isBuilt)
-        throw new IllegalStateException( "This Builder has been built.");
-      if ( crsUri == null )
-        this.crsUri = this.defaultCrsUri;
-      this.crsUri = crsUri;
-    }
-
-    public URI getCRS()
-    {
+    public URI getCRS() {
       return this.crsUri;
     }
 
-    public void setGlobal( boolean isGlobal )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.isGlobal = isGlobal;
-    }
-
-    public boolean isGlobal()
-    {
+    public boolean isGlobal() {
       return this.isGlobal;
-    }
-
-    public void setZPositiveUp( boolean isZPositiveUp )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      this.isZPositiveUp = isZPositiveUp;
     }
 
     public boolean isZPositiveUp()   // Is this needed since have CRS?
@@ -1531,68 +664,16 @@ class ThreddsMetadataImpl
       return this.isZPositiveUp;
     }
 
-    public GeospatialRangeBuilder addExtentBuilder()
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      if ( this.extent == null )
-        this.extent = new ArrayList<GeospatialRangeImpl>();
-      GeospatialRangeImpl gri = new GeospatialRangeImpl();
-      this.extent.add( gri );
-      return gri;
-    }
-
-    public boolean removeExtentBuilder( GeospatialRangeBuilder geospatialRangeBuilder )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      if ( geospatialRangeBuilder == null )
-        return true;
-      if ( this.extent == null )
-        return false;
-      return this.extent.remove( (GeospatialRangeImpl) geospatialRangeBuilder );
-    }
-
-    public List<GeospatialRangeBuilder> getExtentBuilders()
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      if ( this.extent == null )
-        return Collections.emptyList();
-      return Collections.unmodifiableList( new ArrayList<GeospatialRangeBuilder>( this.extent) );
-    }
-
     public List<GeospatialRange> getExtent()
     {
-      if ( ! this.isBuilt )
-        throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
       if ( this.extent == null )
         return Collections.emptyList();
       return Collections.unmodifiableList( new ArrayList<GeospatialRange>( this.extent ) );
     }
-
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
-    }
-
-    public BuilderIssues checkForIssues()
-    {
-      return new BuilderIssues();
-    }
-
-    public GeospatialCoverage build() throws BuilderException
-    {
-      return this;
-    }
   }
 
-  static class GeospatialRangeImpl
-          implements GeospatialRange,
-                     GeospatialRangeBuilder
+  static class GeospatialRangeImpl implements GeospatialRange
   {
-    private boolean isBuilt;
-
     private boolean isHorizontal;
     private double start;
     private double size;
@@ -1601,8 +682,6 @@ class ThreddsMetadataImpl
 
     GeospatialRangeImpl()
     {
-      this.isBuilt = false;
-      
       this.isHorizontal = false;
       this.start = 0.0;
       this.size = 0.0;
@@ -1610,75 +689,24 @@ class ThreddsMetadataImpl
       this.units = "";
     }
 
-    public void setHorizontal( boolean isHorizontal )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built.");
-      this.isHorizontal = isHorizontal;
-    }
-
-    public boolean isHorizontal()
-    {
+    public boolean isHorizontal() {
       return this.isHorizontal;
     }
 
-    public void setStart( double start )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
-      this.start = start;
-    }
-
-    public double getStart()
-    {
+    public double getStart() {
       return this.start;
     }
 
-    public void setSize( double size )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
-      this.size = size;
-    }
-
-    public double getSize()
-    {
+    public double getSize() {
       return this.size;
     }
 
-    public void setResolution( double resolution )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
-      this.resolution = resolution;
-    }
-
-    public double getResolution()
-    {
+    public double getResolution() {
       return this.resolution;
     }
 
-    public void setUnits( String units )
-    {
-      if ( this.isBuilt ) throw new IllegalStateException( "This Builder has been built." );
-      this.units = units == null ? "" : units;
-    }
-
-    public String getUnits()
-    {
+    public String getUnits() {
       return this.units;
-    }
-
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
-    }
-
-    public BuilderIssues checkForIssues()
-    {
-      return new BuilderIssues();
-    }
-
-    public GeospatialRange build() throws BuilderException
-    {
-      this.isBuilt = true;
-      return this;
     }
   }
 }

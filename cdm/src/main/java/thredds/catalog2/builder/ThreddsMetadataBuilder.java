@@ -145,7 +145,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public String getTitle();
 
     //public void setExternalReference( String externalReference );
-    public String getExternalReference();
+    public String getExternalReferenceUriAsString();
 
     public ThreddsMetadata.Documentation build() throws IllegalStateException;
   }
@@ -200,8 +200,8 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public String getEmail();
     public void setEmail( String email );
 
-    public String getWebPage();
-    public void setWebPage( String webPage );
+    public String getWebPageUrlAsString();
+    public void setWebPageUrl(String webPage);
 
     public ThreddsMetadata.Contributor build() throws IllegalStateException;
   }
@@ -211,14 +211,14 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public String getVocabularyAuthorityId();
     public void setVocabularyAuthorityId( String vocabAuthId);
 
-    public String getVocabularyAuthorityUrl();
+    public String getVocabularyAuthorityUrlAsString();
     public void setVocabularyAuthorityUrl( String vocabAuthUrl);
 
     public List<VariableBuilder> getVariableBuilders();
     public VariableBuilder addVariableBuilder( String name, String description, String units,
                                                String vocabId, String vocabName );
 
-    public String getVariableMapUrl();
+    public String getVariableMapUrlAsString();
     public void setVariableMapUrl( String variableMapUrl);
 
     public boolean isEmpty();
@@ -242,7 +242,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public void setVocabularyName( String vocabName);
 
     public String getVocabularyAuthorityId();
-    public String getVocabularyAuthorityUrl();
+    public String getVocabularyAuthorityUrlAsString();
 
     public ThreddsMetadata.Variable build() throws IllegalStateException;
   }

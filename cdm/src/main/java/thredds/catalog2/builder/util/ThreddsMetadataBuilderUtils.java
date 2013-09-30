@@ -165,7 +165,7 @@ public class ThreddsMetadataBuilderUtils
       if ( curDoc.isContainedContent())
         result.addDocumentation( curDoc.getDocType(), curDoc.getContent() );
       else
-        result.addDocumentation( curDoc.getDocType(), curDoc.getTitle(), curDoc.getExternalReference() );
+        result.addDocumentation( curDoc.getDocType(), curDoc.getTitle(), curDoc.getExternalReferenceUriAsString() );
     }
   }
 
@@ -219,11 +219,11 @@ public class ThreddsMetadataBuilderUtils
 
       if ( curSourceVarGroupBuilder.getVocabularyAuthorityId() != null )
         curResultVarGroupBuilder.setVocabularyAuthorityId( curSourceVarGroupBuilder.getVocabularyAuthorityId() );
-      if ( curSourceVarGroupBuilder.getVocabularyAuthorityUrl() != null )
-        curResultVarGroupBuilder.setVocabularyAuthorityUrl( curSourceVarGroupBuilder.getVocabularyAuthorityUrl() );
+      if ( curSourceVarGroupBuilder.getVocabularyAuthorityUrlAsString() != null )
+        curResultVarGroupBuilder.setVocabularyAuthorityUrl( curSourceVarGroupBuilder.getVocabularyAuthorityUrlAsString() );
 
-      if ( curSourceVarGroupBuilder.getVariableMapUrl() != null )
-        curResultVarGroupBuilder.setVariableMapUrl( curSourceVarGroupBuilder.getVariableMapUrl() );
+      if ( curSourceVarGroupBuilder.getVariableMapUrlAsString() != null )
+        curResultVarGroupBuilder.setVariableMapUrl( curSourceVarGroupBuilder.getVariableMapUrlAsString() );
 
       if ( curSourceVarGroupBuilder.getVariableBuilders() != null )
         for ( ThreddsMetadataBuilder.VariableBuilder curSourceVarBuilder : curSourceVarGroupBuilder.getVariableBuilders() )
@@ -377,8 +377,8 @@ public class ThreddsMetadataBuilderUtils
       recipient.setName( source.getName() );
     if ( source.getEmail() != null )
       recipient.setEmail( source.getEmail() );
-    if ( source.getWebPage() != null )
-      recipient.setWebPage( source.getWebPage() );
+    if ( source.getWebPageUrlAsString() != null )
+      recipient.setWebPageUrl(source.getWebPageUrlAsString());
   }
 
   private static boolean setGeospatialCoverateIfNotNull( ThreddsMetadataBuilder source,

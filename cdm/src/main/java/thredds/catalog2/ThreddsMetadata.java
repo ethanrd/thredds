@@ -46,7 +46,7 @@ import thredds.catalog.DataFormatType;
  * @author edavis
  * @since 4.0
  */
-public interface ThreddsMetadata
+public interface ThreddsMetadata extends ThreddsCatalogNode
 {
   public List<Documentation> getDocumentation();
 
@@ -85,8 +85,7 @@ public interface ThreddsMetadata
     public String getContent();
 
     public String getTitle();
-    public String getExternalReference();
-    public URI getExternalReferenceAsUri() throws URISyntaxException;
+    public URI getExternalReferenceUri();
   }
 
   public interface Keyphrase
@@ -159,16 +158,16 @@ public interface ThreddsMetadata
     public String getNamingAuthority();
     public String getRole();
     public String getEmail();
-    public String getWebPage();
+    public URI getWebPageUrl();
   }
 
   public interface VariableGroup
   {
     public String getVocabularyAuthorityId();
-    public String getVocabularyAuthorityUrl();
+    public URI getVocabularyAuthorityUrl();
 
     public List<Variable> getVariables();
-    public String getVariableMapUrl();
+    public URI getVariableMapUrl();
     public boolean isEmpty();
   }
 
@@ -182,7 +181,7 @@ public interface ThreddsMetadata
     public String getVocabularyName();
 
     public String getVocabularyAuthorityId();
-    public String getVocabularyAuthorityUrl();
+    public URI getVocabularyAuthorityUrl();
   }
 
   public interface GeospatialCoverage

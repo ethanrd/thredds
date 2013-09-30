@@ -69,7 +69,7 @@ public class VariableTest
     assertEquals( vocabName, var.getVocabularyName());
 
     assertEquals( vocabAuthId, var.getVocabularyAuthorityId());
-    assertEquals( vocabAuthUrl, var.getVocabularyAuthorityUrl());
+    assertEquals( vocabAuthUrl, var.getVocabularyAuthorityUrlAsString());
   }
 
   // ToDo Figure out Mock objects before running this test.
@@ -100,7 +100,7 @@ public class VariableTest
     assertEquals( vocabName2, var.getVocabularyName());
 
     assertEquals( vocabAuthId, var.getVocabularyAuthorityId());
-    assertEquals( vocabAuthUrl, var.getVocabularyAuthorityUrl());
+    assertEquals( vocabAuthUrl, var.getVocabularyAuthorityUrlAsString());
   }
 
   @Test
@@ -148,7 +148,7 @@ public class VariableTest
   {
     /* ThreddsMetadataBuilder.VariableGroupBuilder mockVarGrp = EasyMock.createMock( ThreddsMetadataBuilder.VariableGroupBuilder.class );
     EasyMock.expect( mockVarGrp.getVocabularyAuthorityId()).andReturn( vocabAuthId );
-    EasyMock.expect( mockVarGrp.getVocabularyAuthorityUrl()).andReturn( vocabAuthUrl );
+    EasyMock.expect( mockVarGrp.getVocabularyAuthorityUrlAsString()).andReturn( vocabAuthUrl );
 
     EasyMock.replay( mockVarGrp );
 

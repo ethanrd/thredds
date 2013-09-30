@@ -175,7 +175,7 @@ class CreatorElementParser extends AbstractElementParser
       String url = urlAtt != null ? urlAtt.getValue() : null;
 
       this.parentBuilder.setEmail( emailAuth );
-      this.parentBuilder.setWebPage( url );
+      this.parentBuilder.setWebPageUrl(url);
     }
 
     void handleChildStartElement() throws ThreddsXmlParserException {
