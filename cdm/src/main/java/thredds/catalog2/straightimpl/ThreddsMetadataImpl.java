@@ -37,6 +37,8 @@ import thredds.catalog2.ThreddsMetadata;
 import thredds.catalog2.builder.BuilderException;
 import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog2.builder.BuilderIssues;
+import thredds.catalog2.builder.ThreddsMetadataBuilder;
+import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.units.DateType;
 import ucar.nc2.units.TimeDuration;
@@ -83,6 +85,27 @@ class ThreddsMetadataImpl implements ThreddsMetadata
 
   ThreddsMetadataImpl() {
     this.dataSizeInBytes = -1;
+  }
+
+  ThreddsMetadataImpl(  List<ThreddsMetadataBuilder.DocumentationBuilder> docs,
+                        List<ThreddsMetadataBuilder.KeyphraseBuilder> keyphrases,
+                        List<ThreddsMetadataBuilder.ContributorBuilder> creators,
+                        List<ThreddsMetadataBuilder.ContributorBuilder> contributors,
+                        List<ThreddsMetadataBuilder.ContributorBuilder> publishers,
+
+                        List<ThreddsMetadataBuilder.DatePointBuilder> otherDates,
+                        ThreddsMetadataBuilder.DatePointBuilder createdDate,
+                        ThreddsMetadataBuilder.DatePointBuilder modifiedDate,
+                        this.issuedDate,
+                        this.validDate,
+                        this.availableDate,
+                        this.metadataCreatedDate,
+                        this.metadataModifiedDate,
+                        this.geospatialCoverage,
+                        this.temporalCoverage,
+                        this.variableGroups)
+  {
+
   }
 
   public boolean isEmpty()
@@ -632,23 +655,35 @@ class ThreddsMetadataImpl implements ThreddsMetadata
 
   static class GeospatialCoverageImpl implements GeospatialCoverage
   {
-    private URI defaultCrsUri;
+    private static String defaultCrsUri = "urn:x-mycrs:2D-WGS84-ellipsoid";
+    private static GeospatialRange defaultRangeX = new GeospatialRangeImpl( 0.0, 0.0, Double.NaN, CDM.LON_UNITS );
+    private static GeospatialRange defaultRangeY = new GeospatialRangeImpl( 0.0, 0.0, Double.NaN, CDM.LAT_UNITS );
+    private static GeospatialRange defaultRangeZ = new GeospatialRangeImpl( 0.0, 0.0, Double.NaN, "km" );
 
     private URI crsUri;
     //private boolean is3D;
     private boolean isZPositiveUp;
 
     private boolean isGlobal;
-    private List<GeospatialRangeImpl> extent;
+    private final GeospatialRange x, y, z;
 
-    GeospatialCoverageImpl()
+    GeospatialCoverageImpl() {
+      this( defaultCrsUri, true, false, defaultRangeX, defaultRangeY, defaultRangeZ);
+    }
+
+    GeospatialCoverageImpl( String crsUri, boolean isZPositiveUp, boolean isGlobal,
+                            ThreddsMetadataBuilder.GeospatialRangeBuilder x,
+                            ThreddsMetadataBuilder.GeospatialRangeBuilder y,
+                            ThreddsMetadataBuilder.GeospatialRangeBuilder z )
     {
-      String defaultCrsUriString = "urn:x-mycrs:2D-WGS84-ellipsoid";
-      try
-      { this.defaultCrsUri = new URI( defaultCrsUriString ); }
-      catch ( URISyntaxException e )
-      { throw new IllegalStateException( "Bad URI syntax for default CRS URI ["+defaultCrsUriString+"]: " + e.getMessage()); }
-      this.crsUri = this.defaultCrsUri;
+
+      try {
+        this.crsUri = new URI( crsUri == null ? "" : crsUri );
+      }
+      catch ( URISyntaxException e ) {
+        throw new IllegalStateException( "Bad URI syntax for default CRS URI ["+defaultCrsUriString+"]: " + e.getMessage());
+      }
+      if (x.isBuildable())
     }
 
     public URI getCRS() {
@@ -674,23 +709,16 @@ class ThreddsMetadataImpl implements ThreddsMetadata
 
   static class GeospatialRangeImpl implements GeospatialRange
   {
-    private boolean isHorizontal;
     private double start;
     private double size;
     private double resolution;
     private String units;
 
-    GeospatialRangeImpl()
-    {
-      this.isHorizontal = false;
-      this.start = 0.0;
-      this.size = 0.0;
-      this.resolution = 0.0;
-      this.units = "";
-    }
-
-    public boolean isHorizontal() {
-      return this.isHorizontal;
+    GeospatialRangeImpl( double start, double size, double resolution, String units ) {
+      this.start = start;
+      this.size = size;
+      this.resolution = resolution;
+      this.units = units;
     }
 
     public double getStart() {

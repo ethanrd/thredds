@@ -83,7 +83,7 @@ public class ThreddsMetadataBuilderUtils
     ThreddsMetadataBuilder.GeospatialCoverageBuilder geoCovBuilder = source.getGeospatialCoverageBuilder();
     if ( geoCovBuilder != null )
       if ( geoCovBuilder.getCRS() != null )
-        recipient.setNewGeospatialCoverageBuilder( geoCovBuilder.getCRS() );
+        recipient.setGeospatialCoverageBuilder(geoCovBuilder.getCRS());
 
     if ( source.getTemporalCoverageBuilder() != null )
     {
@@ -389,7 +389,7 @@ public class ThreddsMetadataBuilderUtils
     {
       if ( geoCovBuilder.getCRS() != null )
       {
-        recipient.setNewGeospatialCoverageBuilder( geoCovBuilder.getCRS() );
+        recipient.setGeospatialCoverageBuilder(geoCovBuilder.getCRS());
         return true;
       }
     }

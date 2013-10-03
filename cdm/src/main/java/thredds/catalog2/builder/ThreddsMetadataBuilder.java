@@ -101,7 +101,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
   public DatePointBuilder setMetadataModifiedDatePointBuilder( String date, String format );
   public DatePointBuilder getMetadataModifiedDatePointBuilder();
 
-  public GeospatialCoverageBuilder setNewGeospatialCoverageBuilder( String crsUri );
+  public GeospatialCoverageBuilder setGeospatialCoverageBuilder(String crsUri);
   public void removeGeospatialCoverageBuilder();
   public GeospatialCoverageBuilder getGeospatialCoverageBuilder();
 
@@ -250,6 +250,7 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
   public interface GeospatialCoverageBuilder extends ThreddsBuilder
   {
     public void setCRS( String crsUri );
+    public void useDefaultCRS();
     public String getCRS();
 
     public void setGlobal( boolean isGlobal );
@@ -258,18 +259,20 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
     public void setZPositiveUp( boolean isZPositiveUp );
     public boolean isZPositiveUp();
 
-    public GeospatialRangeBuilder addExtentBuilder();
-    public boolean removeExtentBuilder( GeospatialRangeBuilder geospatialRangeBuilder );
-    public List<GeospatialRangeBuilder> getExtentBuilders();
+    public GeospatialRangeBuilder setGeospatialRangeX(double start, double size, double resolution, String units);
+    public GeospatialRangeBuilder getGeospatialRangeX();
+
+    public GeospatialRangeBuilder setGeospatialRangeY(double start, double size, double resolution, String units);
+    public GeospatialRangeBuilder getGeospatialRangeY();
+
+    public GeospatialRangeBuilder setGeospatialRangeZ(double start, double size, double resolution, String units);
+    public GeospatialRangeBuilder getGeospatialRangeZ();
 
     public ThreddsMetadata.GeospatialCoverage build() throws IllegalStateException;
   }
 
   public interface GeospatialRangeBuilder extends ThreddsBuilder
   {
-    public void setHorizontal( boolean isHorizontal );
-    public boolean isHorizontal();
-
     public void setStart( double start );
     public double getStart();
 

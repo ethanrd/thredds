@@ -38,6 +38,7 @@ import thredds.catalog2.builder.BuilderException;
 import thredds.catalog2.builder.BuilderIssue;
 import thredds.catalog2.builder.BuilderIssues;
 import thredds.catalog2.builder.ThreddsMetadataBuilder;
+import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.FeatureType;
 
 import java.net.URI;
@@ -417,14 +418,13 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return this.metadataModifiedDate;
   }
 
-  public GeospatialCoverageBuilder setNewGeospatialCoverageBuilder( URI crsUri )
+  public GeospatialCoverageBuilder setGeospatialCoverageBuilder( String crsUri)
   {
     this.isBuildable = Buildable.DONT_KNOW;
 
-    GeospatialCoverageBuilderImpl gci = new GeospatialCoverageBuilderImpl();
-    gci.setCRS( crsUri );
-    this.geospatialCoverage = gci;
-    return null;
+    this.geospatialCoverage = new GeospatialCoverageBuilderImpl();
+    this.geospatialCoverage.setCRS( crsUri );
+    return this.geospatialCoverage;
   }
 
   public void removeGeospatialCoverageBuilder()
@@ -598,7 +598,10 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
   public ThreddsMetadata build() throws IllegalStateException
   {
-    return new ThreddsMetadataImpl(this.docs, this.keyphrases, this.creators, this.contributors,
+    if ( this.isBuildable != Buildable.YES )
+      throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+    return new ThreddsMetadataImpl( this.docs, this.keyphrases, this.creators, this.contributors,
         this.publishers, this.otherDates, this.createdDate, this.modifiedDate, this.issuedDate,
         this.validDate, this.availableDate, this.metadataCreatedDate, this.metadataModifiedDate,
         this.geospatialCoverage, this.temporalCoverage, this.variableGroups );
@@ -675,8 +678,10 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
     public ThreddsMetadata.Documentation build() throws IllegalStateException
     {
-        this.isBuilt = true;
-        return this;
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.DocumentationImpl();
     }
   }
 
@@ -719,9 +724,11 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public Keyphrase build() throws IllegalStateException {
-        this.isBuilt = true;
-        return this;
+    public ThreddsMetadata.Keyphrase build() throws IllegalStateException {
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.KeyphraseImpl();
     }
   }
 
@@ -761,9 +768,11 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public ProjectName build() throws IllegalStateException {
-        this.isBuilt = true;
-        return this;
+    public ThreddsMetadata.ProjectName build() throws IllegalStateException {
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.ProjectNameImpl();
     }
   }
 
@@ -833,9 +842,11 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
           return new BuilderIssues();
         }
 
-        public DatePoint build() throws IllegalStateException {
-            this.isBuilt = true;
-            return this;
+        public ThreddsMetadata.DatePoint build() throws IllegalStateException {
+          if ( this.isBuildable != Buildable.YES )
+            throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+          return new ThreddsMetadataImpl.DatePointImpl();
         }
     }
 
@@ -940,9 +951,11 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
             return new BuilderIssues();
         }
 
-        public DateRange build() throws IllegalStateException {
-            this.isBuilt = true;
-            return this;
+        public ThreddsMetadata.DateRange build() throws IllegalStateException {
+          if ( this.isBuildable != Buildable.YES )
+            throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+          return new ThreddsMetadataImpl.DateRangeImpl();
         }
     }
 
@@ -1026,10 +1039,12 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public Contributor build() throws IllegalStateException
+    public ThreddsMetadata.Contributor build() throws IllegalStateException
     {
-      this.isBuilt = true;
-      return this;
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.ContributorImpl();
     }
   }
 
@@ -1130,8 +1145,10 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
     public Object build() throws IllegalStateException
     {
-      this.isBuilt = true;
-      return this;
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.VariableGroupImpl();
     }
   }
 
@@ -1234,135 +1251,143 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return new BuilderIssues();
     }
 
-    public Variable build() throws IllegalStateException
+    public ThreddsMetadata.Variable build() throws IllegalStateException
     {
-      this.isBuilt = true;
-      return this;
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.VariableImpl();
     }
   }
 
   static class GeospatialCoverageBuilderImpl implements GeospatialCoverageBuilder
   {
-    private URI defaultCrsUri;
+    private static String defaultCrsUri = "urn:x-mycrs:2D-WGS84-ellipsoid";
+    private static GeospatialRangeBuilder defaultRangeX = new GeospatialRangeBuilderImpl( 0.0, 0.0, Double.NaN, CDM.LON_UNITS );
+    private static GeospatialRangeBuilder defaultRangeY = new GeospatialRangeBuilderImpl( 0.0, 0.0, Double.NaN, CDM.LAT_UNITS );
+    private static GeospatialRangeBuilder defaultRangeZ = new GeospatialRangeBuilderImpl( 0.0, 0.0, Double.NaN, "km" );
 
-    private URI crsUri;
+    private String crsUri;
     //private boolean is3D;
     private boolean isZPositiveUp;
 
     private boolean isGlobal;
-    private List<GeospatialRangeBuilderImpl> extent;
+    private GeospatialRangeBuilderImpl x, y, z;
 
     private BuilderIssues builderIssues;
     private Buildable isBuildable;
 
-    GeospatialCoverageBuilderImpl()
-    {
-      this.isBuilt = false;
-      String defaultCrsUriString = "urn:x-mycrs:2D-WGS84-ellipsoid";
-      try
-      { this.defaultCrsUri = new URI( defaultCrsUriString ); }
-      catch ( URISyntaxException e )
-      { throw new IllegalStateException( "Bad URI syntax for default CRS URI ["+defaultCrsUriString+"]: " + e.getMessage()); }
-      this.crsUri = this.defaultCrsUri;
+    GeospatialCoverageBuilderImpl() {
+      this( defaultCrsUri, true, false, defaultRangeX, defaultRangeY, defaultRangeZ );
     }
 
-    public void setCRS( URI crsUri )
+    GeospatialCoverageBuilderImpl( String crsUri, boolean isZPositiveUp, boolean isGlobal,
+                                   GeospatialRangeBuilder geospatialRangeX,
+                                   GeospatialRangeBuilder geospatialRangeY,
+                                   GeospatialRangeBuilder geospatialRangeZ)
     {
-      if ( this.isBuilt)
-        throw new IllegalStateException( "This Builder has been built.");
-      if ( crsUri == null )
-        this.crsUri = this.defaultCrsUri;
-      this.crsUri = crsUri;
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.crsUri = crsUri == null ? defaultCrsUri : crsUri;
+      this.isZPositiveUp = isZPositiveUp;
+      this.isGlobal = isGlobal;
+      this.x = geospatialRangeX == null ? null : new GeospatialRangeBuilderImpl( geospatialRangeX.getStart(), geospatialRangeX.getSize(), geospatialRangeX.getResolution(), geospatialRangeX.getUnits());
+      this.y = geospatialRangeY == null ? null : new GeospatialRangeBuilderImpl( geospatialRangeY.getStart(), geospatialRangeY.getSize(), geospatialRangeY.getResolution(), geospatialRangeY.getUnits());
+      this.z = geospatialRangeZ == null ? null : new GeospatialRangeBuilderImpl( geospatialRangeZ.getStart(), geospatialRangeZ.getSize(), geospatialRangeZ.getResolution(), geospatialRangeZ.getUnits());
     }
 
-    public URI getCRS()
-    {
+    public void setCRS( String crsUri ) {
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.crsUri = crsUri == null ? defaultCrsUri : crsUri;
+    }
+
+    @Override
+    public void useDefaultCRS() {
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.crsUri = defaultCrsUri;
+    }
+
+    public String getCRS() {
       return this.crsUri;
     }
 
-    public void setGlobal( boolean isGlobal )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
+    public void setGlobal( boolean isGlobal ) {
+      this.isBuildable = Buildable.DONT_KNOW;
       this.isGlobal = isGlobal;
     }
 
-    public boolean isGlobal()
-    {
+    public boolean isGlobal() {
       return this.isGlobal;
     }
 
-    public void setZPositiveUp( boolean isZPositiveUp )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
+    public void setZPositiveUp( boolean isZPositiveUp ) {
+      this.isBuildable = Buildable.DONT_KNOW;
       this.isZPositiveUp = isZPositiveUp;
     }
 
-    public boolean isZPositiveUp()   // Is this needed since have CRS?
-    {
+    public boolean isZPositiveUp() {  // Is this needed since have CRS?
       return this.isZPositiveUp;
     }
 
-    public GeospatialRangeBuilder addExtentBuilder()
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      if ( this.extent == null )
-        this.extent = new ArrayList<GeospatialRangeBuilderImpl>();
-      GeospatialRangeBuilderImpl gri = new GeospatialRangeBuilderImpl();
-      this.extent.add( gri );
-      return gri;
+    @Override
+    public GeospatialRangeBuilder setGeospatialRangeX(double start, double size, double resolution, String units) {
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.x = new GeospatialRangeBuilderImpl( start, size, resolution, units);
+      return this.x;
     }
 
-    public boolean removeExtentBuilder( GeospatialRangeBuilder geospatialRangeBuilder )
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      if ( geospatialRangeBuilder == null )
-        return true;
-      if ( this.extent == null )
-        return false;
-      return this.extent.remove( (GeospatialRangeBuilderImpl) geospatialRangeBuilder );
+    @Override
+    public GeospatialRangeBuilder getGeospatialRangeX() {
+      return this.x;
     }
 
-    public List<GeospatialRangeBuilder> getExtentBuilders()
-    {
-      if ( this.isBuilt )
-        throw new IllegalStateException( "This Builder has been built." );
-      if ( this.extent == null )
-        return Collections.emptyList();
-      return Collections.unmodifiableList( new ArrayList<GeospatialRangeBuilder>( this.extent) );
+    @Override
+    public GeospatialRangeBuilder setGeospatialRangeY(double start, double size, double resolution, String units) {
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.y = new GeospatialRangeBuilderImpl( start, size, resolution, units);
+      return this.y;
     }
 
-    public List<GeospatialRange> getExtent()
-    {
-      if ( ! this.isBuilt )
-        throw new IllegalStateException( "Sorry, I've escaped from my Builder before being built." );
-      if ( this.extent == null )
-        return Collections.emptyList();
-      return Collections.unmodifiableList( new ArrayList<GeospatialRange>( this.extent ) );
+    @Override
+    public GeospatialRangeBuilder getGeospatialRangeY() {
+      return this.y;
     }
 
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
+    @Override
+    public GeospatialRangeBuilder setGeospatialRangeZ(double start, double size, double resolution, String units) {
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.z = new GeospatialRangeBuilderImpl( start, size, resolution, units);
+      return this.z;
+    }
+
+    @Override
+    public GeospatialRangeBuilder getGeospatialRangeZ() {
+      return this.z;
+    }
+
+    public Buildable isBuildable() {
+      return this.isBuildable;
     }
 
     public BuilderIssues checkForIssues()
     {
-      return new BuilderIssues();
+      this.builderIssues = new BuilderIssues();
+
+      // ToDo all the checks
+
+      return this.builderIssues;
     }
 
-    public GeospatialCoverage build() throws IllegalStateException
-    {
-      return this;
+    public ThreddsMetadata.GeospatialCoverage build() throws IllegalStateException {
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.GeospatialCoverageImpl(
+          this.crsUri, this.isZPositiveUp, this.isGlobal, this.x, this.y, this.z );
     }
   }
 
   static class GeospatialRangeBuilderImpl implements GeospatialRangeBuilder
   {
-    private boolean isHorizontal;
     private double start;
     private double size;
     private double resolution;
@@ -1371,23 +1396,13 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
     private BuilderIssues builderIssues;
     private Buildable isBuildable;
 
-    GeospatialRangeBuilderImpl()
+    GeospatialRangeBuilderImpl( double start, double size, double resolution, String units )
     {
       this.isBuildable = Buildable.DONT_KNOW;
-      this.isHorizontal = false;
-      this.start = 0.0;
-      this.size = 0.0;
-      this.resolution = 0.0;
-      this.units = "";
-    }
-
-    public void setHorizontal( boolean isHorizontal ) {
-      this.isBuildable = Buildable.DONT_KNOW;
-      this.isHorizontal = isHorizontal;
-    }
-
-    public boolean isHorizontal() {
-      return this.isHorizontal;
+      this.start = start;
+      this.size = size;
+      this.resolution = resolution;
+      this.units = units;
     }
 
     public void setStart( double start ) {
@@ -1439,8 +1454,10 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
     public ThreddsMetadata.GeospatialRange build() throws IllegalStateException
     {
-      return new ThreddsMetadataImpl.GeospatialRangeImpl( this.isHorizontal,
-          this.start, this.size, this.resolution, this.units);
+      if ( this.isBuildable != Buildable.YES )
+        throw new IllegalStateException( "CatalogBuilder not buildable.");
+
+      return new ThreddsMetadataImpl.GeospatialRangeImpl( this.start, this.size, this.resolution, this.units);
     }
   }
 }

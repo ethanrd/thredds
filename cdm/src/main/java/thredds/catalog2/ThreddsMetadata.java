@@ -189,12 +189,13 @@ public interface ThreddsMetadata extends ThreddsCatalogNode
     public URI getCRS();
     public boolean isGlobal();
     public boolean isZPositiveUp();   // Is this needed since have CRS?
-    public List<GeospatialRange> getExtent(); 
+    public GeospatialRange getGeospatialRangeX();
+    public GeospatialRange getGeospatialRangeY();
+    public GeospatialRange getGeospatialRangeZ();
   }
 
   public interface GeospatialRange
   {
-    public boolean isHorizontal();
     public double getStart();
     public double getSize();
     public double getResolution();
