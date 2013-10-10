@@ -34,10 +34,7 @@ package thredds.catalog2.straightimpl;
 
 import thredds.catalog.DataFormatType;
 import thredds.catalog2.ThreddsMetadata;
-import thredds.catalog2.builder.BuilderException;
-import thredds.catalog2.builder.BuilderIssue;
-import thredds.catalog2.builder.BuilderIssues;
-import thredds.catalog2.builder.ThreddsMetadataBuilder;
+import thredds.catalog2.builder.*;
 import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.units.DateType;
@@ -87,6 +84,18 @@ class ThreddsMetadataImpl implements ThreddsMetadata
     this.dataSizeInBytes = -1;
   }
 
+  ThreddsMetadataImpl( ThreddsMetadataBuilder threddsMetadataBuilder )  {
+    if ( threddsMetadataBuilder == null || threddsMetadataBuilder.isEmpty()) {
+      this.dataSizeInBytes = -1;
+      return;
+    }
+    if ( threddsMetadataBuilder.isBuildable() != ThreddsBuilder.Buildable.YES )
+      throw new IllegalArgumentException( "Failed to build ThreddsBuilder because ThreddsMetadataBuilder is not buildable.");
+
+
+
+  }
+
   ThreddsMetadataImpl(  List<ThreddsMetadataBuilder.DocumentationBuilder> docs,
                         List<ThreddsMetadataBuilder.KeyphraseBuilder> keyphrases,
                         List<ThreddsMetadataBuilder.ContributorBuilder> creators,
@@ -96,14 +105,15 @@ class ThreddsMetadataImpl implements ThreddsMetadata
                         List<ThreddsMetadataBuilder.DatePointBuilder> otherDates,
                         ThreddsMetadataBuilder.DatePointBuilder createdDate,
                         ThreddsMetadataBuilder.DatePointBuilder modifiedDate,
-                        this.issuedDate,
-                        this.validDate,
-                        this.availableDate,
-                        this.metadataCreatedDate,
-                        this.metadataModifiedDate,
-                        this.geospatialCoverage,
-                        this.temporalCoverage,
-                        this.variableGroups)
+                        ThreddsMetadataBuilder.DatePointBuilder issuedDate,
+                        ThreddsMetadataBuilder.DatePointBuilder validDate,
+                        ThreddsMetadataBuilder.DatePointBuilder availableDate,
+                        ThreddsMetadataBuilder.DatePointBuilder metadataCreatedDate,
+                        ThreddsMetadataBuilder.DatePointBuilder metadataModifiedDate,
+
+                        ThreddsMetadataBuilder.GeospatialCoverageBuilder geospatialCoverage,
+                        ThreddsMetadataBuilder.DateRangeBuilder temporalCoverage,
+                        ThreddsMetadataBuilder.VariableGroupBuilder variableGroups )
   {
 
   }

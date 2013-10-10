@@ -132,19 +132,19 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
 
   public interface DocumentationBuilder extends ThreddsBuilder
   {
-    //public void setContainedContent( boolean containedContent );
+    public void setContainedContent( boolean containedContent );
     public boolean isContainedContent();
 
-    //public void setDocType( String docType );
+    public void setDocType( String docType );
     public String getDocType();
 
-    //public void setContent( String content );
+    public void setContent( String content );
     public String getContent();
 
-    //public void setTitle( String title );
+    public void setTitle( String title );
     public String getTitle();
 
-    //public void setExternalReference( String externalReference );
+    public void setExternalReference( String externalReference );
     public String getExternalReferenceUriAsString();
 
     public ThreddsMetadata.Documentation build() throws IllegalStateException;
@@ -152,7 +152,10 @@ public interface ThreddsMetadataBuilder extends ThreddsBuilder
 
   public interface KeyphraseBuilder extends ThreddsBuilder
   {
+    public void setAuthority( String authority);
     public String getAuthority();
+
+    public void setPhrase( String phrase );
     public String getPhrase();
 
     public ThreddsMetadata.Keyphrase build() throws IllegalStateException;

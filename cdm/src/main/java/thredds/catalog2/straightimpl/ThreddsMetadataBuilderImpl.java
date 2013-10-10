@@ -83,7 +83,6 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
   private BuilderIssues builderIssues;
   private Buildable isBuildable;
 
-
   ThreddsMetadataBuilderImpl()
   {
     this.dataSizeInBytes = -1;
@@ -666,28 +665,50 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       return this.externalReferenceUriAsString;
     }
 
-    public Buildable isBuildable()
-    {
+    public Buildable isBuildable() {
       return this.isBuildable;
     }
 
     public BuilderIssues checkForIssues()
     {
-      return new BuilderIssues();
+      this.builderIssues = new BuilderIssues();
+      if ( this.isContainedContent()) {
+        if ( this.content == null || this.content.isEmpty())
+          this.builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Documentation's content is empty.", this));
+      } else {
+        if ( this.title == null || this.title.isEmpty() )
+          this.builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Documentation's title is empty.", this));
+        if ( this.externalReferenceUriAsString != null ) {
+          try {
+            new URI(externalReferenceUriAsString );
+          } catch (URISyntaxException e) {
+            this.builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, String.format( "Failed to build Documentation because externalReferenceUri [%s] is not a valid URI", externalReferenceUriAsString), this));
+          }
+        }
+      }
+
+      if ( this.builderIssues.isValid())
+        this.isBuildable = Buildable.YES;
+      else
+        this.isBuildable = Buildable.NO;
+
+      return this.builderIssues;
     }
 
     public ThreddsMetadata.Documentation build() throws IllegalStateException
     {
       if ( this.isBuildable != Buildable.YES )
-        throw new IllegalStateException( "CatalogBuilder not buildable.");
+        throw new IllegalStateException( "DocumentationBuilder not buildable.");
 
-      return new ThreddsMetadataImpl.DocumentationImpl();
+      if ( this.isContainedContent())
+        return new ThreddsMetadataImpl.DocumentationImpl( this.docType, this.content);
+      else
+        return new ThreddsMetadataImpl.DocumentationImpl(this.docType, this.title, this.externalReferenceUriAsString);
     }
   }
 
   static class KeyphraseBuilderImpl implements KeyphraseBuilder
   {
-    private boolean isBuilt;
     private final String authority;
     private final String phrase;
 
@@ -696,31 +717,30 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
 
     KeyphraseBuilderImpl(String authority, String phrase)
     {
-        if ( phrase == null || phrase.length() == 0)
-            throw new IllegalArgumentException( "Phrase may not be null.");
-        this.authority = authority;
-        this.phrase = phrase;
-        this.isBuilt = false;
+      if ( phrase == null )
+        throw new IllegalArgumentException( "Phrase may not be null.");
+      this.isBuildable = Buildable.DONT_KNOW;
+      this.authority = authority;
+      this.phrase = phrase;
     }
 
-    public String getAuthority()
-    {
+    publi
+
+    public String getAuthority() {
       return this.authority;
     }
 
-    public String getPhrase()
-    {
+    public String getPhrase() {
       return this.phrase;
     }
 
-    public Buildable isBuildable()
-    {
-      return this.isBuilt;
+    public Buildable isBuildable() {
+      return this.isBuildable;
     }
 
     public BuilderIssues checkForIssues() {
-      if ( phrase == null || phrase.length() == 0 )
-        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null or empty.", this, null ));
+      if ( phrase == null )
+        return new BuilderIssues( new BuilderIssue( BuilderIssue.Severity.WARNING, "Phrase may not be null.", this ));
       return new BuilderIssues();
     }
 
@@ -728,7 +748,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
       if ( this.isBuildable != Buildable.YES )
         throw new IllegalStateException( "CatalogBuilder not buildable.");
 
-      return new ThreddsMetadataImpl.KeyphraseImpl();
+      return new ThreddsMetadataImpl.KeyphraseImpl( this.authority, this.phrase);
     }
   }
 
@@ -759,7 +779,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder
     }
 
     public Buildable isBuildable() {
-      return this.isBuilt;
+      return this.isBuildable;
     }
 
     public BuilderIssues checkForIssues() {
