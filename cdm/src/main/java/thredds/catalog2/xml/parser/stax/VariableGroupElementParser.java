@@ -52,7 +52,7 @@ class VariableGroupElementParser extends AbstractElementParser
 
     att = startElement.getAttributeByName( ThreddsMetadataElementNames.VariablesElement_vocabAuthorityUrl );
     if ( att != null)
-      this.selfBuilder.setVocabularyAuthorityUrl( att.getValue());
+      this.selfBuilder.setVocabularyAuthorityUrlAsString(att.getValue());
   }
 
   void handleChildStartElement()

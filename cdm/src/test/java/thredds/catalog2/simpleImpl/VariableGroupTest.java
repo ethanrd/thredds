@@ -24,7 +24,7 @@ public class VariableGroupTest
 
     ThreddsMetadataBuilder.VariableGroupBuilder varGrpBldr = new ThreddsMetadataImpl.VariableGroupImpl();
     varGrpBldr.setVocabularyAuthorityId( vocabAuthId );
-    varGrpBldr.setVocabularyAuthorityUrl( vocabAuthUrl );
+    varGrpBldr.setVocabularyAuthorityUrlAsString(vocabAuthUrl);
 
     assertTrue( varGrpBldr.isEmpty());
     assertNotNull( varGrpBldr.getVariableBuilders());
@@ -66,7 +66,7 @@ public class VariableGroupTest
 
     ThreddsMetadataBuilder.VariableGroupBuilder varGrpBldr = new ThreddsMetadataImpl.VariableGroupImpl();
     varGrpBldr.setVocabularyAuthorityId( vocabAuthId );
-    varGrpBldr.setVocabularyAuthorityUrl( vocabAuthUrl );
+    varGrpBldr.setVocabularyAuthorityUrlAsString(vocabAuthUrl);
     varGrpBldr.setVariableMapUrl( varMapUrl );
 
     assertEquals( vocabAuthId, varGrpBldr.getVocabularyAuthorityId());

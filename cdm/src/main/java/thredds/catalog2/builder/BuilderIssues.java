@@ -30,6 +30,10 @@ public class BuilderIssues {
     this.issues.add( issue );
   }
 
+  public void addIssue( BuilderIssue.Severity severity, String msg, ThreddsBuilder builder ) {
+    this.addIssue( new BuilderIssue( severity, msg, builder));
+  }
+
   public void addIssue( BuilderIssue issue ) {
     if ( issue == null )
       return;

@@ -33,8 +33,10 @@
 package thredds.catalog2.straightimpl;
 
 import thredds.catalog.DataFormatType;
+import thredds.catalog2.ThreddsCatalogIssueContainer;
 import thredds.catalog2.ThreddsMetadata;
-import thredds.catalog2.builder.*;
+import thredds.catalog2.builder.ThreddsBuilder;
+import thredds.catalog2.builder.ThreddsMetadataBuilder;
 import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.units.DateType;
@@ -55,26 +57,26 @@ import java.util.List;
  */
 class ThreddsMetadataImpl implements ThreddsMetadata
 {
-  private List<DocumentationImpl> docs;
-  private List<KeyphraseImpl> keyphrases;
-  private List<ProjectNameImpl> projectNames;
-  private List<ContributorImpl> creators;
-  private List<ContributorImpl> contributors;
-  private List<ContributorImpl> publishers;
+  private List<Documentation> docs;
+  private List<Keyphrase> keyphrases;
+  private List<ProjectName> projectNames;
+  private List<Contributor> creators;
+  private List<Contributor> contributors;
+  private List<Contributor> publishers;
 
-  private List<DatePointImpl> otherDates;
-  private DatePointImpl createdDate;
-  private DatePointImpl modifiedDate;
-  private DatePointImpl issuedDate;
-  private DatePointImpl validDate;
-  private DatePointImpl availableDate;
-  private DatePointImpl metadataCreatedDate;
-  private DatePointImpl metadataModifiedDate;
+  private List<DatePoint> otherDates;
+  private DatePoint createdDate;
+  private DatePoint modifiedDate;
+  private DatePoint issuedDate;
+  private DatePoint validDate;
+  private DatePoint availableDate;
+  private DatePoint metadataCreatedDate;
+  private DatePoint metadataModifiedDate;
 
-  private GeospatialCoverageImpl geospatialCoverage;
-  private DateRangeImpl temporalCoverage;
+  private GeospatialCoverage geospatialCoverage;
+  private DateRange temporalCoverage;
 
-  private List<VariableGroupImpl> variableGroups;
+  private List<VariableGroup> variableGroups;
   private long dataSizeInBytes;
   private DataFormatType dataFormat;
   private FeatureType dataType;
@@ -85,37 +87,74 @@ class ThreddsMetadataImpl implements ThreddsMetadata
   }
 
   ThreddsMetadataImpl( ThreddsMetadataBuilder threddsMetadataBuilder )  {
+    if ( threddsMetadataBuilder.isBuildable() != ThreddsBuilder.Buildable.YES )
+      throw new IllegalArgumentException( "Failed to build ThreddsMetadata, ThreddsMetadataBuilder is not buildable.");
+
     if ( threddsMetadataBuilder == null || threddsMetadataBuilder.isEmpty()) {
       this.dataSizeInBytes = -1;
       return;
     }
-    if ( threddsMetadataBuilder.isBuildable() != ThreddsBuilder.Buildable.YES )
-      throw new IllegalArgumentException( "Failed to build ThreddsBuilder because ThreddsMetadataBuilder is not buildable.");
 
-
-
+    this.docs = this.extractDocumentationListFromThreddsMetadataBuilder( threddsMetadataBuilder);
+    this.keyphrases = this.extractKeywordListFromThreddsMetadataBuilder(threddsMetadataBuilder);
+    this.projectNames = this.extractProjectNameListFromThreddsMetadataBuilder(threddsMetadataBuilder);
+    this.creators = this.extractCreatorListFromThreddsMetadataBuilder(threddsMetadataBuilder);
+    this.contributors = null; // ToDo
+    this.publishers = null; // ToDo
+    this.otherDates = null; // ToDo
+    this.createdDate = null; // ToDo
+    this.modifiedDate = null; // ToDo
+    this.issuedDate = null; // ToDo
+    this.validDate = null; // ToDo
+    this.availableDate = null; // ToDo
+    this.metadataCreatedDate = null; // ToDo
+    this.metadataModifiedDate = null; // ToDo
+    this.geospatialCoverage = null; // ToDo
+    this.temporalCoverage = null; // ToDo
+    this.variableGroups = null; // ToDo
+    this.dataFormat = null; // ToDo
+    this.dataType = null; // ToDo
+    this.collectionType = null; // ToDo
   }
 
-  ThreddsMetadataImpl(  List<ThreddsMetadataBuilder.DocumentationBuilder> docs,
-                        List<ThreddsMetadataBuilder.KeyphraseBuilder> keyphrases,
-                        List<ThreddsMetadataBuilder.ContributorBuilder> creators,
-                        List<ThreddsMetadataBuilder.ContributorBuilder> contributors,
-                        List<ThreddsMetadataBuilder.ContributorBuilder> publishers,
+  private List<Documentation> extractDocumentationListFromThreddsMetadataBuilder( ThreddsMetadataBuilder threddsMetadataBuilder) {
+    List<Documentation> documentationList = null;
+    if ( ! threddsMetadataBuilder.getDocumentationBuilders().isEmpty()) {
+      documentationList = new ArrayList<Documentation>();
+      for (ThreddsMetadataBuilder.DocumentationBuilder curDoc : threddsMetadataBuilder.getDocumentationBuilders())
+        documentationList.add( curDoc.build());
+    }
+    return documentationList;
+  }
 
-                        List<ThreddsMetadataBuilder.DatePointBuilder> otherDates,
-                        ThreddsMetadataBuilder.DatePointBuilder createdDate,
-                        ThreddsMetadataBuilder.DatePointBuilder modifiedDate,
-                        ThreddsMetadataBuilder.DatePointBuilder issuedDate,
-                        ThreddsMetadataBuilder.DatePointBuilder validDate,
-                        ThreddsMetadataBuilder.DatePointBuilder availableDate,
-                        ThreddsMetadataBuilder.DatePointBuilder metadataCreatedDate,
-                        ThreddsMetadataBuilder.DatePointBuilder metadataModifiedDate,
+  private List<Keyphrase> extractKeywordListFromThreddsMetadataBuilder( ThreddsMetadataBuilder threddsMetadataBuilder) {
+    List<Keyphrase> keyphraseList = null;
+    if ( ! threddsMetadataBuilder.getKeyphraseBuilders().isEmpty()) {
+      keyphraseList = new ArrayList<Keyphrase>();
+      for (ThreddsMetadataBuilder.KeyphraseBuilder curKeyphrase : threddsMetadataBuilder.getKeyphraseBuilders())
+        keyphraseList.add( curKeyphrase.build());
+    }
+    return keyphraseList;
+  }
 
-                        ThreddsMetadataBuilder.GeospatialCoverageBuilder geospatialCoverage,
-                        ThreddsMetadataBuilder.DateRangeBuilder temporalCoverage,
-                        ThreddsMetadataBuilder.VariableGroupBuilder variableGroups )
-  {
+  private List<ProjectName> extractProjectNameListFromThreddsMetadataBuilder( ThreddsMetadataBuilder threddsMetadataBuilder) {
+    List<ProjectName> projectNameList = null;
+    if ( ! threddsMetadataBuilder.getProjectNameBuilders().isEmpty()) {
+      projectNameList = new ArrayList<ProjectName>();
+      for (ThreddsMetadataBuilder.ProjectNameBuilder curProjNameBuilder : threddsMetadataBuilder.getProjectNameBuilders())
+        projectNameList.add( curProjNameBuilder.build());
+    }
+    return projectNameList;
+  }
 
+  private List<Contributor> extractCreatorListFromThreddsMetadataBuilder( ThreddsMetadataBuilder threddsMetadataBuilder) {
+    List<Contributor> creatorList = null;
+    if ( ! threddsMetadataBuilder.getCreatorBuilder().isEmpty()) {
+      creatorList = new ArrayList<Contributor>();
+      for (ThreddsMetadataBuilder.ContributorBuilder curCreator : threddsMetadataBuilder.getCreatorBuilder())
+        creatorList.add( curCreator.build());
+    }
+    return creatorList;
   }
 
   public boolean isEmpty()
@@ -254,6 +293,10 @@ class ThreddsMetadataImpl implements ThreddsMetadata
 
   public String getCollectionType() { // ?????
     return this.collectionType;
+  }
+
+  public ThreddsCatalogIssueContainer getIssues() {
+    return null; // ToDo
   }
 
   static class DocumentationImpl implements Documentation
@@ -581,13 +624,37 @@ class ThreddsMetadataImpl implements ThreddsMetadata
     private final String vocabularyAuthorityId;
     private final URI vocabularyAuthorityUrl;
 
-    private final List<VariableImpl> variables;
+    private final List<Variable> variables;
 
     private final URI variableMapUrl;
 
-    VariableGroupImpl( String vocabularyAuthorityId, String vocabularyAuthorityUrlAsString,
-                       List<VariableBuilderImpl> variableBuilderList, String variableMapUrlAsString) {
+    VariableGroupImpl( ThreddsMetadataBuilder.VariableGroupBuilder variableGroupBuilder ) {
+      if ( variableGroupBuilder.isBuildable() != ThreddsBuilder.Buildable.YES)
+        throw new IllegalArgumentException( "Failed to build VariableGroup because VariableGroupBuilder is not buildable.");
 
+      this.vocabularyAuthorityId =  variableGroupBuilder.getVocabularyAuthorityId();
+      String vocabAuthUrlAsString = variableGroupBuilder.getVocabularyAuthorityUrlAsString();
+      try {
+        this.vocabularyAuthorityUrl = new URI( vocabAuthUrlAsString == null ? "" : vocabAuthUrlAsString);
+      } catch (URISyntaxException e) {
+        throw new IllegalArgumentException( "Failed to build VariableGroup, VocabularyAuthority URL not a valid URI.");
+      }
+
+      if ( variableGroupBuilder == null || variableGroupBuilder.isEmpty()) {
+        this.variables = null;
+      } else {
+        this.variables = new ArrayList<Variable>();
+        for (ThreddsMetadataBuilder.VariableBuilder curVarBuilder : variableGroupBuilder.getVariableBuilders()) {
+          this.variables.add( curVarBuilder.build());
+        }
+      }
+
+      String variableMapUrl = variableGroupBuilder.getVariableMapUrlAsString();
+      try {
+        this.variableMapUrl = new URI( variableMapUrl == null ? "" : variableMapUrl);
+      } catch (URISyntaxException e) {
+        throw new IllegalArgumentException( "Failed to build VariableGroup, VariableMap URL not a valid URI.");
+      }
     }
 
     public String getVocabularyAuthorityId() {
@@ -615,23 +682,21 @@ class ThreddsMetadataImpl implements ThreddsMetadata
 
   static class VariableImpl implements Variable
   {
-    private String name;
-    private String description;
-    private String units;
-    private String vocabularyId;
-    private String vocabularyName;
+    private final String name;
+    private final String description;
+    private final String units;
+    private final String vocabularyId;
+    private final String vocabularyName;
 
-    private VariableGroupBuilder parent;
+    VariableImpl( ThreddsMetadataBuilder.VariableBuilder variableBuilder ) {
+      if ( variableBuilder.isBuildable() != ThreddsBuilder.Buildable.YES)
+        throw new IllegalArgumentException( "Failed to build Variable, VariableBuilder is not buildable.");
 
-    VariableImpl( String name, String description, String units,
-                  String vocabId, String vocabName, VariableGroupBuilder parent )
-    {
-      this.name = name;
-      this.description = description;
-      this.units = units;
-      this.vocabularyId = vocabId;
-      this.vocabularyName = vocabName;
-      this.parent = parent;
+      this.name =  variableBuilder.getName();
+      this.description = variableBuilder.getDescription();
+      this.units = variableBuilder.getUnits();
+      this.vocabularyId = variableBuilder.getVocabularyId();
+      this.vocabularyName = variableBuilder.getVocabularyName();
     }
 
     public String getName() {
@@ -653,14 +718,6 @@ class ThreddsMetadataImpl implements ThreddsMetadata
     public String getVocabularyName() {
       return this.vocabularyName;
     }
-
-    public String getVocabularyAuthorityId() {
-      return this.parent.getVocabularyAuthorityId();
-    }
-
-    public URI getVocabularyAuthorityUrl() {
-      return this.parent.getVocabularyAuthorityUrl();
-    }
   }
 
   static class GeospatialCoverageImpl implements GeospatialCoverage
@@ -677,23 +734,25 @@ class ThreddsMetadataImpl implements ThreddsMetadata
     private boolean isGlobal;
     private final GeospatialRange x, y, z;
 
-    GeospatialCoverageImpl() {
-      this( defaultCrsUri, true, false, defaultRangeX, defaultRangeY, defaultRangeZ);
-    }
-
-    GeospatialCoverageImpl( String crsUri, boolean isZPositiveUp, boolean isGlobal,
-                            ThreddsMetadataBuilder.GeospatialRangeBuilder x,
-                            ThreddsMetadataBuilder.GeospatialRangeBuilder y,
-                            ThreddsMetadataBuilder.GeospatialRangeBuilder z )
-    {
+    GeospatialCoverageImpl( ThreddsMetadataBuilder.GeospatialCoverageBuilder geospatialCovBuilder ) {
+      if ( geospatialCovBuilder.isBuildable() != ThreddsBuilder.Buildable.YES)
+        throw new IllegalArgumentException( "Failed to build GeospatialCoverage, GeospatialCoverageBuilder is not buildable.");
 
       try {
-        this.crsUri = new URI( crsUri == null ? "" : crsUri );
+        this.crsUri = new URI( geospatialCovBuilder.getCRS() == null ? defaultCrsUri : geospatialCovBuilder.getCRS());
+      } catch (URISyntaxException e) {
+        throw new IllegalArgumentException( "Failed to build GeospatialCoverage, CRS URI not a valid URI.");
       }
-      catch ( URISyntaxException e ) {
-        throw new IllegalStateException( "Bad URI syntax for default CRS URI ["+defaultCrsUriString+"]: " + e.getMessage());
-      }
-      if (x.isBuildable())
+
+      this.isZPositiveUp = geospatialCovBuilder.isZPositiveUp();
+      this.isGlobal = geospatialCovBuilder.isGlobal();
+
+      this.x = geospatialCovBuilder.getGeospatialRangeX() == null
+          ? defaultRangeX : geospatialCovBuilder.getGeospatialRangeX().build();
+      this.y = geospatialCovBuilder.getGeospatialRangeY() == null
+          ? defaultRangeY : geospatialCovBuilder.getGeospatialRangeY().build();
+      this.z = geospatialCovBuilder.getGeospatialRangeZ() == null
+          ? defaultRangeZ : geospatialCovBuilder.getGeospatialRangeZ().build();
     }
 
     public URI getCRS() {
@@ -709,11 +768,19 @@ class ThreddsMetadataImpl implements ThreddsMetadata
       return this.isZPositiveUp;
     }
 
-    public List<GeospatialRange> getExtent()
-    {
-      if ( this.extent == null )
-        return Collections.emptyList();
-      return Collections.unmodifiableList( new ArrayList<GeospatialRange>( this.extent ) );
+    @Override
+    public GeospatialRange getGeospatialRangeX() {
+      return this.x;
+    }
+
+    @Override
+    public GeospatialRange getGeospatialRangeY() {
+      return this.y;
+    }
+
+    @Override
+    public GeospatialRange getGeospatialRangeZ() {
+      return this.z;
     }
   }
 

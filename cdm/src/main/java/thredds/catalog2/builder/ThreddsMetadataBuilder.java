@@ -44,248 +44,303 @@ import thredds.catalog.DataFormatType;
  * @author edavis
  * @since 4.0
  */
-public interface ThreddsMetadataBuilder extends ThreddsBuilder
-{
+public interface ThreddsMetadataBuilder extends ThreddsBuilder {
   public boolean isEmpty();
-  
-  public DocumentationBuilder addDocumentation( String docType, String title, String externalReference );
-  public DocumentationBuilder addDocumentation( String docType, String content );
-  public boolean removeDocumentation( DocumentationBuilder docBuilder );
+
+  public DocumentationBuilder addDocumentation(String docType, String title, String externalReferenceUrl);
+
+  public DocumentationBuilder addDocumentation(String docType, String content);
+
+  public boolean removeDocumentation(DocumentationBuilder docBuilder);
+
   public List<DocumentationBuilder> getDocumentationBuilders();
 
-  public KeyphraseBuilder addKeyphrase( String authority, String phrase );
-  public boolean removeKeyphrase( KeyphraseBuilder keyphraseBuilder );
+  public KeyphraseBuilder addKeyphrase(String authority, String phrase);
+
+  public boolean removeKeyphrase(KeyphraseBuilder keyphraseBuilder);
+
   public List<KeyphraseBuilder> getKeyphraseBuilders();
 
-  public ProjectNameBuilder addProjectName( String namingAuthority, String name);
-  public boolean removeProjectName( ProjectNameBuilder projectNameBuilder);
+  public ProjectNameBuilder addProjectName(String namingAuthority, String name);
+
+  public boolean removeProjectName(ProjectNameBuilder projectNameBuilder);
+
   public List<ProjectNameBuilder> getProjectNameBuilders();
 
-
   public ContributorBuilder addCreator();
-  public boolean removeCreator( ContributorBuilder creatorBuilder );
+
+  public boolean removeCreator(ContributorBuilder creatorBuilder);
+
   public List<ContributorBuilder> getCreatorBuilder();
 
   public ContributorBuilder addContributor();
-  public boolean removeContributor( ContributorBuilder contributorBuilder );
+
+  public boolean removeContributor(ContributorBuilder contributorBuilder);
+
   public List<ContributorBuilder> getContributorBuilder();
 
-
   public ContributorBuilder addPublisher();
-  public boolean removePublisher( ContributorBuilder PublisherBuilder );
+
+  public boolean removePublisher(ContributorBuilder PublisherBuilder);
+
   public List<ContributorBuilder> getPublisherBuilder();
 
-  public DatePointBuilder addOtherDatePointBuilder( String date, String format, String type);
-  public boolean removeOtherDatePointBuilder( DatePointBuilder builder);
+  public DatePointBuilder addOtherDatePointBuilder(String date, String format, String type);
+
+  public boolean removeOtherDatePointBuilder(DatePointBuilder builder);
+
   public List<DatePointBuilder> getOtherDatePointBuilders();
 
+  public DatePointBuilder setCreatedDatePointBuilder(String date, String format);
 
-  public DatePointBuilder setCreatedDatePointBuilder( String date, String format );
   public DatePointBuilder getCreatedDatePointBuilder();
 
-  public DatePointBuilder setModifiedDatePointBuilder( String date, String format );
+  public DatePointBuilder setModifiedDatePointBuilder(String date, String format);
+
   public DatePointBuilder getModifiedDatePointBuilder();
 
-  public DatePointBuilder setIssuedDatePointBuilder( String date, String format );
+  public DatePointBuilder setIssuedDatePointBuilder(String date, String format);
+
   public DatePointBuilder getIssuedDatePointBuilder();
 
-  public DatePointBuilder setValidDatePointBuilder( String date, String format );
+  public DatePointBuilder setValidDatePointBuilder(String date, String format);
+
   public DatePointBuilder getValidDatePointBuilder();
 
-  public DatePointBuilder setAvailableDatePointBuilder( String date, String format );
+  public DatePointBuilder setAvailableDatePointBuilder(String date, String format);
+
   public DatePointBuilder getAvailableDatePointBuilder();
 
-  public DatePointBuilder setMetadataCreatedDatePointBuilder( String date, String format );
+  public DatePointBuilder setMetadataCreatedDatePointBuilder(String date, String format);
+
   public DatePointBuilder getMetadataCreatedDatePointBuilder();
 
-  public DatePointBuilder setMetadataModifiedDatePointBuilder( String date, String format );
+  public DatePointBuilder setMetadataModifiedDatePointBuilder(String date, String format);
+
   public DatePointBuilder getMetadataModifiedDatePointBuilder();
 
   public GeospatialCoverageBuilder setGeospatialCoverageBuilder(String crsUri);
+
   public void removeGeospatialCoverageBuilder();
+
   public GeospatialCoverageBuilder getGeospatialCoverageBuilder();
 
-  public DateRangeBuilder setTemporalCoverageBuilder( String startDate, String startDateFormat,
-                                                      String endDate, String endDateFormat,
-                                                      String duration, String resolution );
+  public DateRangeBuilder setTemporalCoverageBuilder(String startDate, String startDateFormat,
+                                                     String endDate, String endDateFormat,
+                                                     String duration, String resolution);
+
   public DateRangeBuilder getTemporalCoverageBuilder();
 
   public VariableGroupBuilder addVariableGroupBuilder();
-  public boolean removeVariableGroupBuilder( VariableGroupBuilder varGroupBldr);
+
+  public boolean removeVariableGroupBuilder(VariableGroupBuilder varGroupBldr);
+
   public List<VariableGroupBuilder> getVariableGroupBuilders();
 
-  public void setDataSizeInBytes( long dataSizeInBytes );
+  public void setDataSizeInBytes(long dataSizeInBytes);
+
   public long getDataSizeInBytes();
 
-  public void setDataFormat( DataFormatType dataFormat);
-  public void setDataFormat( String dataFormat );
+  public void setDataFormat(DataFormatType dataFormat);
+
+  public void setDataFormat(String dataFormat);
+
   public DataFormatType getDataFormat();
 
-  public void setDataType( FeatureType dataType );
-  public void setDataType( String dataType );
+  public void setDataType(FeatureType dataType);
+
+  public void setDataType(String dataType);
+
   public FeatureType getDataType();
 
-  public void setCollectionType( String collectionType );
+  public void setCollectionType(String collectionType);
+
   public String getCollectionType();
 
   ThreddsMetadata build() throws IllegalStateException;
 
-  public interface DocumentationBuilder extends ThreddsBuilder
-  {
-    public void setContainedContent( boolean containedContent );
+  public interface DocumentationBuilder extends ThreddsBuilder {
+    public void setContainedContent( boolean isContainedContent);
     public boolean isContainedContent();
 
-    public void setDocType( String docType );
+    public void setDocType( String docType);
     public String getDocType();
 
     public void setContent( String content );
     public String getContent();
 
-    public void setTitle( String title );
+    public void setTitle( String title);
     public String getTitle();
 
-    public void setExternalReference( String externalReference );
+    public void setExternalReferenceUriAsString( String externalReferenceUri );
     public String getExternalReferenceUriAsString();
 
     public ThreddsMetadata.Documentation build() throws IllegalStateException;
   }
 
-  public interface KeyphraseBuilder extends ThreddsBuilder
-  {
-    public void setAuthority( String authority);
+  public interface KeyphraseBuilder extends ThreddsBuilder {
     public String getAuthority();
 
-    public void setPhrase( String phrase );
     public String getPhrase();
 
     public ThreddsMetadata.Keyphrase build() throws IllegalStateException;
   }
 
-  public interface ProjectNameBuilder extends ThreddsBuilder
-  {
+  public interface ProjectNameBuilder extends ThreddsBuilder {
     public String getNamingAuthority();
+
     public String getName();
 
     public ThreddsMetadata.ProjectName build() throws IllegalStateException;
   }
 
-    public interface DatePointBuilder extends ThreddsBuilder
-    {
-        public String getDate();
-        public String getDateFormat();
-        public boolean isTyped();
-        public String getType();
+  public interface DatePointBuilder extends ThreddsBuilder {
+    public String getDate();
 
-        public ThreddsMetadata.DatePoint build() throws IllegalStateException;
-    }
+    public String getDateFormat();
 
-    public interface DateRangeBuilder extends ThreddsBuilder
-    {
-        public String getStartDateFormat();
-        public String getStartDate();
-        public String getEndDateFormat();
-        public String getEndDate();
-        public String getDuration();
-        public String getResolution();
+    public boolean isTyped();
 
-        public ThreddsMetadata.DateRange build() throws IllegalStateException;
-    }
+    public String getType();
+
+    public ThreddsMetadata.DatePoint build() throws IllegalStateException;
+  }
+
+  public interface DateRangeBuilder extends ThreddsBuilder {
+    public String getStartDateFormat();
+
+    public String getStartDate();
+
+    public String getEndDateFormat();
+
+    public String getEndDate();
+
+    public String getDuration();
+
+    public String getResolution();
+
+    public ThreddsMetadata.DateRange build() throws IllegalStateException;
+  }
 
 
-    public interface ContributorBuilder extends ThreddsBuilder
-  {
+  public interface ContributorBuilder extends ThreddsBuilder {
     public String getName();
-    public void setName( String name );
+
+    public void setName(String name);
+
     public String getNamingAuthority();
-    public void setNamingAuthority( String authority );
+
+    public void setNamingAuthority(String authority);
+
     public String getRole();
-    public void setRole( String role );
+
+    public void setRole(String role);
+
     public String getEmail();
-    public void setEmail( String email );
+
+    public void setEmail(String email);
 
     public String getWebPageUrlAsString();
+
     public void setWebPageUrl(String webPage);
 
     public ThreddsMetadata.Contributor build() throws IllegalStateException;
   }
 
-  public interface VariableGroupBuilder extends ThreddsBuilder
-  {
+  public interface VariableGroupBuilder extends ThreddsBuilder {
     public String getVocabularyAuthorityId();
-    public void setVocabularyAuthorityId( String vocabAuthId);
+
+    public void setVocabularyAuthorityId(String vocabAuthId);
 
     public String getVocabularyAuthorityUrlAsString();
-    public void setVocabularyAuthorityUrl( String vocabAuthUrl);
+
+    public void setVocabularyAuthorityUrlAsString(String vocabAuthUrl);
 
     public List<VariableBuilder> getVariableBuilders();
-    public VariableBuilder addVariableBuilder( String name, String description, String units,
-                                               String vocabId, String vocabName );
+
+    public VariableBuilder addVariableBuilder(String name, String description, String units,
+                                              String vocabId, String vocabName);
 
     public String getVariableMapUrlAsString();
-    public void setVariableMapUrl( String variableMapUrl);
+
+    public void setVariableMapUrl(String variableMapUrl);
 
     public boolean isEmpty();
   }
 
-  public interface VariableBuilder extends ThreddsBuilder
-  {
+  public interface VariableBuilder extends ThreddsBuilder {
     public String getName();
-    public void setName( String name);
+
+    public void setName(String name);
 
     public String getDescription();
-    public void setDescription( String description );
+
+    public void setDescription(String description);
 
     public String getUnits();
-    public void setUnits( String units );
+
+    public void setUnits(String units);
 
     public String getVocabularyId();
-    public void setVocabularyId( String vocabId);
+
+    public void setVocabularyId(String vocabId);
 
     public String getVocabularyName();
-    public void setVocabularyName( String vocabName);
+
+    public void setVocabularyName(String vocabName);
 
     public String getVocabularyAuthorityId();
+
     public String getVocabularyAuthorityUrlAsString();
 
     public ThreddsMetadata.Variable build() throws IllegalStateException;
   }
 
-  public interface GeospatialCoverageBuilder extends ThreddsBuilder
-  {
-    public void setCRS( String crsUri );
+  public interface GeospatialCoverageBuilder extends ThreddsBuilder {
+    public void setCRS(String crsUri);
+
     public void useDefaultCRS();
+
     public String getCRS();
 
-    public void setGlobal( boolean isGlobal );
+    public void setGlobal(boolean isGlobal);
+
     public boolean isGlobal();
 
-    public void setZPositiveUp( boolean isZPositiveUp );
+    public void setZPositiveUp(boolean isZPositiveUp);
+
     public boolean isZPositiveUp();
 
     public GeospatialRangeBuilder setGeospatialRangeX(double start, double size, double resolution, String units);
+
     public GeospatialRangeBuilder getGeospatialRangeX();
 
     public GeospatialRangeBuilder setGeospatialRangeY(double start, double size, double resolution, String units);
+
     public GeospatialRangeBuilder getGeospatialRangeY();
 
     public GeospatialRangeBuilder setGeospatialRangeZ(double start, double size, double resolution, String units);
+
     public GeospatialRangeBuilder getGeospatialRangeZ();
 
     public ThreddsMetadata.GeospatialCoverage build() throws IllegalStateException;
   }
 
-  public interface GeospatialRangeBuilder extends ThreddsBuilder
-  {
-    public void setStart( double start );
+  public interface GeospatialRangeBuilder extends ThreddsBuilder {
+    public void setStart(double start);
+
     public double getStart();
 
-    public void setSize( double size );
+    public void setSize(double size);
+
     public double getSize();
 
-    public void setResolution( double resolution );
+    public void setResolution(double resolution);
+
     public double getResolution();
 
-    public void setUnits( String units );
+    public void setUnits(String units);
+
     public String getUnits();
 
     public ThreddsMetadata.GeospatialRange build() throws IllegalStateException;

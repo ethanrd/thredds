@@ -1286,7 +1286,7 @@ class ThreddsMetadataImpl
       return this.vocabularyAuthorityUrl;
     }
 
-    public void setVocabularyAuthorityUrl( String vocabAuthUrl) {
+    public void setVocabularyAuthorityUrlAsString(String vocabAuthUrl) {
       if ( this.isBuilt )
         throw new IllegalStateException( "This Builder has already been built." );
       this.vocabularyAuthorityUrl = vocabAuthUrl;

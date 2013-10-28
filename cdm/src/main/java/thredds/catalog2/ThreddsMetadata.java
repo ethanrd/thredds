@@ -33,9 +33,7 @@
 package thredds.catalog2;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Iterator;
 
 import ucar.nc2.constants.FeatureType;
 import thredds.catalog.DataFormatType;
@@ -46,114 +44,118 @@ import thredds.catalog.DataFormatType;
  * @author edavis
  * @since 4.0
  */
-public interface ThreddsMetadata extends ThreddsCatalogNode
-{
+public interface ThreddsMetadata extends ThreddsCatalogNode {
+  public boolean isEmpty();
+
   public List<Documentation> getDocumentation();
 
   public List<Keyphrase> getKeyphrases();
+
   public List<ProjectName> getProjectNames();
+
   public List<Contributor> getCreator();
+
   public List<Contributor> getContributor();
+
   public List<Contributor> getPublisher();
 
   public List<DatePoint> getOtherDates();
+
   public DatePoint getCreatedDate();
+
   public DatePoint getModifiedDate();
+
   public DatePoint getIssuedDate();
 
   public DatePoint getValidDate();  // Should really be some kind of DateRange.
+
   public DatePoint getAvailableDate();  // Should really be some kind of DateRange.
 
   public DatePoint getMetadataCreatedDate();
+
   public DatePoint getMetadataModifiedDate();
 
   public GeospatialCoverage getGeospatialCoverage();
-  public DateRange getTemporalCoverage();  
+
+  public DateRange getTemporalCoverage();
+
   public List<VariableGroup> getVariableGroups();
 
   public long getDataSizeInBytes();
+
   public DataFormatType getDataFormat();
+
   public FeatureType getDataType();
+
   public String getCollectionType(); // ?????
 
-    public interface Documentation
-  {
+  public interface Documentation {
     public boolean isContainedContent();
-
-    public String getDocType(); //"summary" ("abstract"?), "history", "processing_level", "funding", "rights"
-
+    public String getDocType();
     public String getContent();
-
     public String getTitle();
     public URI getExternalReferenceUri();
   }
 
-  public interface Keyphrase
-  {
+  public interface Keyphrase {
     public String getAuthority();
     public String getPhrase();
   }
 
-  public interface ProjectName
-  {
+  public interface ProjectName {
     public String getNamingAuthority();
     public String getName();
   }
 
-    public enum DatePointType
-    {
+  public enum DatePointType {
+    Created("created"),
+    Modified("modified"),
+    Valid("valid"),
+    Issued("issued"),
+    Available("available"),
+    MetadataCreated("metadataCreated"),
+    MetadataModified("metadataModified"),
 
-        Created( "created"),
-        Modified( "modified"),
-        Valid( "valid"),
-        Issued( "issued"),
-        Available( "available"),
-        MetadataCreated( "metadataCreated"),
-        MetadataModified( "metadataModified"),
+    Other(""),
+    Untyped("");
 
-        Other( ""),
-        Untyped( "");
+    private final String label;
 
-        private final String label;
-
-        DatePointType( String label) {
-            this.label = label;
-        }
-
-        public static DatePointType getTypeForLabel( String label) {
-            if ( label == null || label.length() == 0)
-                return Untyped;
-            for ( DatePointType dpt : DatePointType.values())
-                if ( dpt.label.equalsIgnoreCase( label ))
-                    return dpt;
-            return Other;
-        }
-
-        public String toString() {
-            return this.label;
-        }
+    DatePointType(String label) {
+      this.label = label;
     }
 
-    public interface DatePoint
-    {
-        public String getDate();
-        public String getDateFormat();
-        public boolean isTyped();
-        public String getType();
+    public static DatePointType getTypeForLabel(String label) {
+      if (label == null || label.length() == 0)
+        return Untyped;
+      for (DatePointType dpt : DatePointType.values())
+        if (dpt.label.equalsIgnoreCase(label))
+          return dpt;
+      return Other;
     }
 
-    public interface DateRange
-    {
-        public String getStartDateFormat();
-        public String getStartDate();
-        public String getEndDateFormat();
-        public String getEndDate();
-        public String getDuration();
-        public String getResolution();
+    public String toString() {
+      return this.label;
     }
+  }
 
-  public interface Contributor
-  {
+  public interface DatePoint {
+    public String getDate();
+    public String getDateFormat();
+    public boolean isTyped();
+    public String getType();
+  }
+
+  public interface DateRange {
+    public String getStartDateFormat();
+    public String getStartDate();
+    public String getEndDateFormat();
+    public String getEndDate();
+    public String getDuration();
+    public String getResolution();
+  }
+
+  public interface Contributor {
     public String getName();
     public String getNamingAuthority();
     public String getRole();
@@ -161,31 +163,23 @@ public interface ThreddsMetadata extends ThreddsCatalogNode
     public URI getWebPageUrl();
   }
 
-  public interface VariableGroup
-  {
+  public interface VariableGroup {
     public String getVocabularyAuthorityId();
     public URI getVocabularyAuthorityUrl();
-
     public List<Variable> getVariables();
     public URI getVariableMapUrl();
     public boolean isEmpty();
   }
 
-  public interface Variable
-  {
+  public interface Variable {
     public String getName();
     public String getDescription();
     public String getUnits();
-
     public String getVocabularyId();
     public String getVocabularyName();
-
-    public String getVocabularyAuthorityId();
-    public URI getVocabularyAuthorityUrl();
   }
 
-  public interface GeospatialCoverage
-  {
+  public interface GeospatialCoverage {
     public URI getCRS();
     public boolean isGlobal();
     public boolean isZPositiveUp();   // Is this needed since have CRS?
@@ -194,8 +188,7 @@ public interface ThreddsMetadata extends ThreddsCatalogNode
     public GeospatialRange getGeospatialRangeZ();
   }
 
-  public interface GeospatialRange
-  {
+  public interface GeospatialRange {
     public double getStart();
     public double getSize();
     public double getResolution();

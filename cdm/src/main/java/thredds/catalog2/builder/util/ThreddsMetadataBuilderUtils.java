@@ -220,7 +220,7 @@ public class ThreddsMetadataBuilderUtils
       if ( curSourceVarGroupBuilder.getVocabularyAuthorityId() != null )
         curResultVarGroupBuilder.setVocabularyAuthorityId( curSourceVarGroupBuilder.getVocabularyAuthorityId() );
       if ( curSourceVarGroupBuilder.getVocabularyAuthorityUrlAsString() != null )
-        curResultVarGroupBuilder.setVocabularyAuthorityUrl( curSourceVarGroupBuilder.getVocabularyAuthorityUrlAsString() );
+        curResultVarGroupBuilder.setVocabularyAuthorityUrlAsString(curSourceVarGroupBuilder.getVocabularyAuthorityUrlAsString());
 
       if ( curSourceVarGroupBuilder.getVariableMapUrlAsString() != null )
         curResultVarGroupBuilder.setVariableMapUrl( curSourceVarGroupBuilder.getVariableMapUrlAsString() );
