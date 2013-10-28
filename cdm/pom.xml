@@ -131,7 +131,10 @@
           <excludes>
             <exclude>thredds/catalog2/simpleImpl/**/*.java</exclude>
             <exclude>thredds/catalog2/xml/**/*.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/Thredds*.java</exclude>
+            <exclude>thredds/catalog2/straightimpl/ThreddsB*.java</exclude>
+            <exclude>thredds/catalog2/straightimpl/ThreddsC*.java</exclude>
+            <exclude>thredds/catalog2/straightimpl/CatalogBuilderImpl.java</exclude>
+            <exclude>thredds/catalog2/straightimpl/CatalogImpl.java</exclude>
             <exclude>thredds/catalog2/straightimpl/CatalogRefImpl.java</exclude>
             <exclude>thredds/catalog2/straightimpl/Dataset*.java</exclude>
             <exclude>thredds/catalog2/straightimpl/Metadata*.java</exclude>
