@@ -48,7 +48,9 @@ import ucar.nc2.units.DateType;
  */
 public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
 {
-  public CatalogBuilder newCatalogBuilder( String name, URI docBaseUri, String version, DateType expires, DateType lastModified )
+  public ThreddsBuilderFactoryImpl() {};
+
+  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified )
   {
     return new CatalogImpl( name, docBaseUri, version, expires, lastModified );
   }
@@ -65,14 +67,19 @@ public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
     throw new UnsupportedOperationException( "Not yet implemented.");
   }
 
-  public ServiceBuilder newServiceBuilder( String name, ServiceType type, URI baseUri )
-  {
+  @Override
+  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri ) {
     return new ServiceImpl( name, type, baseUri, null );
   }
 
   public ServiceBuilder newServiceBuilder( Service service )
   {
     throw new UnsupportedOperationException( "Not yet implemented." );
+  }
+
+  @Override
+  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath ) {
+    return null;
   }
 
   public DatasetBuilder newDatasetBuilder( String name )
@@ -85,7 +92,7 @@ public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
     throw new UnsupportedOperationException( "Not yet implemented." );
   }
 
-  public CatalogRefBuilder newCatalogRefBuilder( String name, URI reference )
+  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference )
   {
     return new CatalogRefImpl( name, reference, null, null );
   }

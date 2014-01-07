@@ -72,7 +72,7 @@ class AccessBuilderImpl implements AccessBuilder
   }
 
   @Override
-  public void setServiceBuilderName( String serviceBuilder ) {
+  public void setServiceBuilderName( String serviceBuilderName ) {
     this.serviceBuilderName = serviceBuilderName != null ? serviceBuilderName : "";
 
     this.isBuildable = Buildable.DONT_KNOW;

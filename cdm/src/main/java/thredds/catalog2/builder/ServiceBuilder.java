@@ -54,7 +54,7 @@ public interface ServiceBuilder extends ThreddsBuilder
   public void setType( ServiceType type );
 
   public String getBaseUri();
-  public void setBaseUri( String baseUri );
+  public void setBaseUriAsString( String baseUriAsString );
 
   public String getSuffix();
   public void setSuffix( String suffix );

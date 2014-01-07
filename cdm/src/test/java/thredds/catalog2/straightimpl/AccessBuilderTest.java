@@ -1,13 +1,15 @@
 package thredds.catalog2.straightimpl;
 
 import org.junit.Test;
+import org.junit.runners.Parameterized;
 import thredds.catalog.ServiceType;
 import thredds.catalog2.Access;
 import thredds.catalog2.Service;
-import thredds.catalog2.builder.AccessBuilder;
-import thredds.catalog2.builder.BuilderIssues;
-import thredds.catalog2.builder.ServiceBuilder;
-import thredds.catalog2.builder.ThreddsBuilder;
+import thredds.catalog2.builder.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -16,18 +18,34 @@ import static org.junit.Assert.*;
  *
  * @author edavis
  */
+//@RunWith(Parameterized.class)
 public class AccessBuilderTest {
+  private ThreddsBuilderFactory threddsBuilderFactory;
+
+  public AccessBuilderTest( ThreddsBuilderFactory threddsBuilderFactory ) {
+    this.threddsBuilderFactory = threddsBuilderFactory;
+  }
+
+  @Parameterized.Parameters
+  public static Collection<Object[]> threddsBuilderFactoryClasses() {
+    Object[] classes = new ThreddsBuilderFactory[] {
+        new thredds.catalog2.straightimpl.ThreddsBuilderFactoryImpl()
+//        , new thredds.catalog2.simpleImpl.ThreddsBuilderFactoryImpl()
+    };
+    return Collections.singleton( classes );
+  }
+
 
   @Test(expected=IllegalArgumentException.class)
   public void t() {
-    new AccessBuilderImpl( "", null );
+    this.threddsBuilderFactory.newAccessBuilder( "", null );
   }
 
   @Test
   public void checkResultingAccessFoundReferencedService() {
-    ServiceBuilder sb = new ServiceBuilderImpl( "dap", ServiceType.OPENDAP, "/thredds/dodsC/", new CatalogWideServiceBuilderTracker());
 
-    AccessBuilder accessBuilder = new AccessBuilderImpl( "/my/data.nc", sb);
+    AccessBuilder accessBuilder = threddsBuilderFactory.newAccessBuilder( "dap", "/my/data.nc" );
+    assertNotNull( accessBuilder );
     BuilderIssues builderIssues = accessBuilder.checkForIssues();
     assertTrue( builderIssues.isValid());
     assertEquals( ThreddsBuilder.Buildable.YES, accessBuilder.isBuildable());

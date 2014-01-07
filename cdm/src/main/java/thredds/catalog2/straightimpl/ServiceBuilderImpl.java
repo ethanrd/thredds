@@ -136,10 +136,10 @@ class ServiceBuilderImpl implements ServiceBuilder
   }
 
   // ToDo Test that an empty baseUri is OK for a "Compound" service.
-  public void setBaseUri( String baseUri ) {
-    if ( baseUri == null )
+  public void setBaseUriAsString( String baseUriAsString ) {
+    if ( baseUriAsString == null )
       throw new IllegalArgumentException( "Base URI must not be null." );
-    this.baseUri = baseUri;
+    this.baseUri = baseUriAsString;
     this.isBuildable = Buildable.DONT_KNOW;
   }
 

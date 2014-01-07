@@ -54,6 +54,7 @@ class ServiceImpl implements Service, ServiceBuilder
   private String name;
   private String description;
   private ServiceType type;
+  private String baseUriAsString;
   private URI baseUri;
   private String suffix;
 
@@ -67,11 +68,11 @@ class ServiceImpl implements Service, ServiceBuilder
   private final BuilderIssueContainer builderIssuesContainer;
   private boolean isBuilt = false;
 
-  ServiceImpl( String name, ServiceType type, URI baseUri, GlobalServiceContainer globalServiceContainer )
+  ServiceImpl( String name, ServiceType type, String baseUriAsString, GlobalServiceContainer globalServiceContainer )
   {
     if ( name == null ) throw new IllegalArgumentException( "Name must not be null.");
     if ( type == null ) throw new IllegalArgumentException( "Service type must not be null.");
-    if ( baseUri == null ) throw new IllegalArgumentException( "Base URI must not be null.");
+    if ( baseUriAsString == null ) throw new IllegalArgumentException( "Base URI must not be null.");
 
     builderIssuesContainer = new BuilderIssueContainer();
     isBuilt = false;
@@ -79,7 +80,7 @@ class ServiceImpl implements Service, ServiceBuilder
     this.name = name;
     this.description = "";
     this.type = type;
-    this.baseUri = baseUri;
+    this.baseUriAsString = baseUriAsString;
     this.suffix = "";
     this.propertyContainer = new PropertyContainer();
 
@@ -124,6 +125,13 @@ class ServiceImpl implements Service, ServiceBuilder
   public ServiceType getType()
   {
     return this.type;
+  }
+
+  @Override
+  public void setBaseUriAsString( String baseUriAsString ) {
+    if ( this.isBuilt ) throw new IllegalStateException( "This ServiceBuilder has been built." );
+    this.baseUriAsString = baseUriAsString != null ? baseUriAsString : "";
+
   }
 
   public void setBaseUri( URI baseUri )

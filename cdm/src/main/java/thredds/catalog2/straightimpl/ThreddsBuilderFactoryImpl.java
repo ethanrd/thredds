@@ -48,6 +48,8 @@ import ucar.nc2.units.DateType;
  */
 public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
 {
+  public ThreddsBuilderFactoryImpl() {};
+
   public CatalogBuilder newCatalogBuilder( String name, String docBaseUriAsString, String version,
                                            DateType expires, DateType lastModified ) {
     return new CatalogBuilderImpl( name, docBaseUriAsString, version, expires, lastModified );
