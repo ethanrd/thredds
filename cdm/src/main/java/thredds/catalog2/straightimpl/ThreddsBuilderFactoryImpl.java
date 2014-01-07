@@ -40,8 +40,6 @@ import thredds.catalog2.Service;
 import thredds.catalog2.builder.*;
 import ucar.nc2.units.DateType;
 
-import java.net.URI;
-
 /**
  * _more_
  *
@@ -50,13 +48,15 @@ import java.net.URI;
  */
 public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
 {
-  public CatalogBuilder newCatalogBuilder( String name, URI docBaseUri, String version, DateType expires, DateType lastModified )
-  {
-    return new CatalogImpl( name, docBaseUri, version, expires, lastModified );
+  public CatalogBuilder newCatalogBuilder( String name, String docBaseUriAsString, String version,
+                                           DateType expires, DateType lastModified ) {
+    return new CatalogBuilderImpl( name, docBaseUriAsString, version, expires, lastModified );
   }
 
   public CatalogBuilder newCatalogBuilder( Catalog catalog )
   {
+    // ToDo
+    throw new UnsupportedOperationException( "Not yet implemented.");
 //    if ( catalog instanceof CatalogImpl )
 //    {
 //      CatalogBuilder cb = (CatalogBuilder) catalog;
@@ -64,46 +64,46 @@ public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
 //      return cb;
 //    }
 //    throw new IllegalArgumentException( "Given catalog not correct implementation for this ThreddsBuilderFactory.");
-    throw new UnsupportedOperationException( "Not yet implemented.");
   }
 
-  public ServiceBuilder newServiceBuilder( String name, ServiceType type, URI baseUri )
-  {
-    return new ServiceImpl( name, type, baseUri, null );
+  @Override
+  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath ) {
+    return new AccessBuilderImpl( serviceBuilderName, urlPath );
   }
 
-  public ServiceBuilder newServiceBuilder( Service service )
-  {
+  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUriAsString ) {
+    return new ServiceBuilderImpl( name, type, baseUriAsString, null );
+  }
+
+  public ServiceBuilder newServiceBuilder( Service service ) {
+    // ToDo
     throw new UnsupportedOperationException( "Not yet implemented." );
   }
 
-  public DatasetBuilder newDatasetBuilder( String name )
-  {
-    return new DatasetImpl( name, null, null );
-  }
+//  public DatasetBuilder newDatasetBuilder( String name ) {
+//    return new DatasetImpl( name, null, null );
+//  }
+//
+//  public DatasetBuilder newDatasetBuilder( Dataset dataset ) {
+//    // ToDo
+//    throw new UnsupportedOperationException( "Not yet implemented." );
+//  }
+//
+//  public CatalogRefBuilder newCatalogRefBuilder( String name, String referenceUriAsString ) {
+//    return new CatalogRefImpl( name, referenceUriAsString, null, null );
+//  }
+//
+//  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef ) {
+//    // ToDo
+//    throw new UnsupportedOperationException( "Not yet implemented." );
+//  }
 
-  public DatasetBuilder newDatasetBuilder( Dataset dataset )
-  {
-    throw new UnsupportedOperationException( "Not yet implemented." );
-  }
-
-  public CatalogRefBuilder newCatalogRefBuilder( String name, URI reference )
-  {
-    return new CatalogRefImpl( name, reference, null, null );
-  }
-
-  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef )
-  {
-    throw new UnsupportedOperationException( "Not yet implemented." );
-  }
-
-  public MetadataBuilder newMetadataBuilder()
-  {
+  public MetadataBuilder newMetadataBuilder() {
     return new MetadataImpl();
   }
 
   public ThreddsMetadataBuilder newThreddsMetadataBuilder()
   {
-    return new ThreddsMetadataImpl();
+    return new ThreddsMetadataBuilderImpl();
   }
 }

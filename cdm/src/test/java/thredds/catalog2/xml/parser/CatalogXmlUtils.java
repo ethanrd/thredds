@@ -130,8 +130,8 @@ public class CatalogXmlUtils
     assertTrue( accesses.size() == 1 );
     AccessBuilder access = accesses.get( 0 );
     assertEquals( access.getUrlPath(), "test/test1.nc" );
-    assertEquals( access.getServiceBuilder().getType(), ServiceType.OPENDAP );
-    assertEquals( access.getServiceBuilder().getBaseUri().toString(), "/thredds/dodsC/" );
+    assertEquals( access.getServiceBuilderName().getType(), ServiceType.OPENDAP );
+    assertEquals( access.getServiceBuilderName().getBaseUri().toString(), "/thredds/dodsC/" );
   }
 
     public static DatasetBuilder assertCatalogWithContainerDatasetAsExpected( CatalogBuilder catBuilder,
@@ -176,8 +176,8 @@ public class CatalogXmlUtils
     assertTrue( accesses.size() == 1 );
     AccessBuilder access = accesses.get( 0 );
     assertEquals( access.getUrlPath(), "test/test1.nc" );
-    assertEquals( access.getServiceBuilder().getType(), ServiceType.OPENDAP );
-    assertEquals( access.getServiceBuilder().getBaseUri().toString(), "/thredds/dodsC/" );
+    assertEquals( access.getServiceBuilderName().getType(), ServiceType.OPENDAP );
+    assertEquals( access.getServiceBuilderName().getBaseUri().toString(), "/thredds/dodsC/" );
   }
 
   public static void assertNestedDatasetIsNotAccessible( CatalogBuilder catBuilder,

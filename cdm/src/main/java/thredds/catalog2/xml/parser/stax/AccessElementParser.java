@@ -83,7 +83,7 @@ class AccessElementParser extends AbstractElementParser
     {
       String serviceName = serviceNameAtt.getValue();
       ServiceBuilder serviceBuilder = this.parentDatasetBuilder.getParentCatalogBuilder().findServiceBuilderByNameGlobally( serviceName );
-      this.selfBuilder.setServiceBuilder( serviceBuilder );
+      this.selfBuilder.setServiceBuilderName( serviceBuilder );
     }
 
     Attribute urlPathAtt = startElement.getAttributeByName( AccessElementNames.AccessElement_UrlPath );

@@ -127,7 +127,7 @@ public class TestDatasetImpl extends TestCase
     ads1 = 5678;
     aft1 = DataFormatType.NETCDF;
 
-    ab1.setServiceBuilder( sb1 );
+    ab1.setServiceBuilderName( sb1 );
     ab1.setUrlPath( aup1 );
     ab1.setDataSize( ads1 );
     ab1.setDataFormat( aft1 );
@@ -138,7 +138,7 @@ public class TestDatasetImpl extends TestCase
     ads2 = 56782;
     aft2 = DataFormatType.GRIB2;
 
-    ab2.setServiceBuilder( sb2 );
+    ab2.setServiceBuilderName( sb2 );
     ab2.setUrlPath( aup2 );
     ab2.setDataSize( ads2 );
     ab2.setDataFormat( aft2 );

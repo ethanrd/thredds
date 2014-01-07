@@ -48,6 +48,7 @@ import java.net.URISyntaxException;
 class AccessBuilderImpl implements AccessBuilder
 {
   //private final DatasetImpl parentDs;
+  private String serviceBuilderName;
   private ServiceBuilder service;
   private String urlPath;
   private DataFormatType dataFormat = DataFormatType.NONE;
@@ -56,13 +57,9 @@ class AccessBuilderImpl implements AccessBuilder
   private BuilderIssues builderIssues;
   private Buildable isBuildable;
 
-  AccessBuilderImpl( String urlPath, ServiceBuilder serviceBuilder ) {
+  AccessBuilderImpl( String serviceBuilderName, String urlPath ) {
     this.urlPath = urlPath != null ? urlPath : "";
-
-    if ( serviceBuilder == null )
-      throw new IllegalArgumentException( "Referenced ServiceBuilder must not be null.");
-
-    this.service = serviceBuilder;
+    this.serviceBuilderName = serviceBuilderName != null ? serviceBuilderName : "";
 
     this.isBuildable = Buildable.DONT_KNOW;
     this.builderIssues = new BuilderIssues();
@@ -75,12 +72,10 @@ class AccessBuilderImpl implements AccessBuilder
   }
 
   @Override
-  public void setServiceBuilder( ServiceBuilder serviceBuilder) {
-    if ( serviceBuilder == null )
-      throw new IllegalArgumentException( "Referenced ServiceBuilder must not be null.");
+  public void setServiceBuilderName( String serviceBuilder ) {
+    this.serviceBuilderName = serviceBuilderName != null ? serviceBuilderName : "";
 
     this.isBuildable = Buildable.DONT_KNOW;
-    this.service = serviceBuilder;
   }
 
   public void setDataFormat( DataFormatType dataFormat ) {
@@ -94,8 +89,8 @@ class AccessBuilderImpl implements AccessBuilder
       this.dataSize = dataSize;
   }
 
-  public ServiceBuilder getServiceBuilder() {
-    return service;
+  public String getServiceBuilderName() {
+    return serviceBuilderName;
   }
 
   public String getUrlPath() {

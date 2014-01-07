@@ -46,6 +46,7 @@ import thredds.catalog2.builder.*;
 class AccessImpl implements Access, AccessBuilder
 {
   private final DatasetImpl parentDs;
+  private String serviceName;
   private ServiceImpl service;
   private String urlPath;
   private DataFormatType dataFormat;
@@ -58,11 +59,10 @@ class AccessImpl implements Access, AccessBuilder
     this.parentDs = parentDataset;
   }
 
-  public void setServiceBuilder( ServiceBuilder service )
+  public void setServiceBuilderName( String serviceBuilderName )
   {
     if ( this.isBuilt ) throw new IllegalStateException( "This AccessBuilder has been built." );
-    if ( service == null ) throw new IllegalArgumentException( "Service must not be null." );
-    this.service = (ServiceImpl) service;
+    this.serviceName = serviceBuilderName != null ? serviceBuilderName : "";
   }
 
   public void setUrlPath( String urlPath )
@@ -93,10 +93,10 @@ class AccessImpl implements Access, AccessBuilder
     return service;
   }
 
-  public ServiceBuilder getServiceBuilder()
+  public String getServiceBuilderName()
   {
     if ( this.isBuilt ) throw new IllegalStateException( "This AccessBuilder has been built." );
-    return service;
+    return serviceName;
   }
 
   public String getUrlPath()

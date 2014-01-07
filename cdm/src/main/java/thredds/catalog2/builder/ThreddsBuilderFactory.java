@@ -51,11 +51,13 @@ public interface ThreddsBuilderFactory
   public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
   public ServiceBuilder newServiceBuilder( Service service );
 
-  public DatasetBuilder newDatasetBuilder( String name );
-  public DatasetBuilder newDatasetBuilder( Dataset dataset );
-  
-  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
-  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
+  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath );
+
+//  public DatasetBuilder newDatasetBuilder( String name );
+//  public DatasetBuilder newDatasetBuilder( Dataset dataset );
+//
+//  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
+//  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
 
   public MetadataBuilder newMetadataBuilder();
 

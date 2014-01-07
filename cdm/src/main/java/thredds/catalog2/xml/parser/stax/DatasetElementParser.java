@@ -180,10 +180,10 @@ class DatasetElementParser extends AbstractElementParser
 
             for ( AccessBuilder curAB : this.selfBuilder.getAccessBuilders() )
             {
-                if ( curAB.getServiceBuilder() == null )
+                if ( curAB.getServiceBuilderName() == null )
                 {
                     if ( defaultServiceBuilder != null )
-                        curAB.setServiceBuilder( defaultServiceBuilder );
+                        curAB.setServiceBuilderName( defaultServiceBuilder );
                     else
                         this.selfBuilder.removeAccessBuilder( curAB );
                 }

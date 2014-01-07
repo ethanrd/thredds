@@ -92,13 +92,13 @@ public class TestAccessImpl extends TestCase
 
     assertFalse( access.isBuildable() );
 
-    access.setServiceBuilder( serviceBuilder );
+    access.setServiceBuilderName( serviceBuilder );
     access.setUrlPath( urlPath );
     access.setDataSize( dataSize );
     access.setDataFormat( formatType );
 
     assertTrue( "getServiceBuilder() not as expected.",
-                access.getServiceBuilder() == serviceBuilder);
+                access.getServiceBuilderName() == serviceBuilder);
     String respUrlPath = access.getUrlPath();
     assertTrue( "geturlPath() ["+respUrlPath+"] not as expect ["+urlPath+"]",
                 respUrlPath.equals(  urlPath ));
@@ -114,7 +114,7 @@ public class TestAccessImpl extends TestCase
   {
     AccessImpl accessImpl = new AccessImpl( null);
 
-    accessImpl.setServiceBuilder( serviceBuilder );
+    accessImpl.setServiceBuilderName( serviceBuilder );
     accessImpl.setUrlPath( urlPath );
     accessImpl.setDataSize( dataSize );
     accessImpl.setDataFormat( formatType );
@@ -133,7 +133,7 @@ public class TestAccessImpl extends TestCase
   {
     AccessImpl accessImpl = new AccessImpl( null);
 
-    accessImpl.setServiceBuilder( serviceBuilder );
+    accessImpl.setServiceBuilderName( serviceBuilder );
     accessImpl.setUrlPath( urlPath );
     accessImpl.setDataSize( dataSize );
     accessImpl.setDataFormat( formatType );
@@ -160,7 +160,7 @@ public class TestAccessImpl extends TestCase
   {
     AccessImpl accessImpl = new AccessImpl( null);
 
-    accessImpl.setServiceBuilder( serviceBuilder );
+    accessImpl.setServiceBuilderName( serviceBuilder );
     accessImpl.setUrlPath( urlPath );
     accessImpl.setDataSize( dataSize );
     accessImpl.setDataFormat( formatType );
@@ -181,7 +181,7 @@ public class TestAccessImpl extends TestCase
   {
     AccessImpl accessImpl = new AccessImpl( null);
 
-    accessImpl.setServiceBuilder( serviceBuilder );
+    accessImpl.setServiceBuilderName( serviceBuilder );
     accessImpl.setUrlPath( urlPath );
     accessImpl.setDataSize( dataSize );
     accessImpl.setDataFormat( formatType );
@@ -193,7 +193,7 @@ public class TestAccessImpl extends TestCase
     { fail( "Build failed: " + e.getMessage() ); return; }
 
     try
-    { accessImpl.getServiceBuilder(); }
+    { accessImpl.getServiceBuilderName(); }
     catch ( IllegalStateException ise )
     { return; }
     catch ( Exception e )

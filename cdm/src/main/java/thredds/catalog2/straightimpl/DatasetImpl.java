@@ -128,7 +128,7 @@ class DatasetImpl
     List<AccessBuilder> list = new ArrayList<AccessBuilder>();
     if ( this.accessImplList != null )
       for ( AccessBuilder a : this.accessImplList )
-        if ( a.getServiceBuilder().getType().equals( type ) )
+        if ( a.getServiceBuilderName().getType().equals( type ) )
           list.add( a );
     return list;
   }

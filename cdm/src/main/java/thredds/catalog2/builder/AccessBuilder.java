@@ -45,9 +45,8 @@ import java.util.List;
  */
 public interface AccessBuilder extends ThreddsBuilder
 {
-  // ToDo Should be String getServiceName() instead of an actual ServiceBuilder
-  public ServiceBuilder getServiceBuilder();
-  public void setServiceBuilder( ServiceBuilder service );
+  public String getServiceBuilderName();
+  public void setServiceBuilderName( String serviceBuilderName );
 
   public String getUrlPath();
   public void setUrlPath( String urlPath );

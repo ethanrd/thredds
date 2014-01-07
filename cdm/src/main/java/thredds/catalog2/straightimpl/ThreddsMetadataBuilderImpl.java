@@ -124,7 +124,7 @@ class ThreddsMetadataBuilderImpl implements ThreddsMetadataBuilder {
 
     if (this.docs == null)
       this.docs = new ArrayList<DocumentationBuilderImpl>();
-    DocumentationBuilderImpl doc = new DocumentationBuilderImpl(docType, title, externalReference);
+    DocumentationBuilderImpl doc = new DocumentationBuilderImpl(docType, title, externalReferenceUrl);
     this.docs.add(doc);
     return doc;
   }

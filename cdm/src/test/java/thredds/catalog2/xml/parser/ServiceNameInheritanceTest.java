@@ -528,25 +528,25 @@ public class ServiceNameInheritanceTest
   private static void assertOdapAccessToFile1( AccessBuilder access )
   {
     assertEquals( "dir/file1.nc", access.getUrlPath() );
-    assertEquals( "odap", access.getServiceBuilder().getName() );
-    assertEquals( ServiceType.OPENDAP, access.getServiceBuilder().getType() );
-    assertEquals( "/thredds/dodsC/", access.getServiceBuilder().getBaseUri().toString() );
+    assertEquals( "odap", access.getServiceBuilderName().getName() );
+    assertEquals( ServiceType.OPENDAP, access.getServiceBuilderName().getType() );
+    assertEquals( "/thredds/dodsC/", access.getServiceBuilderName().getBaseUri().toString() );
   }
 
   private static void assertOdapAccessToFile2( AccessBuilder access )
   {
     assertEquals( "dir/file2.nc", access.getUrlPath() );
-    assertEquals( "odap", access.getServiceBuilder().getName() );
-    assertEquals( ServiceType.OPENDAP, access.getServiceBuilder().getType() );
-    assertEquals( "/thredds/dodsC/", access.getServiceBuilder().getBaseUri().toString() );
+    assertEquals( "odap", access.getServiceBuilderName().getName() );
+    assertEquals( ServiceType.OPENDAP, access.getServiceBuilderName().getType() );
+    assertEquals( "/thredds/dodsC/", access.getServiceBuilderName().getBaseUri().toString() );
   }
 
   private static void assertWcsAccess( AccessBuilder access )
   {
     assertEquals( "dir/file2.nc", access.getUrlPath() );
-    assertEquals( "wcs", access.getServiceBuilder().getName() );
-    assertEquals( ServiceType.WCS, access.getServiceBuilder().getType() );
-    assertEquals("/thredds/wcs/wcs/", access.getServiceBuilder().getBaseUri().toString() );
+    assertEquals( "wcs", access.getServiceBuilderName().getName() );
+    assertEquals( ServiceType.WCS, access.getServiceBuilderName().getType() );
+    assertEquals("/thredds/wcs/wcs/", access.getServiceBuilderName().getBaseUri().toString() );
   }
 
   private static DatasetBuilder assertGetDatasetOne( CatalogBuilder catBuilder ) {
