@@ -5,6 +5,8 @@ import thredds.catalog2.ThreddsMetadata;
 import thredds.catalog2.builder.BuilderIssues;
 import thredds.catalog2.builder.ThreddsMetadataBuilder;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -31,11 +33,13 @@ public class ThreddsMetadataBuilderTest {
 
     ThreddsMetadataBuilder.DocumentationBuilder docBuilder = threddsMetadataBuilder.addDocumentation(null, "title", "http;//stuff/a.b");
     ThreddsMetadataBuilder.DocumentationBuilder docBuilder2 = threddsMetadataBuilder.addDocumentation(null, "some content");
-    ((ThreddsMetadataBuilderImpl.DocumentationBuilderImpl)docBuilder).
-
+                              threddsMetadataBuilder.
     BuilderIssues builderIssues = threddsMetadataBuilder.checkForIssues();
     assertTrue( builderIssues.isEmpty());
     ThreddsMetadata threddsMetadata = threddsMetadataBuilder.build();
-    assertTrue( threddsMetadata.isEmpty());
+    assertFalse( threddsMetadata.isEmpty() );
+
+    List<ThreddsMetadata.Documentation> documentation = threddsMetadata.getDocumentation();
+    assertEquals( 2, documentation.size() );
   }
 }
