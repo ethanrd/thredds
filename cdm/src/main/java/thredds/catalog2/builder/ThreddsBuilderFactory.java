@@ -45,8 +45,8 @@ import ucar.nc2.units.DateType;
  */
 public interface ThreddsBuilderFactory
 {
-  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
-  public CatalogBuilder newCatalogBuilder( Catalog catalog );
+//  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
+//  public CatalogBuilder newCatalogBuilder( Catalog catalog );
 
   public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
   public ServiceBuilder newServiceBuilder( Service service );
@@ -59,7 +59,7 @@ public interface ThreddsBuilderFactory
 //  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
 //  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
 
-  public MetadataBuilder newMetadataBuilder();
+//  public MetadataBuilder newMetadataBuilder();
 
   public ThreddsMetadataBuilder newThreddsMetadataBuilder();
 }

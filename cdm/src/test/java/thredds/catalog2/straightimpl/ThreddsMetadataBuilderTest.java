@@ -33,7 +33,7 @@ public class ThreddsMetadataBuilderTest {
 
     ThreddsMetadataBuilder.DocumentationBuilder docBuilder = threddsMetadataBuilder.addDocumentation(null, "title", "http;//stuff/a.b");
     ThreddsMetadataBuilder.DocumentationBuilder docBuilder2 = threddsMetadataBuilder.addDocumentation(null, "some content");
-                              threddsMetadataBuilder.
+
     BuilderIssues builderIssues = threddsMetadataBuilder.checkForIssues();
     assertTrue( builderIssues.isEmpty());
     ThreddsMetadata threddsMetadata = threddsMetadataBuilder.build();

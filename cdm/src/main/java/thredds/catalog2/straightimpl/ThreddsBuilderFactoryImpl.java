@@ -50,23 +50,23 @@ public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
 {
   public ThreddsBuilderFactoryImpl() {};
 
-  public CatalogBuilder newCatalogBuilder( String name, String docBaseUriAsString, String version,
-                                           DateType expires, DateType lastModified ) {
-    return new CatalogBuilderImpl( name, docBaseUriAsString, version, expires, lastModified );
-  }
-
-  public CatalogBuilder newCatalogBuilder( Catalog catalog )
-  {
-    // ToDo
-    throw new UnsupportedOperationException( "Not yet implemented.");
-//    if ( catalog instanceof CatalogImpl )
-//    {
-//      CatalogBuilder cb = (CatalogBuilder) catalog;
-//      cb.unfinish();
-//      return cb;
-//    }
-//    throw new IllegalArgumentException( "Given catalog not correct implementation for this ThreddsBuilderFactory.");
-  }
+//  public CatalogBuilder newCatalogBuilder( String name, String docBaseUriAsString, String version,
+//                                           DateType expires, DateType lastModified ) {
+//    return new CatalogBuilderImpl( name, docBaseUriAsString, version, expires, lastModified );
+//  }
+//
+//  public CatalogBuilder newCatalogBuilder( Catalog catalog )
+//  {
+//    // ToDo
+//    throw new UnsupportedOperationException( "Not yet implemented.");
+////    if ( catalog instanceof CatalogImpl )
+////    {
+////      CatalogBuilder cb = (CatalogBuilder) catalog;
+////      cb.unfinish();
+////      return cb;
+////    }
+////    throw new IllegalArgumentException( "Given catalog not correct implementation for this ThreddsBuilderFactory.");
+//  }
 
   @Override
   public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath ) {
@@ -100,9 +100,9 @@ public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
 //    throw new UnsupportedOperationException( "Not yet implemented." );
 //  }
 
-  public MetadataBuilder newMetadataBuilder() {
-    return new MetadataImpl();
-  }
+//  public MetadataBuilder newMetadataBuilder() {
+//    return new MetadataImpl();
+//  }
 
   public ThreddsMetadataBuilder newThreddsMetadataBuilder()
   {

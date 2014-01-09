@@ -1,15 +1,13 @@
 package thredds.catalog2.straightimpl;
 
-import org.junit.Test;
-import org.junit.runners.Parameterized;
-import thredds.catalog.ServiceType;
 import thredds.catalog2.Access;
-import thredds.catalog2.Service;
 import thredds.catalog2.builder.*;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+
+import org.junit.Test;
+import org.junit.runners.Parameterized;
 
 import static org.junit.Assert.*;
 
@@ -44,7 +42,8 @@ public class AccessBuilderTest {
   @Test
   public void checkResultingAccessFoundReferencedService() {
 
-    AccessBuilder accessBuilder = threddsBuilderFactory.newAccessBuilder( "dap", "/my/data.nc" );
+    AccessBuilder accessBuilder =
+        threddsBuilderFactory.newAccessBuilder( "dap", "/my/data.nc" );
     assertNotNull( accessBuilder );
     BuilderIssues builderIssues = accessBuilder.checkForIssues();
     assertTrue( builderIssues.isValid());

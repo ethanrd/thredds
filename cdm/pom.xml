@@ -130,6 +130,7 @@
           </includes>
           <excludes>
             <exclude>thredds/catalog2/simpleImpl/**/*.java</exclude>
+            <exclude>thredds/catalog2/builder/util/**/*.java</exclude>
             <exclude>thredds/catalog2/xml/**/*.java</exclude>
             <exclude>thredds/catalog2/straightimpl/ThreddsC*.java</exclude>
             <exclude>thredds/catalog2/straightimpl/CatalogBuilderImpl.java</exclude>
