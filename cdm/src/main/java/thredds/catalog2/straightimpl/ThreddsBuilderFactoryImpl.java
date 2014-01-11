@@ -74,7 +74,7 @@ public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
   }
 
   public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUriAsString ) {
-    return new ServiceBuilderImpl( name, type, baseUriAsString, null );
+    return new ServiceBuilderImpl( name, type, baseUriAsString );
   }
 
   public ServiceBuilder newServiceBuilder( Service service ) {

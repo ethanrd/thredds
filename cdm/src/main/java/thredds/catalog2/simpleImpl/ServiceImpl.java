@@ -98,6 +98,11 @@ class ServiceImpl implements Service, ServiceBuilder
     this.serviceContainer = new ServiceContainer( this.globalServiceContainer );
   }
 
+  public void setName( String name ) {
+    if ( this.isBuilt ) throw new IllegalStateException( "This ServiceBuilder has been built." );
+    this.name = name != null ? name : "";
+  }
+
   public String getName()
   {
     return this.name;

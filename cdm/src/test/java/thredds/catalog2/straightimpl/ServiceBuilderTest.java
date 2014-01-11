@@ -1,38 +1,93 @@
 package thredds.catalog2.straightimpl;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import thredds.catalog.ServiceType;
 import thredds.catalog2.Service;
-import thredds.catalog2.builder.BuilderIssue;
-import thredds.catalog2.builder.BuilderIssues;
-import thredds.catalog2.builder.ServiceBuilder;
-import thredds.catalog2.builder.ThreddsBuilder;
+import thredds.catalog2.builder.*;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * _MORE_
  *
  * @author edavis
  */
+@RunWith(Parameterized.class)
 public class ServiceBuilderTest {
+  private ThreddsBuilderFactory threddsBuilderFactory;
+
+  public ServiceBuilderTest( ThreddsBuilderFactory threddsBuilderFactory ) {
+    this.threddsBuilderFactory = threddsBuilderFactory;
+  }
+
+  @Parameterized.Parameters
+  public static Collection<Object[]> threddsBuilderFactoryClasses() {
+    Object[] classes = new ThreddsBuilderFactory[] {
+      new thredds.catalog2.straightimpl.ThreddsBuilderFactoryImpl()
+//      , new thredds.catalog2.simpleImpl.ThreddsBuilderFactoryImpl()
+    };
+    return Collections.singleton( classes );
+  }
+
+  @Test
+  public void checkBasicServiceBuilderCreation() {
+    ServiceBuilder serviceBuilder =
+        this.threddsBuilderFactory.newServiceBuilder( "odap", ServiceType.OPENDAP, "/thredds/dodsC/" );
+    assertNotNull( serviceBuilder );
+
+    assertEquals( "odap", serviceBuilder.getName() );
+    assertEquals( ServiceType.OPENDAP, serviceBuilder.getType() );
+    assertEquals( "/thredds/dodsC/", serviceBuilder.getBaseUri() );
+    assertEquals( "", serviceBuilder.getSuffix() );
+    assertEquals( "", serviceBuilder.getDescription() );
+
+    assertTrue( serviceBuilder.getServiceBuilders().isEmpty() );
+    assertTrue( serviceBuilder.getPropertyNames().isEmpty() );
+
+    BuilderIssues builderIssues = serviceBuilder.checkForIssues();
+    assertNotNull( builderIssues );
+    assertTrue( builderIssues.isValid());
+
+    serviceBuilder.setName( "all" );
+    serviceBuilder.setType( ServiceType.COMPOUND );
+    serviceBuilder.setBaseUriAsString( "" );
+    serviceBuilder.setSuffix( ".dsr" );
+    serviceBuilder.setDescription( "contain all services" );
+    serviceBuilder.addProperty( "name", "val" );
+    serviceBuilder.addService( "odap", ServiceType.OPENDAP, "/thredds/dodsC" );
+  }
+
+  @Test
+  public void check() {
+    ServiceBuilder serviceBuilder =
+        this.threddsBuilderFactory.newServiceBuilder( "all", ServiceType.COMPOUND, "");
+    serviceBuilder.removeService( null );
+  }
 
   @Test
   public void checkConformance_NonCompoundServiceNotValidWithEmptyBaseUri() {
-    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "", null);
+    ServiceBuilder serviceBuilder =
+        this.threddsBuilderFactory.newServiceBuilder( "odap", ServiceType.OPENDAP, "");
     BuilderIssues issues = serviceBuilder.checkForIssues();
     assertFalse(issues.isEmpty());
     assertEquals( "Don't have exactly zero WARN issue.", 1, issues.getNumWarningIssues());
     assertEquals( "Don't have exactly one ERROR issue.", 0, issues.getNumErrorIssues());
     assertEquals( "Don't have exactly zero FATAL issue.", 0, issues.getNumFatalIssues());
-    assertTrue(issues.isValid());
+    assertTrue( issues.isValid() );
   }
 
   @Test
   public void checkConformance_NotAbleToAddServiceToNonCompoundService() {
-    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC/", null);
+    ServiceBuilder serviceBuilder =
+        this.threddsBuilderFactory.newServiceBuilder( "odap", ServiceType.OPENDAP, "/thredds/dodsC/" );
+
     serviceBuilder.addService( "wms", ServiceType.WMS, "/thredds/wms/");
 
     assertEquals(ThreddsBuilder.Buildable.DONT_KNOW, serviceBuilder.isBuildable());
@@ -46,7 +101,9 @@ public class ServiceBuilderTest {
 
   @Test
   public void checkConformance_BuildOfServiceWithProperties() {
-    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC/", null);
+    ServiceBuilder serviceBuilder =
+        this.threddsBuilderFactory.newServiceBuilder( "odap", ServiceType.OPENDAP, "/thredds/dodsC/" );
+
     serviceBuilder.addProperty( "name1", "value1");
     serviceBuilder.addProperty( "name2", "value2");
     serviceBuilder.addProperty( "name3", "value3");
@@ -66,7 +123,9 @@ public class ServiceBuilderTest {
 
   @Test
   public void checkRootServiceTrackingOfServicesByName() {
-    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( "all", ServiceType.COMPOUND, "", null);
+    ServiceBuilder serviceBuilder =
+        this.threddsBuilderFactory.newServiceBuilder( "all", ServiceType.COMPOUND, "");
+
     serviceBuilder.addService( "odap", ServiceType.OPENDAP, "/thredds/dodsC/" );
     serviceBuilder.addService( "http", ServiceType.HTTP, "/thredds/fileServer/" );
     ServiceBuilder sBGrid = serviceBuilder.addService( "grid", ServiceType.COMPOUND, "" );
@@ -79,7 +138,9 @@ public class ServiceBuilderTest {
 
   @Test
   public void checkBuildOfNestedService() {
-    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( "all", ServiceType.COMPOUND, "", null);
+    ServiceBuilder serviceBuilder =
+        this.threddsBuilderFactory.newServiceBuilder( "all", ServiceType.COMPOUND, "");
+
     serviceBuilder.addService( "odap", ServiceType.OPENDAP, "/thredds/dodsC/" );
     serviceBuilder.addService( "http", ServiceType.HTTP, "/thredds/fileServer/" );
     ServiceBuilder sBGrid = serviceBuilder.addService( "grid", ServiceType.COMPOUND, "" );

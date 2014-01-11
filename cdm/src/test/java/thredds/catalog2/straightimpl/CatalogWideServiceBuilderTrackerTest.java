@@ -14,7 +14,7 @@ public class CatalogWideServiceBuilderTrackerTest {
   @Test
   public void checkMultipleAdditionsOfSameServiceOK() {
     CatalogWideServiceBuilderTracker cwsbt = new CatalogWideServiceBuilderTracker();
-    ServiceBuilderImpl odap1 = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC/", null);
+    ServiceBuilderImpl odap1 = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC/");
     cwsbt.addService( odap1);
     cwsbt.addService( odap1);
     assertEquals( 1, cwsbt.numberOfReferenceableServices());
@@ -23,9 +23,9 @@ public class CatalogWideServiceBuilderTrackerTest {
   @Test
   public void checkRemoveReferencableServiceWithDuplicateNamePromotesDuplicateNamedService() {
     CatalogWideServiceBuilderTracker cwsbt = new CatalogWideServiceBuilderTracker();
-    ServiceBuilderImpl odap1 = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC/", null);
-    ServiceBuilderImpl odap2 = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC2/", null);
-    ServiceBuilderImpl wcs = new ServiceBuilderImpl( "wcs", ServiceType.WCS, "/thredds/wcs/", null);
+    ServiceBuilderImpl odap1 = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC/");
+    ServiceBuilderImpl odap2 = new ServiceBuilderImpl( "odap", ServiceType.OPENDAP, "/thredds/dodsC2/");
+    ServiceBuilderImpl wcs = new ServiceBuilderImpl( "wcs", ServiceType.WCS, "/thredds/wcs/");
 
     cwsbt.addService( odap1);
     cwsbt.addService( odap2);

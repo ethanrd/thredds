@@ -96,7 +96,8 @@ class ServiceBuilderContainer implements ThreddsBuilder
     if ( this.serviceBuilders == null )
       this.serviceBuilders = new ArrayList<ServiceBuilder>();
 
-    ServiceBuilder serviceBuilder = new ServiceBuilderImpl( name, type, baseUri, this.catalogWideServiceBuilderTracker);
+    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( name, type, baseUri);
+    serviceBuilder.initialize( this.catalogWideServiceBuilderTracker );
 
     boolean addedService = this.serviceBuilders.add( serviceBuilder );
     assert addedService;

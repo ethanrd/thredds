@@ -33,6 +33,7 @@
 package thredds.catalog2.builder;
 
 import thredds.catalog.ServiceType;
+import thredds.catalog2.Property;
 import thredds.catalog2.Service;
 
 import java.util.List;
@@ -46,6 +47,7 @@ import java.util.List;
 public interface ServiceBuilder extends ThreddsBuilder
 {
   public String getName();
+  public void setName( String name );
 
   public String getDescription();
   public void setDescription( String description );
@@ -69,6 +71,7 @@ public interface ServiceBuilder extends ThreddsBuilder
    */
   public void addProperty( String name, String value );
   public boolean removeProperty( String name );
+  public List<Property> getProperties();
   public List<String> getPropertyNames();
   public String getPropertyValue( String name );
 

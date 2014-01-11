@@ -81,21 +81,37 @@ class ServiceBuilderImpl implements ServiceBuilder
   private BuilderIssues builderIssues;
   private Buildable isBuildable;
 
-  ServiceBuilderImpl( String name, ServiceType type, String baseUri,
-                      CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker)
+  /**
+   * Constructs a ServiceBuilderImpl.
+   *
+   * <p>Once constructed, the resulting ServiceBuilderImpl must be initialized with either
+   * {@link #initialize()}, if it is a standalone ServiceBuilder, or
+   * {@link #initialize(CatalogWideServiceBuilderTracker)}, if it is contained in a
+   * ServiceBuilderContainer.</p?
+   *
+   * @param name the name of the ServiceBuilder
+   * @param type the ServiceType of the ServiceBuilder
+   * @param baseUri the baseUri of the ServiceBuilder
+   */
+  ServiceBuilderImpl( String name, ServiceType type, String baseUri)
   {
-    if ( name == null || name.isEmpty() )
-      throw new IllegalArgumentException( "Name must not be null or empty.");
-    if ( type == null )
-      throw new IllegalArgumentException( "Service type must not be null.");
-    if ( baseUri == null ) throw new IllegalArgumentException( "Base URI must not be null.");
-
-    this.name = name;
+    this.name = name != null ? name : "";
     this.description = "";
-    this.type = type;
-    this.baseUri = baseUri;
+    this.type = type != null ? type : ServiceType.NONE;
+    this.baseUri = baseUri != null ? baseUri : "";
     this.suffix = "";
     this.propertyBuilderContainer = new PropertyBuilderContainer();
+
+    this.isBuildable = Buildable.DONT_KNOW;
+  }
+
+  public void initialize() {
+    this.initialize( null );
+  }
+
+  public void initialize( CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker ) {
+    if ( this.catalogWideServiceBuilderTracker != null )
+      throw new IllegalStateException( "CatalogWideServiceBuilderTracker already set." );
 
     if ( catalogWideServiceBuilderTracker == null ) {
       this.isRootServiceContainer = true;
@@ -106,12 +122,11 @@ class ServiceBuilderImpl implements ServiceBuilder
     }
 
     this.serviceBuilderContainer = new ServiceBuilderContainer( this.catalogWideServiceBuilderTracker);
-
-    this.isBuildable = Buildable.DONT_KNOW;
   }
 
-  // ToDo Decide on whether to support setName(). Many things key off name so it is not quite straightforward.
-  private final void setName() {}
+  public void setName( String name ) {
+    this.name = name != null ? name : "";
+  }
 
   public String getName() {
     return this.name;
@@ -126,9 +141,7 @@ class ServiceBuilderImpl implements ServiceBuilder
   }
 
   public void setType( ServiceType type ) {
-    if ( type == null )
-      throw new IllegalArgumentException( "Service type must not be null." );
-    this.type = type;
+    this.type = type != null ? type : ServiceType.NONE;
   }
 
   public ServiceType getType() {
@@ -137,9 +150,7 @@ class ServiceBuilderImpl implements ServiceBuilder
 
   // ToDo Test that an empty baseUri is OK for a "Compound" service.
   public void setBaseUriAsString( String baseUriAsString ) {
-    if ( baseUriAsString == null )
-      throw new IllegalArgumentException( "Base URI must not be null." );
-    this.baseUri = baseUriAsString;
+    this.baseUri = baseUriAsString != null ? baseUriAsString : "";
     this.isBuildable = Buildable.DONT_KNOW;
   }
 
@@ -181,6 +192,9 @@ class ServiceBuilderImpl implements ServiceBuilder
     return this.propertyBuilderContainer.getProperty(name);
   }
   public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
+    if ( this.serviceBuilderContainer == null )
+      this.initialize();
+
     this.isBuildable = Buildable.DONT_KNOW;
     return this.serviceBuilderContainer.addService( name, type, baseUri );
   }
@@ -189,22 +203,31 @@ class ServiceBuilderImpl implements ServiceBuilder
     if ( serviceBuilder == null )
       return false;
 
+    if ( this.serviceBuilderContainer == null )
+      this.initialize();
+
     this.isBuildable = Buildable.DONT_KNOW;
     return this.serviceBuilderContainer.removeService( serviceBuilder );
   }
 
-  public List<ServiceBuilder> getServiceBuilders()
-  {
+  public List<ServiceBuilder> getServiceBuilders() {
+    if ( this.serviceBuilderContainer == null )
+      this.initialize();
+
     return this.serviceBuilderContainer.getServiceBuilders();
   }
 
-  public ServiceBuilder getServiceBuilderByName( String name )
-  {
+  public ServiceBuilder getServiceBuilderByName( String name ) {
+    if ( this.serviceBuilderContainer == null )
+      this.initialize();
+
     return this.serviceBuilderContainer.getServiceBuilderByName( name );
   }
 
-  public ServiceBuilder findServiceBuilderByNameGlobally( String name )
-  {
+  public ServiceBuilder findServiceBuilderByNameGlobally( String name ) {
+    if ( this.catalogWideServiceBuilderTracker == null )
+      this.initialize();
+
     return this.catalogWideServiceBuilderTracker.getReferenceableService( name );
   }
 
@@ -218,12 +241,22 @@ class ServiceBuilderImpl implements ServiceBuilder
    * @return true if this ServiceBuilder is in a state where build() will succeed.
    */
   public BuilderIssues checkForIssues() {
+    if ( catalogWideServiceBuilderTracker == null )
+      this.initialize();
+
     builderIssues = new BuilderIssues();
 
+    if ( this.name == null )
+      builderIssues.addIssue( BuilderIssue.Severity.ERROR, "Service name may not be null.", this);
+    if ( this.type == null )
+      builderIssues.addIssue( BuilderIssue.Severity.ERROR, "Service type must not be null.", this);
+    if ( baseUri == null )
+      builderIssues.addIssue( BuilderIssue.Severity.ERROR, "Base URI must not be null.", this);
+
     // Check that the baseUri is a valid URI.
-    if ( this.baseUri != null && ! this.baseUri.isEmpty()) {
+    if ( ! this.baseUri.isEmpty()) {
       try {
-        URI bUri = new URI( this.baseUri);
+        new URI( this.baseUri);
       } catch (URISyntaxException e) {
         builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, "The baseUri [" + this.baseUri + "] of this Service [" + this.name + "] must be a valid URI.", this));
       }
