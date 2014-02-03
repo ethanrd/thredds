@@ -30,44 +30,59 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog;
+package ucar.thredds.catalog.xml.parser;
 
-import ucar.nc2.units.DateType;
-
-import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Represents a hierarchical collection of datasets.
- *
- * <p>Invariants:
- * <ul>
- *   <li> Must have a non-null name.</li>
- *   <li> Must have a non-null document base URI.</li>
- *   <li> Each Service name must be unique in the catalog.</li>
- *   <li> All Service name references must reference an existing Service.</li>
- *   <li> All Dataset ID must be unique in the catalog.</li>
- *   <li> All Dataset alias must reference an existing Dataset.</li> 
- * </ul>
+ * _more_
  *
  * @author edavis
  * @since 4.0
  */
-public interface Catalog extends ThreddsCatalogNode
+public class ThreddsXmlParserException extends Exception
 {
-  public String getName();
-  public URI getDocBaseUri();
-  public String getVersion();
-  public DateType getExpires();
-  public DateType getLastModified();
+  private final List<ThreddsXmlParserIssue> issues;
 
-//  public List<Service> getServices();
-//  public Service getServiceByName( String name );
-//  public Service findServiceByNameGlobally( String name );
-//
-//  public List<DatasetNode> getDatasets();
-//  public DatasetNode getDatasetById( String id );
-//  public DatasetNode findDatasetByIdGlobally( String id );
-//
-//  public List<Property> getProperties();
-//  public Property getPropertyByName( String name );
+  public ThreddsXmlParserException( ThreddsXmlParserIssue issue )
+  {
+    super();
+    this.issues = Collections.singletonList( issue );
+  }
+
+  public ThreddsXmlParserException( List<ThreddsXmlParserIssue> issues )
+  {
+    super();
+    this.issues = issues;
+  }
+
+  public ThreddsXmlParserException( String message )
+  {
+    super( message);
+    this.issues = Collections.emptyList();
+  }
+
+  public ThreddsXmlParserException( String message, Throwable cause )
+  {
+    super( message, cause);
+    this.issues = Collections.emptyList();
+  }
+
+  public List<ThreddsXmlParserIssue> getSources()
+  {
+    return Collections.unmodifiableList( this.issues );
+  }
+
+  @Override
+  public String getMessage()
+  {
+    if ( this.issues == null || this.issues.isEmpty())
+      return super.getMessage();
+
+    StringBuilder sb = new StringBuilder();
+    for ( ThreddsXmlParserIssue txpi : this.issues )
+      sb.append( txpi.getMessage() ).append( "\n" );
+    return sb.toString();
+  }
 }

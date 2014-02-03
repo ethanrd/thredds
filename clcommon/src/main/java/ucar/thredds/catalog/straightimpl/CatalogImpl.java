@@ -32,11 +32,10 @@
  */
 package ucar.thredds.catalog.straightimpl;
 
-import thredds.catalog2.*;
-import thredds.catalog2.builder.BuilderIssues;
-import thredds.catalog2.builder.ThreddsBuilder;
-import thredds.catalog2.straightimpl.*;
 import ucar.nc2.units.DateType;
+import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
+import ucar.thredds.catalog.builder.BuilderIssues;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -56,26 +55,28 @@ class CatalogImpl implements Catalog
   private final DateType expires; // DateType instances are mutable
   private final DateType lastModified;
 
-  private final ServiceContainer serviceContainer;
-  private final CatalogWideServiceTracker catalogWideServiceTracker;
-
-  //private final DatasetNodeContainer datasetNodeContainer;
-
-  private final PropertyContainer propertyContainer;
+//  private final ServiceContainer serviceContainer;
+//  private final CatalogWideServiceTracker catalogWideServiceTracker;
+//
+//  //private final DatasetNodeContainer datasetNodeContainer;
+//
+//  private final PropertyContainer propertyContainer;
 
   private final ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
 
 
   CatalogImpl( String name, String docBaseUri, String version, DateType expires, DateType lastModified,
-               PropertyBuilderContainer propertyBuilderContainer, ServiceBuilderContainer serviceBuilderContainer,
-               CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker, BuilderIssues builderIssues )
+//               PropertyBuilderContainer propertyBuilderContainer, ServiceBuilderContainer serviceBuilderContainer,
+//               CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker,
+               BuilderIssues builderIssues
+  )
   {
-    if ( propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
-      throw new IllegalArgumentException( "Failed to build Catalog, PropertyBuilderContainer is not buildable.");
-    if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
-      throw new IllegalArgumentException( "Failed to build Catalog, ServiceBuilderContainer is not buildable.");
-    if ( catalogWideServiceBuilderTracker.isBuildable() != ThreddsBuilder.Buildable.YES)
-      throw new IllegalArgumentException( "Failed to build Catalog, CatalogWideServiceBuilderTracker is not buildable.");
+//    if ( propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
+//      throw new IllegalArgumentException( "Failed to build Catalog, PropertyBuilderContainer is not buildable.");
+//    if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
+//      throw new IllegalArgumentException( "Failed to build Catalog, ServiceBuilderContainer is not buildable.");
+//    if ( catalogWideServiceBuilderTracker.isBuildable() != ThreddsBuilder.Buildable.YES)
+//      throw new IllegalArgumentException( "Failed to build Catalog, CatalogWideServiceBuilderTracker is not buildable.");
 //    if ( datasetNodeBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
 //      throw new IllegalArgumentException( "Failed to build Catalog, DatasetNodeBuilderContainer is not buildable.");
 
@@ -90,9 +91,9 @@ class CatalogImpl implements Catalog
     this.expires = expires;
     this.lastModified = lastModified;
 
-    this.propertyContainer = propertyBuilderContainer.build();
-    this.serviceContainer = serviceBuilderContainer.build();
-    this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
+//    this.propertyContainer = propertyBuilderContainer.build();
+//    this.serviceContainer = serviceBuilderContainer.build();
+//    this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
 
     //this.datasetNodeContainer = datasetNodeBuilderContainer.build();
 
@@ -123,44 +124,44 @@ class CatalogImpl implements Catalog
     return this.lastModified;
   }
 
-  public List<Service> getServices() {
-    return this.serviceContainer.getServices();
-  }
-
-  public Service getServiceByName( String name ) {
-    return this.serviceContainer.getServiceByName( name );
-  }
-
-  public Service findServiceByNameGlobally( String name ) {
-    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
-  }
-
-  public List<String> getPropertyNames() {
-    return this.propertyContainer.getPropertyNames();
-  }
-
-  public List<Property> getProperties() {
-    return this.propertyContainer.getProperties();
-  }
-
-  public Property getPropertyByName( String name ) {
-    return this.propertyContainer.getProperty( name );
-  }
-
-  public List<DatasetNode> getDatasets() {
-    return null; //this.datasetNodeContainer.getDatasets();
-  }
-
-  public DatasetNode getDatasetById( String id ) {
-    return null; //this.datasetNodeContainer.getDatasetById( id );
-  }
-
-  public DatasetNode findDatasetByIdGlobally( String id ) {
-    return null; //this.datasetNodeContainer.getDatasetNodeByGloballyUniqueId( id );
-  }
+//  public List<Service> getServices() {
+//    return this.serviceContainer.getServices();
+//  }
+//
+//  public Service getServiceByName( String name ) {
+//    return this.serviceContainer.getServiceByName( name );
+//  }
+//
+//  public Service findServiceByNameGlobally( String name ) {
+//    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
+//  }
+//
+//  public List<String> getPropertyNames() {
+//    return this.propertyContainer.getPropertyNames();
+//  }
+//
+//  public List<Property> getProperties() {
+//    return this.propertyContainer.getProperties();
+//  }
+//
+//  public Property getPropertyByName( String name ) {
+//    return this.propertyContainer.getProperty( name );
+//  }
+//
+//  public List<DatasetNode> getDatasets() {
+//    return null; //this.datasetNodeContainer.getDatasets();
+//  }
+//
+//  public DatasetNode getDatasetById( String id ) {
+//    return null; //this.datasetNodeContainer.getDatasetById( id );
+//  }
+//
+//  public DatasetNode findDatasetByIdGlobally( String id ) {
+//    return null; //this.datasetNodeContainer.getDatasetNodeByGloballyUniqueId( id );
+//  }
 
   @Override
-  public ThreddsCatalogIssueContainer getIssues() {
+  public ThreddsCatalogIssueContainer getCatalogIssues() {
     return this.threddsCatalogIssueContainer;
   }
 }

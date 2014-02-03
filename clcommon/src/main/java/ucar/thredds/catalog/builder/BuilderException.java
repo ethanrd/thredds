@@ -30,44 +30,53 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog;
-
-import ucar.nc2.units.DateType;
-
-import java.net.URI;
+package ucar.thredds.catalog.builder;
 
 /**
- * Represents a hierarchical collection of datasets.
- *
- * <p>Invariants:
- * <ul>
- *   <li> Must have a non-null name.</li>
- *   <li> Must have a non-null document base URI.</li>
- *   <li> Each Service name must be unique in the catalog.</li>
- *   <li> All Service name references must reference an existing Service.</li>
- *   <li> All Dataset ID must be unique in the catalog.</li>
- *   <li> All Dataset alias must reference an existing Dataset.</li> 
- * </ul>
+ * _more_
  *
  * @author edavis
  * @since 4.0
  */
-public interface Catalog extends ThreddsCatalogNode
+public class BuilderException extends Exception
 {
-  public String getName();
-  public URI getDocBaseUri();
-  public String getVersion();
-  public DateType getExpires();
-  public DateType getLastModified();
+  private final BuilderIssues issues;
 
-//  public List<Service> getServices();
-//  public Service getServiceByName( String name );
-//  public Service findServiceByNameGlobally( String name );
-//
-//  public List<DatasetNode> getDatasets();
-//  public DatasetNode getDatasetById( String id );
-//  public DatasetNode findDatasetByIdGlobally( String id );
-//
-//  public List<Property> getProperties();
-//  public Property getPropertyByName( String name );
+  public BuilderException( BuilderIssue issue )
+  {
+      super();
+      if ( issue == null )
+          throw new IllegalArgumentException( "Issue may not be null.");
+      this.issues = new BuilderIssues( issue );
+  }
+
+  public BuilderException( BuilderIssues issues )
+  {
+    super();
+    if ( issues == null )
+        throw new IllegalArgumentException( "Issues may not be null." );
+    this.issues = issues;
+  }
+
+  public BuilderException( BuilderIssue issue, Throwable cause )
+  {
+      super( cause );
+      this.issues = new BuilderIssues( issue );
+  }
+
+  public BuilderException( BuilderIssues issues, Throwable cause )
+  {
+    super( cause );
+    this.issues = issues;
+  }
+
+  public BuilderIssues getIssues()
+  {
+    return this.issues;
+  }
+
+  @Override
+  public String getMessage() {
+      return this.issues.toString();
+  }
 }

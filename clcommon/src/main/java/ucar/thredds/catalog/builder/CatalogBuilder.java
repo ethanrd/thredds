@@ -32,12 +32,8 @@
  */
 package ucar.thredds.catalog.builder;
 
-import thredds.catalog.ServiceType;
-import thredds.catalog2.Catalog;
-import thredds.catalog2.builder.*;
 import ucar.nc2.units.DateType;
-
-import java.util.List;
+import ucar.thredds.catalog.Catalog;
 
 /**
  * _more_
@@ -63,24 +59,25 @@ public interface CatalogBuilder extends ThreddsBuilder
   public void setLastModified( DateType lastModified );
 
   // * @throws IllegalStateException this CatalogBuilder has already been finished or already contains a ServiceBuilder with the given name.
-  public ServiceBuilder addService( String name, ServiceType type, String baseUri );
-  public boolean removeService( ServiceBuilder serviceBuilder );
-  public List<ServiceBuilder> getServiceBuilders();
-  public ServiceBuilder getServiceBuilderByName( String name );
-  public ServiceBuilder findServiceBuilderByNameGlobally( String name );
-
-  public DatasetBuilder addDataset( String name );
-  public CatalogRefBuilder addCatalogRef( String name, String uriReference );
-  public boolean removeDataset( DatasetNodeBuilder datasetNodeBuilder );
-
-  public List<DatasetNodeBuilder> getDatasetNodeBuilders();
-  public DatasetNodeBuilder getDatasetNodeBuilderById( String id );
-  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id );
-
-  public void addProperty( String name, String value );
-  public boolean removeProperty( String name );
-  public List<String> getPropertyNames();
-  public String getPropertyValue( String name );
+//  public ServiceBuilder addService( String name, ServiceType type, String baseUri );
+//  public boolean removeService( ServiceBuilder serviceBuilder );
+//  public List<ServiceBuilder> getServiceBuilders();
+//  public ServiceBuilder getServiceBuilderByName( String name );
+//  public ServiceBuilder findServiceBuilderByNameGlobally( String name );
+//
+//  public DatasetBuilder addDataset( String name );
+//  public CatalogRefBuilder addCatalogRef( String name, String uriReference );
+//  public boolean removeDataset( DatasetNodeBuilder datasetNodeBuilder );
+//
+//  public List<DatasetNodeBuilder> getDatasetNodeBuilders();
+//  public DatasetNodeBuilder getDatasetNodeBuilderById( String id );
+//  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id );
+//
+//  public void addProperty( String name, String value );
+//  public boolean removeProperty( String name );
+//  public List<Property> getProperties();
+//  public List<String> getPropertyNames();
+//  public String getPropertyValue( String name );
 
   /**
    * Generate the resulting Catalog.

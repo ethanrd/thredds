@@ -30,44 +30,34 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog;
+package ucar.thredds.catalog.builder;
 
 import ucar.nc2.units.DateType;
-
-import java.net.URI;
+import ucar.thredds.catalog.Catalog;
 
 /**
- * Represents a hierarchical collection of datasets.
- *
- * <p>Invariants:
- * <ul>
- *   <li> Must have a non-null name.</li>
- *   <li> Must have a non-null document base URI.</li>
- *   <li> Each Service name must be unique in the catalog.</li>
- *   <li> All Service name references must reference an existing Service.</li>
- *   <li> All Dataset ID must be unique in the catalog.</li>
- *   <li> All Dataset alias must reference an existing Dataset.</li> 
- * </ul>
+ * _more_
  *
  * @author edavis
  * @since 4.0
  */
-public interface Catalog extends ThreddsCatalogNode
+public interface ThreddsBuilderFactory
 {
-  public String getName();
-  public URI getDocBaseUri();
-  public String getVersion();
-  public DateType getExpires();
-  public DateType getLastModified();
+  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
+  public CatalogBuilder newCatalogBuilder( Catalog catalog );
 
-//  public List<Service> getServices();
-//  public Service getServiceByName( String name );
-//  public Service findServiceByNameGlobally( String name );
+//  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
+//  public ServiceBuilder newServiceBuilder( Service service );
 //
-//  public List<DatasetNode> getDatasets();
-//  public DatasetNode getDatasetById( String id );
-//  public DatasetNode findDatasetByIdGlobally( String id );
+//  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath );
+
+//  public DatasetBuilder newDatasetBuilder( String name );
+//  public DatasetBuilder newDatasetBuilder( Dataset dataset );
 //
-//  public List<Property> getProperties();
-//  public Property getPropertyByName( String name );
+//  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
+//  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
+
+//  public MetadataBuilder newMetadataBuilder();
+
+//  public ThreddsMetadataBuilder newThreddsMetadataBuilder();
 }

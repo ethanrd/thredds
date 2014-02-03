@@ -33,12 +33,11 @@
 package ucar.thredds.catalog.straightimpl;
 
 import thredds.catalog.ServiceType;
-import thredds.catalog2.Catalog;
-import thredds.catalog2.DatasetNode;
-import thredds.catalog2.Property;
-import thredds.catalog2.builder.*;
-import thredds.catalog2.straightimpl.*;
 import ucar.nc2.units.DateType;
+import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.builder.BuilderIssue;
+import ucar.thredds.catalog.builder.BuilderIssues;
+import ucar.thredds.catalog.builder.CatalogBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -58,34 +57,34 @@ class CatalogBuilderImpl implements CatalogBuilder
   private DateType expires;
   private DateType lastModified;
 
-  private ServiceBuilderContainer serviceBuilderContainer;
-  private CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
-
-  private DatasetNodeContainer datasetContainer;
-
-  private PropertyBuilderContainer propertyBuilderContainer;
+//  private ServiceBuilderContainer serviceBuilderContainer;
+//  private CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
+//
+//  private DatasetNodeContainer datasetContainer;
+//
+//  private PropertyBuilderContainer propertyBuilderContainer;
 
   private BuilderIssues builderIssues;
   private Buildable isBuildable;
 
   CatalogBuilderImpl( String name, String docBaseUri, String version, DateType expires, DateType lastModified ) {
     this.docBaseUri = docBaseUri != null ? docBaseUri : "";
-    this.name = name;
-    this.version = version;
-    this.expires = expires;
-    this.lastModified = lastModified;
+    this. name = name != null ? name : "";
+    this.version = version != null ? version : "";
+    this.expires = expires != null ? expires : new DateType();
+    this.lastModified = lastModified != null ? lastModified : new DateType();
 
-    this.catalogWideServiceBuilderTracker = new CatalogWideServiceBuilderTracker();
-    this.serviceBuilderContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
-
-    //this.datasetContainer = new DatasetNodeContainer( null );
-    this.propertyBuilderContainer = new PropertyBuilderContainer();
+//    this.catalogWideServiceBuilderTracker = new CatalogWideServiceBuilderTracker();
+//    this.serviceBuilderContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
+//
+//    //this.datasetContainer = new DatasetNodeContainer( null );
+//    this.propertyBuilderContainer = new PropertyBuilderContainer();
     this.isBuildable = Buildable.DONT_KNOW;
   }
 
-  DatasetNodeContainer getDatasetNodeContainer() {
-    return this.datasetContainer;
-  }
+//  DatasetNodeContainer getDatasetNodeContainer() {
+//    return this.datasetContainer;
+//  }
 
   public void setName( String name ) {
     this.name = name;
@@ -133,106 +132,106 @@ class CatalogBuilderImpl implements CatalogBuilder
     return this.lastModified;
   }
 
-  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
-    this.isBuildable = Buildable.DONT_KNOW;
-    return this.serviceBuilderContainer.addService( name, type, baseUri );
-  }
-
-  public boolean removeService( ServiceBuilder serviceBuilder ) {
-    if ( serviceBuilder == null )
-      return false;
-
-    this.isBuildable = Buildable.DONT_KNOW;
-    return this.serviceBuilderContainer.removeService( serviceBuilder );
-  }
-
-  public List<ServiceBuilder> getServiceBuilders()
-  {
-    return this.serviceBuilderContainer.getServiceBuilders();
-  }
-
-  public ServiceBuilder getServiceBuilderByName( String name )
-  {
-    return this.serviceBuilderContainer.getServiceBuilderByName( name );
-  }
-
-  public ServiceBuilder findServiceBuilderByNameGlobally( String name ) {
-    return this.catalogWideServiceBuilderTracker.getReferenceableService(name);
-  }
-
-  public void addProperty( String name, String value ) {
-    this.isBuildable = Buildable.DONT_KNOW;
-    this.propertyBuilderContainer.addProperty(name, value);
-  }
-
-  public boolean removeProperty( String name ) {
-    this.isBuildable = Buildable.DONT_KNOW;
-    return this.propertyBuilderContainer.removeProperty( name ) != null;
-  }
-
-  public List<String> getPropertyNames() {
-    return this.propertyBuilderContainer.getPropertyNames();
-  }
-
-  public String getPropertyValue( String name ) {
-    return this.propertyBuilderContainer.getPropertyValue( name );
-  }
-
-  public List<Property> getProperties() {
-    return this.propertyBuilderContainer.getProperties();
-  }
-
-  public Property getPropertyByName( String name ) {
-    return this.propertyBuilderContainer.getProperty(name);
-  }
-
-  public DatasetBuilder addDataset( String name ) {
-    this.isBuildable = Buildable.DONT_KNOW;
-//    DatasetImpl di = new DatasetImpl( name, this, null );
-//    this.datasetContainer.addDatasetNode( di );
-//    return di;
-    return null;
-  }
-
-  public CatalogRefBuilder addCatalogRef( String name, String reference ) {
-    this.isBuildable = Buildable.DONT_KNOW;
-//    CatalogRefImpl crb = new CatalogRefImpl( name, reference, this, null );
-//    this.datasetContainer.addDatasetNode( crb );
-//    return crb;
-    return null;
-  }
-
-  public boolean removeDataset( DatasetNodeBuilder builder ) {
-    if ( builder == null )
-      throw new IllegalArgumentException( "DatasetNodeBuilder may not be null.");
-
-    this.isBuildable = Buildable.DONT_KNOW;
-    return this.datasetContainer.removeDatasetNode( (DatasetNodeImpl) builder );
-  }
-
-  public List<DatasetNode> getDatasets() {
-    return this.datasetContainer.getDatasets();
-  }
-
-  public DatasetNode getDatasetById( String id ) {
-    return this.datasetContainer.getDatasetById( id );
-  }
-
-  public DatasetNode findDatasetByIdGlobally( String id ) {
-    return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
-  }
-
-  public List<DatasetNodeBuilder> getDatasetNodeBuilders() {
-    return this.datasetContainer.getDatasetNodeBuilders();
-  }
-
-  public DatasetNodeBuilder getDatasetNodeBuilderById( String id ) {
-    return this.datasetContainer.getDatasetNodeBuilderById( id);
-  }
-
-  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id ) {
-    return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
-  }
+//  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
+//    this.isBuildable = Buildable.DONT_KNOW;
+//    return this.serviceBuilderContainer.addService( name, type, baseUri );
+//  }
+//
+//  public boolean removeService( ServiceBuilder serviceBuilder ) {
+//    if ( serviceBuilder == null )
+//      return false;
+//
+//    this.isBuildable = Buildable.DONT_KNOW;
+//    return this.serviceBuilderContainer.removeService( serviceBuilder );
+//  }
+//
+//  public List<ServiceBuilder> getServiceBuilders()
+//  {
+//    return this.serviceBuilderContainer.getServiceBuilders();
+//  }
+//
+//  public ServiceBuilder getServiceBuilderByName( String name )
+//  {
+//    return this.serviceBuilderContainer.getServiceBuilderByName( name );
+//  }
+//
+//  public ServiceBuilder findServiceBuilderByNameGlobally( String name ) {
+//    return this.catalogWideServiceBuilderTracker.getReferenceableService(name);
+//  }
+//
+//  public void addProperty( String name, String value ) {
+//    this.isBuildable = Buildable.DONT_KNOW;
+//    this.propertyBuilderContainer.addProperty(name, value);
+//  }
+//
+//  public boolean removeProperty( String name ) {
+//    this.isBuildable = Buildable.DONT_KNOW;
+//    return this.propertyBuilderContainer.removeProperty( name ) != null;
+//  }
+//
+//  public List<String> getPropertyNames() {
+//    return this.propertyBuilderContainer.getPropertyNames();
+//  }
+//
+//  public String getPropertyValue( String name ) {
+//    return this.propertyBuilderContainer.getPropertyValue( name );
+//  }
+//
+//  public List<Property> getProperties() {
+//    return this.propertyBuilderContainer.getProperties();
+//  }
+//
+//  public Property getPropertyByName( String name ) {
+//    return this.propertyBuilderContainer.getProperty(name);
+//  }
+//
+//  public DatasetBuilder addDataset( String name ) {
+//    this.isBuildable = Buildable.DONT_KNOW;
+////    DatasetImpl di = new DatasetImpl( name, this, null );
+////    this.datasetContainer.addDatasetNode( di );
+////    return di;
+//    return null;
+//  }
+//
+//  public CatalogRefBuilder addCatalogRef( String name, String reference ) {
+//    this.isBuildable = Buildable.DONT_KNOW;
+////    CatalogRefImpl crb = new CatalogRefImpl( name, reference, this, null );
+////    this.datasetContainer.addDatasetNode( crb );
+////    return crb;
+//    return null;
+//  }
+//
+//  public boolean removeDataset( DatasetNodeBuilder builder ) {
+//    if ( builder == null )
+//      throw new IllegalArgumentException( "DatasetNodeBuilder may not be null.");
+//
+//    this.isBuildable = Buildable.DONT_KNOW;
+//    return this.datasetContainer.removeDatasetNode( (DatasetNodeImpl) builder );
+//  }
+//
+//  public List<DatasetNode> getDatasets() {
+//    return this.datasetContainer.getDatasets();
+//  }
+//
+//  public DatasetNode getDatasetById( String id ) {
+//    return this.datasetContainer.getDatasetById( id );
+//  }
+//
+//  public DatasetNode findDatasetByIdGlobally( String id ) {
+//    return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
+//  }
+//
+//  public List<DatasetNodeBuilder> getDatasetNodeBuilders() {
+//    return this.datasetContainer.getDatasetNodeBuilders();
+//  }
+//
+//  public DatasetNodeBuilder getDatasetNodeBuilderById( String id ) {
+//    return this.datasetContainer.getDatasetNodeBuilderById( id);
+//  }
+//
+//  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id ) {
+//    return this.datasetContainer.getDatasetNodeByGloballyUniqueId( id );
+//  }
 
   public Buildable isBuildable() {
     return this.isBuildable;
@@ -253,9 +252,9 @@ class CatalogBuilderImpl implements CatalogBuilder
       builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, String.format( "The document base URI [%s} is not absolute.", this.docBaseUri), this));
 
     // Check subordinates.
-    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
-    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
-    builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
+//    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
+//    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
+//    builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
 
     if ( builderIssues.isValid())
       this.isBuildable = Buildable.YES;
@@ -270,8 +269,10 @@ class CatalogBuilderImpl implements CatalogBuilder
     if ( this.isBuildable != Buildable.YES )
       throw new IllegalStateException( "CatalogBuilder not buildable.");
 
-    return new CatalogImpl( this.name, this.docBaseUri, this.version, this.expires, this.lastModified,
-        this.propertyBuilderContainer, this.serviceBuilderContainer,
-        this.catalogWideServiceBuilderTracker, this.builderIssues );
+    return new CatalogImpl( this.name, this.docBaseUri, this.version,
+        this.expires, this.lastModified,
+//        this.propertyBuilderContainer, this.serviceBuilderContainer,
+//        this.catalogWideServiceBuilderTracker,
+        this.builderIssues );
   }
 }

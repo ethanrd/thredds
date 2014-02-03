@@ -30,44 +30,25 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog;
+package ucar.thredds.catalog.xml.parser;
 
-import ucar.nc2.units.DateType;
-
-import java.net.URI;
+import ucar.thredds.catalog.builder.BuilderIssue;
+import ucar.thredds.catalog.builder.ThreddsBuilder;
 
 /**
- * Represents a hierarchical collection of datasets.
- *
- * <p>Invariants:
- * <ul>
- *   <li> Must have a non-null name.</li>
- *   <li> Must have a non-null document base URI.</li>
- *   <li> Each Service name must be unique in the catalog.</li>
- *   <li> All Service name references must reference an existing Service.</li>
- *   <li> All Dataset ID must be unique in the catalog.</li>
- *   <li> All Dataset alias must reference an existing Dataset.</li> 
- * </ul>
+ * _more_
  *
  * @author edavis
  * @since 4.0
  */
-public interface Catalog extends ThreddsCatalogNode
+public class ThreddsXmlParserIssue extends BuilderIssue
 {
-  public String getName();
-  public URI getDocBaseUri();
-  public String getVersion();
-  public DateType getExpires();
-  public DateType getLastModified();
+  public final Exception cause;
 
-//  public List<Service> getServices();
-//  public Service getServiceByName( String name );
-//  public Service findServiceByNameGlobally( String name );
-//
-//  public List<DatasetNode> getDatasets();
-//  public DatasetNode getDatasetById( String id );
-//  public DatasetNode findDatasetByIdGlobally( String id );
-//
-//  public List<Property> getProperties();
-//  public Property getPropertyByName( String name );
+  public ThreddsXmlParserIssue( Severity severity, String message, ThreddsBuilder builder, Exception cause ) {
+    super( severity, message, builder );
+    this.cause = cause;
+  }
+
+  public Exception getCause() { return this.cause; }
 }
