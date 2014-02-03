@@ -12,6 +12,28 @@
   <artifactId>clcommon</artifactId>
   <name>client side common library</name>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>ucar/thredds/catalog/**/*.java</include>
+          </includes>
+          <!--<excludes>-->
+            <!--<exclude>ucar/nc2/**/*.java</exclude>-->
+            <!--<exclude>thredds/**/*.java</exclude>-->
+          <!--</excludes>-->
+
+          <testIncludes>
+            <include>ucar/thredds/catalog/**/*.java</include>
+          </testIncludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
 
     <dependency>

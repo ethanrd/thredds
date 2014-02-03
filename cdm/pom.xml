@@ -124,20 +124,23 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <includes>
-            <include>thredds/catalog/**/*.java</include>
-            <include>thredds/catalog2/**/*.java</include>
-          </includes>
+          <!--<includes>-->
+            <!--<include>thredds/catalog/**/*.java</include>-->
+            <!--<include>thredds/catalog2/**/*.java</include>-->
+          <!--</includes>-->
           <excludes>
-            <exclude>thredds/catalog2/simpleImpl/**/*.java</exclude>
-            <exclude>thredds/catalog2/builder/util/**/*.java</exclude>
-            <exclude>thredds/catalog2/xml/**/*.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/ThreddsC*.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/CatalogBuilderImpl.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/CatalogImpl.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/CatalogRefImpl.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/Dataset*.java</exclude>
-            <exclude>thredds/catalog2/straightimpl/Metadata*.java</exclude>
+            <exclude>ucar/nc2/util/reflect/**</exclude>
+            <exclude>thredds/catalog2/**</exclude>
+
+            <!--<exclude>thredds/catalog2/simpleImpl/**/*.java</exclude>-->
+            <!--<exclude>thredds/catalog2/builder/util/**/*.java</exclude>-->
+            <!--<exclude>thredds/catalog2/xml/**/*.java</exclude>-->
+            <!--<exclude>thredds/catalog2/straightimpl/ThreddsC*.java</exclude>-->
+            <!--<exclude>thredds/catalog2/straightimpl/CatalogBuilderImpl.java</exclude>-->
+            <!--<exclude>thredds/catalog2/straightimpl/CatalogImpl.java</exclude>-->
+            <!--<exclude>thredds/catalog2/straightimpl/CatalogRefImpl.java</exclude>-->
+            <!--<exclude>thredds/catalog2/straightimpl/Dataset*.java</exclude>-->
+            <!--<exclude>thredds/catalog2/straightimpl/Metadata*.java</exclude>-->
             <!--&lt;!&ndash; exclude>thredds/logs/**</exclude &ndash;&gt;-->
             <!--<exclude>ucar/nc2/dataset/grid/**</exclude>-->
             <!--&lt;!&ndash;exclude>ucar/nc2/jni/**</exclude &ndash;&gt;-->
@@ -145,11 +148,15 @@
             <!--exclude>ucar/nc2/util/reflect/**</exclude-->
           </excludes>
 
-          <testIncludes>
-            <include>thredds/catalog/xml/testutil/CatalogXmlAsStringUtil.java</include>
-            <include>thredds/catalog2/builder/*.java</include>
-            <include>thredds/catalog2/straightimpl/*.java</include>
-          </testIncludes>
+          <!--<testIncludes>-->
+            <!--<include>thredds/catalog/xml/testutil/CatalogXmlAsStringUtil.java</include>-->
+            <!--<include>thredds/catalog2/builder/*.java</include>-->
+            <!--<include>thredds/catalog2/straightimpl/*.java</include>-->
+          <!--</testIncludes>-->
+          <testExcludes>
+            <exclude>thredds/catalog2/**</exclude>
+            <exclude>thredds/catalog/testutil/CatalogXmlUtils.java</exclude>
+          </testExcludes>
         </configuration>
       </plugin>
 
