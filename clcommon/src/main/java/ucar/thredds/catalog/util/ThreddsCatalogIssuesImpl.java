@@ -1,4 +1,4 @@
-package ucar.thredds.catalog.straightimpl;
+package ucar.thredds.catalog.util;
 
 import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssue;

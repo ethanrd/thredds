@@ -6,8 +6,10 @@
 - Start "fresh" in clcommon with package ucar.thredds.catalog
   - Limit initial work to Catalog
 ** Current actions
-*** TODO Move to ucar.thredds.catalog
-*** NEXT Ensure consistency throughout classes
+*** TODO Write impl agnostic Builder/Node tests
+*** TODO Write impl specific Builder/Node tests
+*** TODO Write impl and parser agnostic tests
+*** TODO Ensure consistency throughout classes
 | class          | str    | straight     | straight   | simple |
 |                | B-able | Test Builder | Test Built |        |
 |----------------+--------+--------------+------------+--------|

@@ -35,8 +35,6 @@ package ucar.thredds.catalog.simpleimpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.*;
 
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
@@ -44,7 +42,7 @@ import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssue;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.CatalogBuilder;
-import ucar.thredds.catalog.straightimpl.ThreddsCatalogIssuesImpl;
+import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 /**
  * _more_
