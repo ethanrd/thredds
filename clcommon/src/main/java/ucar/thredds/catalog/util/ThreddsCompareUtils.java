@@ -1,6 +1,7 @@
 package ucar.thredds.catalog.util;
 
 import ucar.thredds.catalog.builder.CatalogBuilder;
+import ucar.thredds.catalog.Catalog;
 
 import java.util.Formatter;
 
@@ -19,6 +20,13 @@ public class ThreddsCompareUtils {
     return threddsCompareUtils.doCompareCatalogBuilders( orginalCB, altCB );
   }
 
+  public static boolean compareCatalog( Catalog orginalCat, Catalog altCat, Formatter compareLog) {
+    if ( compareLog == null )
+      throw new IllegalArgumentException( "Must supply a compareLog." );
+
+    ThreddsCompareUtils threddsCompareUtils = new ThreddsCompareUtils( compareLog);
+    return threddsCompareUtils.doCompareCatalogs( orginalCat, altCat );
+  }
 
   private Formatter comparisonLog;
   private boolean showCompare = false;
@@ -54,6 +62,42 @@ public class ThreddsCompareUtils {
     if ( ! originalCB.getLastModified().equals( altCB.getLastModified() )) {
       this.comparisonLog.format( "Catalog lastMod dates not the same; first [%s], second [%s]",
           originalCB.getLastModified(), altCB.getLastModified());
+      ok = false;
+    }
+
+    // for ( Property curProperty : originalCB.getProperties() ) {
+    //   ok &= doCompareProperties(... );
+    // }
+
+    return ok;
+  }private boolean doCompareCatalogs( Catalog originalCat, Catalog altCat ) {
+    if ( originalCat == null || altCat == null )
+      throw new IllegalArgumentException( "Catalogs to compare may not be null." );
+
+    boolean ok = true;
+    if ( ! originalCat.getDocBaseUri().equals( originalCat.getDocBaseUri() )) {
+      this.comparisonLog.format( "Catalog DocBase URIs not the same: first [%s], second [%s]",
+          originalCat.getDocBaseUri(), altCat.getDocBaseUri() );
+      ok = false;
+    }
+    if ( ! originalCat.getName().equals( altCat.getName() )) {
+      this.comparisonLog.format( "Catalog names not the same; first [%s], second [%s]",
+          originalCat.getName(), altCat.getName());
+      ok = false;
+    }
+    if ( ! originalCat.getVersion().equals( altCat.getVersion() )) {
+      this.comparisonLog.format( "Catalog versions not the same; first [%s], second [%s]",
+          originalCat.getVersion(), altCat.getVersion());
+      ok = false;
+    }
+    if ( ! originalCat.getExpires().equals( altCat.getExpires() )) {
+      this.comparisonLog.format( "Catalog expires dates not the same; first [%s], second [%s]",
+          originalCat.getExpires(), altCat.getExpires());
+      ok = false;
+    }
+    if ( ! originalCat.getLastModified().equals( altCat.getLastModified() )) {
+      this.comparisonLog.format( "Catalog lastMod dates not the same; first [%s], second [%s]",
+          originalCat.getLastModified(), altCat.getLastModified());
       ok = false;
     }
 

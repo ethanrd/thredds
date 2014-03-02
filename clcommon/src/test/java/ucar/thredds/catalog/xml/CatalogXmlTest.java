@@ -6,10 +6,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import ucar.thredds.catalog.Catalog;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.CatalogBuilder;
 import ucar.thredds.catalog.builder.ThreddsBuilder;
+import ucar.thredds.catalog.builder.ThreddsBuilderFactory;
 import ucar.thredds.catalog.testutil.CatalogTestUtils;
 import ucar.thredds.catalog.util.ThreddsCompareUtils;
 import ucar.thredds.catalog.xml.parser.ThreddsXmlParser;
@@ -25,6 +28,8 @@ import ucar.thredds.catalog.xml.writer.ThreddsXmlWriterFactory;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Formatter;
 
@@ -34,8 +39,24 @@ import java.util.Formatter;
  * @author edavis
  * @since 4.0
  */
+@RunWith(Parameterized.class)
 public class CatalogXmlTest
 {
+  private ThreddsBuilderFactory threddsBuilderFactory;
+
+  public CatalogXmlTest( ThreddsBuilderFactory threddsBuilderFactory ) {
+    this.threddsBuilderFactory = threddsBuilderFactory;
+  }
+
+  @Parameterized.Parameters
+  public static Collection<Object[]> threddsBuilderFactoryClasses() {
+    Object[][] classes = {
+        {new ucar.thredds.catalog.straightimpl.ThreddsBuilderFactoryImpl()},
+        {new ucar.thredds.catalog.simpleimpl.ThreddsBuilderFactoryImpl()}
+    };
+    return Arrays.asList( classes );
+  }
+
 
   // Do we have all these:
     // 1) dataset with urlPath and serviceName attributes
@@ -58,20 +79,29 @@ public class CatalogXmlTest
       DateType expires = new DateType( false, new Date( System.currentTimeMillis() + 60*60*1000));
       DateType lastModified = new DateType( false, new Date( System.currentTimeMillis() - 60*60*1000));
 
-      actualTestFor_parseAndWriteCatalogSkeleton( baseUriString, name, version, expires, lastModified );
-      actualTestFor_parseAndWriteCatalogSkeleton( baseUriString, name, version, expires, null );
-      actualTestFor_parseAndWriteCatalogSkeleton( baseUriString, name, version, null, null );
-      actualTestFor_parseAndWriteCatalogSkeleton( baseUriString, name, null, null, null );
-      actualTestFor_parseAndWriteCatalogSkeleton( baseUriString, null, null, null, null );
+      ThreddsXmlParserFactory threddsXmlParserFactory = ThreddsXmlParserFactory.newInstance();
+      threddsXmlParserFactory.setCatalogBuilderImpl( this.threddsBuilderFactory );
+
+      actualTestFor_parseAndWriteCatalogSkeleton( threddsXmlParserFactory,
+          baseUriString, name, version, expires, lastModified );
+      actualTestFor_parseAndWriteCatalogSkeleton( threddsXmlParserFactory,
+          baseUriString, name, version, expires, null );
+      actualTestFor_parseAndWriteCatalogSkeleton( threddsXmlParserFactory,
+          baseUriString, name, version, null, null );
+      actualTestFor_parseAndWriteCatalogSkeleton( threddsXmlParserFactory,
+          baseUriString, name, null, null, null );
+      actualTestFor_parseAndWriteCatalogSkeleton( threddsXmlParserFactory,
+          baseUriString, null, null, null, null );
     }
 
-  private void actualTestFor_parseAndWriteCatalogSkeleton( String baseUriString, String name, String version,
+  private void actualTestFor_parseAndWriteCatalogSkeleton( ThreddsXmlParserFactory threddsXmlParserFactory,
+                                                           String baseUriString, String name, String version,
                                                            DateType expires, DateType lastModified )
       throws ThreddsXmlParserException, ThreddsXmlWriterException
   {
     String xml = CatalogXmlAsStringUtils.getCatalog( name, version, expires, lastModified);
 
-    ThreddsXmlParser cp = ThreddsXmlParserFactory.newInstance().getParser();
+    ThreddsXmlParser cp = threddsXmlParserFactory.getParser();
     CatalogBuilder catBuilder = cp.parseIntoBuilder( new StringReader( xml ),
                                                    baseUriString );
     assertNotNull( catBuilder );
@@ -87,7 +117,6 @@ public class CatalogXmlTest
 
     StringWriter catWriter = new StringWriter();
     txw.writeCatalog( catalog, catWriter );
-    System.out.println( catWriter.toString());
 
     CatalogBuilder catBuilder2 = cp.parseIntoBuilder( new StringReader( catWriter.toString()), baseUriString );
     BuilderIssues builderIssues2 = catBuilder2.checkForIssues();
@@ -97,7 +126,7 @@ public class CatalogXmlTest
 
     Formatter compareLog = new Formatter();
     assertTrue( compareLog.toString(),
-        ThreddsCompareUtils.compareCatalogBuilders( catBuilder, catBuilder2, compareLog ));
+        ThreddsCompareUtils.compareCatalog( catalog, catalog2, compareLog ));
     //ThreddsCompareUtils.compareCatalogBuilders( catalog, catalog2 );
   }
 
