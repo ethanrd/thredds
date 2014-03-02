@@ -7,7 +7,6 @@ import ucar.nc2.units.DateType;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
