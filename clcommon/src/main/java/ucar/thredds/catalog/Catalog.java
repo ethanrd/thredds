@@ -35,6 +35,7 @@ package ucar.thredds.catalog;
 import ucar.nc2.units.DateType;
 
 import java.net.URI;
+import java.util.List;
 
 /**
  * Represents a hierarchical collection of datasets.
@@ -67,7 +68,9 @@ public interface Catalog extends ThreddsCatalogNode
 //  public List<DatasetNode> getDatasets();
 //  public DatasetNode getDatasetById( String id );
 //  public DatasetNode findDatasetByIdGlobally( String id );
-//
-//  public List<Property> getProperties();
-//  public Property getPropertyByName( String name );
+
+  public List<Property> getProperties();
+  public List<String> getPropertyNames();
+  public Property getPropertyByName( String name );
+  public List<Property> getPropertiesByName( String name );
 }

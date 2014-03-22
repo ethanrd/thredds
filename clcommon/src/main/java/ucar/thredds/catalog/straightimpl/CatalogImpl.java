@@ -34,12 +34,15 @@ package ucar.thredds.catalog.straightimpl;
 
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.Property;
 import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssues;
+import ucar.thredds.catalog.builder.ThreddsBuilder;
 import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * _more_
@@ -59,20 +62,20 @@ class CatalogImpl implements Catalog
 //  private final CatalogWideServiceTracker catalogWideServiceTracker;
 //
 //  //private final DatasetNodeContainer datasetNodeContainer;
-//
-//  private final PropertyContainer propertyContainer;
+
+  private final PropertyContainer propertyContainer;
 
   private final ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
 
 
   CatalogImpl( String name, String docBaseUri, String version, DateType expires, DateType lastModified,
-//               PropertyBuilderContainer propertyBuilderContainer, ServiceBuilderContainer serviceBuilderContainer,
+               PropertyBuilderContainer propertyBuilderContainer, //ServiceBuilderContainer serviceBuilderContainer,
 //               CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker,
                BuilderIssues builderIssues
   )
   {
-//    if ( propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
-//      throw new IllegalArgumentException( "Failed to build Catalog, PropertyBuilderContainer is not buildable.");
+    if ( propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
+      throw new IllegalArgumentException( "Failed to build Catalog, PropertyBuilderContainer is not buildable.");
 //    if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
 //      throw new IllegalArgumentException( "Failed to build Catalog, ServiceBuilderContainer is not buildable.");
 //    if ( catalogWideServiceBuilderTracker.isBuildable() != ThreddsBuilder.Buildable.YES)
@@ -91,7 +94,7 @@ class CatalogImpl implements Catalog
     this.expires = expires;
     this.lastModified = lastModified;
 
-//    this.propertyContainer = propertyBuilderContainer.build();
+    this.propertyContainer = propertyBuilderContainer.build();
 //    this.serviceContainer = serviceBuilderContainer.build();
 //    this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
 
@@ -135,19 +138,19 @@ class CatalogImpl implements Catalog
 //  public Service findServiceByNameGlobally( String name ) {
 //    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
 //  }
-//
-//  public List<String> getPropertyNames() {
-//    return this.propertyContainer.getPropertyNames();
-//  }
-//
-//  public List<Property> getProperties() {
-//    return this.propertyContainer.getProperties();
-//  }
-//
-//  public Property getPropertyByName( String name ) {
-//    return this.propertyContainer.getProperty( name );
-//  }
-//
+
+  public List<String> getPropertyNames() {
+    return this.propertyContainer.getPropertyNames();
+  }
+
+  public List<Property> getProperties() {
+    return this.propertyContainer.getProperties();
+  }
+
+  public Property getPropertyByName( String name ) {
+    return this.propertyContainer.getProperty( name );
+  }
+
 //  public List<DatasetNode> getDatasets() {
 //    return null; //this.datasetNodeContainer.getDatasets();
 //  }

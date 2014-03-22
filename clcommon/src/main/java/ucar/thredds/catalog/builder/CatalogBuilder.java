@@ -34,6 +34,9 @@ package ucar.thredds.catalog.builder;
 
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.Property;
+
+import java.util.List;
 
 /**
  * _more_
@@ -72,12 +75,13 @@ public interface CatalogBuilder extends ThreddsBuilder
 //  public List<DatasetNodeBuilder> getDatasetNodeBuilders();
 //  public DatasetNodeBuilder getDatasetNodeBuilderById( String id );
 //  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id );
-//
-//  public void addProperty( String name, String value );
-//  public boolean removeProperty( String name );
-//  public List<Property> getProperties();
-//  public List<String> getPropertyNames();
-//  public String getPropertyValue( String name );
+
+  public void addProperty( String name, String value );
+  public List<Property> getProperties();
+  public List<String> getPropertyNames();
+  public Property getPropertyByName( String name );
+  public List<Property> getPropertiesByName( String name );
+  public boolean removeProperty( Property property );
 
   /**
    * Generate the resulting Catalog.

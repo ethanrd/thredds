@@ -30,36 +30,81 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog.builder;
+package ucar.thredds.catalog.straightimpl;
 
-import ucar.nc2.units.DateType;
-import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.Property;
+
+import java.util.*;
 
 /**
- * _more_
+ * Helper class for classes that contain properties: ServiceImpl, DatasetNodeImpl,
+ * and CatalogImpl.
  *
  * @author edavis
- * @since 4.0
  */
-public interface ThreddsBuilderFactory
+final class PropertyContainer
 {
-  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
-  public CatalogBuilder newCatalogBuilder( Catalog catalog );
+  private final Map<String, Property> propertiesMap;
 
-  public PropertyBuilder
+  PropertyContainer() {
+    this.propertiesMap = null;
+  }
 
-//  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
-//  public ServiceBuilder newServiceBuilder( Service service );
-//
-//  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath );
+  PropertyContainer( Map<String,Property> propertiesMap) {
+    if ( propertiesMap == null || propertiesMap.isEmpty())
+      this.propertiesMap = null;
+    else
+      this.propertiesMap = new HashMap<String, Property>( propertiesMap);
+  }
 
-//  public DatasetBuilder newDatasetBuilder( String name );
-//  public DatasetBuilder newDatasetBuilder( Dataset dataset );
-//
-//  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
-//  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
+  boolean isEmpty() {
+    if ( this.propertiesMap == null )
+      return true;
+    return this.propertiesMap.isEmpty();
+  }
 
-//  public MetadataBuilder newMetadataBuilder();
+  int size() {
+    if ( this.propertiesMap == null )
+      return 0;
+    return this.propertiesMap.size();
+  }
 
-//  public ThreddsMetadataBuilder newThreddsMetadataBuilder();
+  List<String> getPropertyNames() {
+    if ( this.propertiesMap == null )
+      return Collections.emptyList();
+
+    return Collections.unmodifiableList( new ArrayList<String>( this.propertiesMap.keySet() ) );
+  }
+
+  boolean containsProperty( String name ) {
+    if ( name == null || this.propertiesMap == null )
+      return false;
+
+    if ( this.propertiesMap.get( name ) == null )
+      return false;
+    return true;
+  }
+
+  Property getProperty( String name ) {
+    if ( name == null || this.propertiesMap == null )
+      return null;
+
+    return this.propertiesMap.get( name );
+  }
+
+  String getPropertyValue( String name ) {
+    if ( name == null || propertiesMap == null )
+      return null;
+
+    Property property = this.propertiesMap.get( name );
+    if ( property == null )
+      return null;
+    return property.getValue();
+  }
+
+  List<Property> getProperties() {
+    if ( propertiesMap == null )
+      return Collections.emptyList();
+    return Collections.unmodifiableList( new ArrayList<Property>( this.propertiesMap.values() ) );
+  }
 }

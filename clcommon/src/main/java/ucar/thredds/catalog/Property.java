@@ -30,36 +30,16 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog.builder;
-
-import ucar.nc2.units.DateType;
-import ucar.thredds.catalog.Catalog;
+package ucar.thredds.catalog;
 
 /**
- * _more_
+ * Represents a Property name/value pair used in various places throughout THREDDS catalogs.
  *
  * @author edavis
  * @since 4.0
  */
-public interface ThreddsBuilderFactory
+public interface Property extends ThreddsCatalogNode
 {
-  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
-  public CatalogBuilder newCatalogBuilder( Catalog catalog );
-
-  public PropertyBuilder
-
-//  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
-//  public ServiceBuilder newServiceBuilder( Service service );
-//
-//  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath );
-
-//  public DatasetBuilder newDatasetBuilder( String name );
-//  public DatasetBuilder newDatasetBuilder( Dataset dataset );
-//
-//  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
-//  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
-
-//  public MetadataBuilder newMetadataBuilder();
-
-//  public ThreddsMetadataBuilder newThreddsMetadataBuilder();
+  public String getName();
+  public String getValue();
 }

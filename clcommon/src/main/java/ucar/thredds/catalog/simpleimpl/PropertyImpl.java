@@ -30,10 +30,11 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog.builder;
+package ucar.thredds.catalog.simpleimpl;
 
-import ucar.nc2.units.DateType;
-import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.Property;
+import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
+import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 /**
  * _more_
@@ -41,25 +42,30 @@ import ucar.thredds.catalog.Catalog;
  * @author edavis
  * @since 4.0
  */
-public interface ThreddsBuilderFactory
+class PropertyImpl implements Property
 {
-  public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
-  public CatalogBuilder newCatalogBuilder( Catalog catalog );
+  private final String name;
+  private final String value;
+  PropertyImpl( String name, String value )
+  {
+    if ( name == null || name.isEmpty())
+      throw new IllegalArgumentException( "Name must not be null or empty.");
+    this.name = name;
+    this.value = value != null ? value : "";
+  }
 
-  public PropertyBuilder
+  public String getName()
+  {
+    return this.name;
+  }
 
-//  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
-//  public ServiceBuilder newServiceBuilder( Service service );
-//
-//  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath );
+  public String getValue()
+  {
+    return this.value;
+  }
 
-//  public DatasetBuilder newDatasetBuilder( String name );
-//  public DatasetBuilder newDatasetBuilder( Dataset dataset );
-//
-//  public CatalogRefBuilder newCatalogRefBuilder( String name, String reference );
-//  public CatalogRefBuilder newCatalogRefBuilder( CatalogRef catRef);
+  public ThreddsCatalogIssueContainer getCatalogIssues() {
+    return new ThreddsCatalogIssuesImpl( null);
+  }
 
-//  public MetadataBuilder newMetadataBuilder();
-
-//  public ThreddsMetadataBuilder newThreddsMetadataBuilder();
 }

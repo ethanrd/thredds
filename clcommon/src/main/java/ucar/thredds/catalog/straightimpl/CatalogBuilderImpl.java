@@ -32,9 +32,9 @@
  */
 package ucar.thredds.catalog.straightimpl;
 
-import thredds.catalog.ServiceType;
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.Property;
 import ucar.thredds.catalog.builder.BuilderIssue;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.CatalogBuilder;
@@ -62,7 +62,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 //
 //  private DatasetNodeContainer datasetContainer;
 //
-//  private PropertyBuilderContainer propertyBuilderContainer;
+  private PropertyBuilderContainer propertyBuilderContainer;
 
   private BuilderIssues builderIssues;
   private Buildable isBuildable;
@@ -78,7 +78,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 //    this.serviceBuilderContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
 //
 //    //this.datasetContainer = new DatasetNodeContainer( null );
-//    this.propertyBuilderContainer = new PropertyBuilderContainer();
+    this.propertyBuilderContainer = new PropertyBuilderContainer();
     this.isBuildable = Buildable.DONT_KNOW;
   }
 
@@ -158,33 +158,33 @@ class CatalogBuilderImpl implements CatalogBuilder
 //  public ServiceBuilder findServiceBuilderByNameGlobally( String name ) {
 //    return this.catalogWideServiceBuilderTracker.getReferenceableService(name);
 //  }
-//
-//  public void addProperty( String name, String value ) {
-//    this.isBuildable = Buildable.DONT_KNOW;
-//    this.propertyBuilderContainer.addProperty(name, value);
-//  }
-//
-//  public boolean removeProperty( String name ) {
-//    this.isBuildable = Buildable.DONT_KNOW;
-//    return this.propertyBuilderContainer.removeProperty( name ) != null;
-//  }
-//
-//  public List<String> getPropertyNames() {
-//    return this.propertyBuilderContainer.getPropertyNames();
-//  }
-//
-//  public String getPropertyValue( String name ) {
-//    return this.propertyBuilderContainer.getPropertyValue( name );
-//  }
-//
-//  public List<Property> getProperties() {
-//    return this.propertyBuilderContainer.getProperties();
-//  }
-//
-//  public Property getPropertyByName( String name ) {
-//    return this.propertyBuilderContainer.getProperty(name);
-//  }
-//
+
+  public void addProperty( String name, String value ) {
+    this.isBuildable = Buildable.DONT_KNOW;
+    this.propertyBuilderContainer.addProperty(name, value);
+  }
+
+  public boolean removeProperty( Property name ) {
+    this.isBuildable = Buildable.DONT_KNOW;
+    return this.propertyBuilderContainer.removeProperty( name ) != null;
+  }
+
+  public List<String> getPropertyNames() {
+    return this.propertyBuilderContainer.getPropertyNames();
+  }
+
+  public List<Property> getPropertiesByName( String name ) {
+    return this.propertyBuilderContainer.getPropertyValue( name );
+  }
+
+  public List<Property> getProperties() {
+    return this.propertyBuilderContainer.getProperties();
+  }
+
+  public Property getPropertyByName( String name ) {
+    return this.propertyBuilderContainer.getProperty(name);
+  }
+
 //  public DatasetBuilder addDataset( String name ) {
 //    this.isBuildable = Buildable.DONT_KNOW;
 ////    DatasetImpl di = new DatasetImpl( name, this, null );
@@ -253,7 +253,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 
     // Check subordinates.
 //    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
-//    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
+    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
 //    builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
 
     if ( builderIssues.isValid())
@@ -271,7 +271,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 
     return new CatalogImpl( this.name, this.docBaseUri, this.version,
         this.expires, this.lastModified,
-//        this.propertyBuilderContainer, this.serviceBuilderContainer,
+        this.propertyBuilderContainer, // this.serviceBuilderContainer,
 //        this.catalogWideServiceBuilderTracker,
         this.builderIssues );
   }
