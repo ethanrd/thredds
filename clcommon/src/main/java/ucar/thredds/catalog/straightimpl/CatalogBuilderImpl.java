@@ -38,6 +38,7 @@ import ucar.thredds.catalog.Property;
 import ucar.thredds.catalog.builder.BuilderIssue;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.CatalogBuilder;
+import ucar.thredds.catalog.util.PropertyBuilderContainer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -79,6 +80,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 //
 //    //this.datasetContainer = new DatasetNodeContainer( null );
     this.propertyBuilderContainer = new PropertyBuilderContainer();
+    this.propertyBuilderContainer.setContainingBuilder( this );
     this.isBuildable = Buildable.DONT_KNOW;
   }
 
@@ -166,23 +168,23 @@ class CatalogBuilderImpl implements CatalogBuilder
 
   public boolean removeProperty( Property name ) {
     this.isBuildable = Buildable.DONT_KNOW;
-    return this.propertyBuilderContainer.removeProperty( name ) != null;
-  }
-
-  public List<String> getPropertyNames() {
-    return this.propertyBuilderContainer.getPropertyNames();
-  }
-
-  public List<Property> getPropertiesByName( String name ) {
-    return this.propertyBuilderContainer.getPropertyValue( name );
+    return this.propertyBuilderContainer.removeProperty( name );
   }
 
   public List<Property> getProperties() {
     return this.propertyBuilderContainer.getProperties();
   }
 
-  public Property getPropertyByName( String name ) {
+  public List<String> getPropertyNames() {
+    return this.propertyBuilderContainer.getPropertyNames();
+  }
+
+  public Property getProperty( String name ) {
     return this.propertyBuilderContainer.getProperty(name);
+  }
+
+  public List<Property> getProperties( String name ) {
+    return this.propertyBuilderContainer.getProperties( name );
   }
 
 //  public DatasetBuilder addDataset( String name ) {

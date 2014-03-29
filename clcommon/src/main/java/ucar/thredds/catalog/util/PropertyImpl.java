@@ -9,14 +9,14 @@ import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
  * @author edavis
  * @since 4.0
  */
-class PropertyImpl implements Property {
+public class PropertyImpl implements Property {
   private final String name;
   private final String value;
 
   PropertyImpl( String name, String value ) {
-    if ( name == null || name.isEmpty())
-      throw new IllegalArgumentException( "Name must not be null or empty.");
-    this.name = name;
+//    if ( name == null || name.isEmpty())
+//      throw new IllegalArgumentException( "Name must not be null or empty.");
+    this.name = name != null ? name : "";
     this.value = value != null ? value : "";
   }
 
@@ -26,9 +26,5 @@ class PropertyImpl implements Property {
 
   public String getValue() {
     return this.value;
-  }
-
-  public ThreddsCatalogIssueContainer getCatalogIssues() {
-    return new ThreddsCatalogIssuesImpl( null);
   }
 }

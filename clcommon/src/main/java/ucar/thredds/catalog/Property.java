@@ -38,7 +38,7 @@ package ucar.thredds.catalog;
  * @author edavis
  * @since 4.0
  */
-public interface Property extends ThreddsCatalogNode
+public interface Property // extends ThreddsCatalogNode
 {
   public String getName();
   public String getValue();

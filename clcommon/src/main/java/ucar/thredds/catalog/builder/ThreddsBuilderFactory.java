@@ -46,8 +46,6 @@ public interface ThreddsBuilderFactory
   public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
   public CatalogBuilder newCatalogBuilder( Catalog catalog );
 
-  public PropertyBuilder
-
 //  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
 //  public ServiceBuilder newServiceBuilder( Service service );
 //

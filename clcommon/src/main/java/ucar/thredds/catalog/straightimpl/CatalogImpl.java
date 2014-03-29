@@ -37,7 +37,7 @@ import ucar.thredds.catalog.Catalog;
 import ucar.thredds.catalog.Property;
 import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssues;
-import ucar.thredds.catalog.builder.ThreddsBuilder;
+import ucar.thredds.catalog.util.PropertyBuilderContainer;
 import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 import java.net.URI;
@@ -63,7 +63,7 @@ class CatalogImpl implements Catalog
 //
 //  //private final DatasetNodeContainer datasetNodeContainer;
 
-  private final PropertyContainer propertyContainer;
+  private final PropertyBuilderContainer propertyBuilderContainer;
 
   private final ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
 
@@ -74,8 +74,6 @@ class CatalogImpl implements Catalog
                BuilderIssues builderIssues
   )
   {
-    if ( propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
-      throw new IllegalArgumentException( "Failed to build Catalog, PropertyBuilderContainer is not buildable.");
 //    if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
 //      throw new IllegalArgumentException( "Failed to build Catalog, ServiceBuilderContainer is not buildable.");
 //    if ( catalogWideServiceBuilderTracker.isBuildable() != ThreddsBuilder.Buildable.YES)
@@ -94,7 +92,7 @@ class CatalogImpl implements Catalog
     this.expires = expires;
     this.lastModified = lastModified;
 
-    this.propertyContainer = propertyBuilderContainer.build();
+    this.propertyBuilderContainer = propertyBuilderContainer;
 //    this.serviceContainer = serviceBuilderContainer.build();
 //    this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
 
@@ -139,16 +137,24 @@ class CatalogImpl implements Catalog
 //    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
 //  }
 
-  public List<String> getPropertyNames() {
-    return this.propertyContainer.getPropertyNames();
-  }
-
+  @Override
   public List<Property> getProperties() {
-    return this.propertyContainer.getProperties();
+    return this.propertyBuilderContainer.getProperties();
   }
 
-  public Property getPropertyByName( String name ) {
-    return this.propertyContainer.getProperty( name );
+  @Override
+  public List<String> getPropertyNames() {
+    return this.propertyBuilderContainer.getPropertyNames();
+  }
+
+  @Override
+  public List<Property> getProperties( String name ) {
+    return null;
+  }
+
+  @Override
+  public Property getProperty( String name ) {
+    return this.propertyBuilderContainer.getProperty( name );
   }
 
 //  public List<DatasetNode> getDatasets() {

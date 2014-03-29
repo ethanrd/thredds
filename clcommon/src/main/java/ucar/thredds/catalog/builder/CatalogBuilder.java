@@ -77,11 +77,11 @@ public interface CatalogBuilder extends ThreddsBuilder
 //  public DatasetNodeBuilder findDatasetNodeBuilderByIdGlobally( String id );
 
   public void addProperty( String name, String value );
+  public boolean removeProperty( Property property );
   public List<Property> getProperties();
   public List<String> getPropertyNames();
-  public Property getPropertyByName( String name );
-  public List<Property> getPropertiesByName( String name );
-  public boolean removeProperty( Property property );
+  public List<Property> getProperties( String name );
+  public Property getProperty( String name );
 
   /**
    * Generate the resulting Catalog.

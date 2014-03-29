@@ -71,6 +71,6 @@ public interface Catalog extends ThreddsCatalogNode
 
   public List<Property> getProperties();
   public List<String> getPropertyNames();
-  public Property getPropertyByName( String name );
-  public List<Property> getPropertiesByName( String name );
+  public Property getProperty( String name );
+  public List<Property> getProperties( String name );
 }
