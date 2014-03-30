@@ -183,13 +183,14 @@ public class PropertyBuilderContainer // implements ThreddsBuilder
   public BuilderIssues checkForIssues()
   {
     builderIssues = new BuilderIssues();
-
-    for ( Property curProperty : this.propertiesList ) {
-      if ( curProperty.getName().isEmpty() ) {
-        builderIssues.addIssue( BuilderIssue.Severity.ERROR, String.format("Property has empty name [value=%s].", curProperty.getValue()), this.containingBuilder );
-      }
-      if (curProperty.getValue().isEmpty() ) {
-        builderIssues.addIssue( BuilderIssue.Severity.WARNING, String.format("Property has empty value [name=%s].", curProperty.getName()), this.containingBuilder );
+    if ( this.propertiesList != null ) {
+      for ( Property curProperty : this.propertiesList ) {
+        if ( curProperty.getName().isEmpty() ) {
+          builderIssues.addIssue( BuilderIssue.Severity.ERROR, String.format("Property has empty name [value=%s].", curProperty.getValue()), this.containingBuilder );
+        }
+        if (curProperty.getValue().isEmpty() ) {
+          builderIssues.addIssue( BuilderIssue.Severity.WARNING, String.format("Property has empty value [name=%s].", curProperty.getName()), this.containingBuilder );
+        }
       }
     }
     if ( builderIssues.isValid()) {

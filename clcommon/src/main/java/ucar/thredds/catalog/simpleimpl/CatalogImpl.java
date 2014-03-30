@@ -218,16 +218,14 @@ class CatalogImpl implements Catalog, CatalogBuilder
 //  }
 
   @Override
-  public void addProperty( String name, String value )
-  {
+  public void addProperty( String name, String value ) {
     if ( this.isBuilt )
       throw new IllegalStateException( "This CatalogBuilder has been built." );
     this.propertyBuilderContainer.addProperty( name, value );
   }
 
   @Override
-  public boolean removeProperty( Property property )
-  {
+  public boolean removeProperty( Property property ) {
     if ( this.isBuilt )
       throw new IllegalStateException( "This CatalogBuilder has been built." );
 
@@ -235,33 +233,22 @@ class CatalogImpl implements Catalog, CatalogBuilder
   }
 
   @Override
-  public List<Property> getProperties()
-  {
-    if ( !this.isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped from its CatalogBuilder before build() was called." );
+  public List<Property> getProperties() {
     return this.propertyBuilderContainer.getProperties();
   }
 
   @Override
-  public List<String> getPropertyNames()
-  {
-    if ( this.isBuilt )
-      throw new IllegalStateException( "This CatalogBuilder has been built." );
+  public List<String> getPropertyNames() {
     return this.propertyBuilderContainer.getPropertyNames();
   }
 
   @Override
   public List<Property> getProperties( String name ) {
-    if ( !this.isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped from its CatalogBuilder before build() was called." );
     return this.propertyBuilderContainer.getProperties( name );
   }
 
   @Override
-  public Property getProperty( String name )
-  {
-    if ( !this.isBuilt )
-      throw new IllegalStateException( "This Catalog has escaped from its CatalogBuilder before build() was called." );
+  public Property getProperty( String name ) {
     return this.propertyBuilderContainer.getProperty( name );
   }
 
