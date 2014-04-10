@@ -15,11 +15,13 @@
 
 - steps
   - copy node and builder
-  - copy impls
-  - copy parsers
-  - copy writers
-  - copy builder tests and update to use multiple impls
-  - copy add parser/writer tests  
+  - copy impls (and any containers)
+  - Add to ThreddsBuilderFactory
+  - copy Builder (and any container) tests and get them running
+  - Add use of new node/builder in parent nodes/builders (e.g., add Property to Catalog)
+  - Add tests for new child elements
+  - copy XML names, parsers, and writers
+  - copy add parser/writer tests, add to CatalogXmlAsStringUtils and ThreddsCompareUtils
 *** TODO Write impl agnostic Builder/Node tests
 *** TODO Write impl specific Builder/Node tests
 *** TODO Write impl and parser agnostic tests
