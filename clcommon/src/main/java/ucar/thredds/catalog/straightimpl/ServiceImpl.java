@@ -43,6 +43,7 @@ import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -138,18 +139,30 @@ final class ServiceImpl implements Service
   }
 
   public List<Property> getProperties() {
+    if ( this.propertyBuilderContainer == null )   {
+      return Collections.emptyList();
+    }
     return this.propertyBuilderContainer.getProperties();
   }
 
   public List<String> getPropertyNames() {
+    if ( this.propertyBuilderContainer == null )   {
+      return Collections.emptyList();
+    }
     return this.propertyBuilderContainer.getPropertyNames();
   }
 
   public Property getProperty(String name) {
+    if ( this.propertyBuilderContainer == null )   {
+      return null;
+    }
     return this.propertyBuilderContainer.getProperty( name );
   }
 
   public List<Property> getProperties( String name ) {
+    if ( this.propertyBuilderContainer == null )   {
+      return Collections.emptyList();
+    }
     return this.propertyBuilderContainer.getProperties( name );
   }
 

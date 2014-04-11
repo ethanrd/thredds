@@ -42,6 +42,7 @@ import ucar.thredds.catalog.util.PropertyBuilderContainer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -79,8 +80,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 //    this.serviceBuilderContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
 //
 //    //this.datasetContainer = new DatasetNodeContainer( null );
-    this.propertyBuilderContainer = new PropertyBuilderContainer();
-    this.propertyBuilderContainer.setContainingBuilder( this );
+    this.propertyBuilderContainer = null;
     this.isBuildable = Buildable.DONT_KNOW;
   }
 
@@ -163,27 +163,42 @@ class CatalogBuilderImpl implements CatalogBuilder
 
   public void addProperty( String name, String value ) {
     this.isBuildable = Buildable.DONT_KNOW;
+    if ( this.propertyBuilderContainer == null ) {
+      this.propertyBuilderContainer = new PropertyBuilderContainer();
+      this.propertyBuilderContainer.setContainingBuilder( this );
+
+    }
     this.propertyBuilderContainer.addProperty(name, value);
   }
 
   public boolean removeProperty( Property name ) {
     this.isBuildable = Buildable.DONT_KNOW;
+    if ( this.propertyBuilderContainer == null )
+      return false;
     return this.propertyBuilderContainer.removeProperty( name );
   }
 
   public List<Property> getProperties() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getProperties();
   }
 
   public List<String> getPropertyNames() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getPropertyNames();
   }
 
   public Property getProperty( String name ) {
-    return this.propertyBuilderContainer.getProperty(name);
+    if ( this.propertyBuilderContainer == null )
+      return null;
+    return this.propertyBuilderContainer.getProperty( name );
   }
 
   public List<Property> getProperties( String name ) {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getProperties( name );
   }
 
@@ -255,7 +270,8 @@ class CatalogBuilderImpl implements CatalogBuilder
 
     // Check subordinates.
 //    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
-    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
+    if ( this.propertyBuilderContainer != null )
+      builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues() );
 //    builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
 
     if ( builderIssues.isValid())

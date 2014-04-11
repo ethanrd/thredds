@@ -34,7 +34,10 @@ package ucar.thredds.catalog.simpleimpl;
 
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.Service;
+import ucar.thredds.catalog.ServiceType;
 import ucar.thredds.catalog.builder.CatalogBuilder;
+import ucar.thredds.catalog.builder.ServiceBuilder;
 import ucar.thredds.catalog.builder.ThreddsBuilderFactory;
 
 /**
@@ -65,18 +68,18 @@ public class ThreddsBuilderFactoryImpl implements ThreddsBuilderFactory
 //    throw new IllegalArgumentException( "Given catalog not correct implementation for this ThreddsBuilderFactory.");
   }
 
+  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUriAsString ) {
+    return new ServiceImpl( name, type, baseUriAsString );
+  }
+
+  public ServiceBuilder newServiceBuilder( Service service ) {
+    // ToDo
+    throw new UnsupportedOperationException( "Not yet implemented." );
+  }
+
 //  @Override
 //  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath ) {
 //    return new AccessBuilderImpl( serviceBuilderName, urlPath );
-//  }
-//
-//  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUriAsString ) {
-//    return new ServiceBuilderImpl( name, type, baseUriAsString );
-//  }
-//
-//  public ServiceBuilder newServiceBuilder( Service service ) {
-//    // ToDo
-//    throw new UnsupportedOperationException( "Not yet implemented." );
 //  }
 
 //  public DatasetBuilder newDatasetBuilder( String name ) {

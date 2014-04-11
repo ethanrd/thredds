@@ -45,6 +45,7 @@ import ucar.thredds.catalog.util.PropertyBuilderContainer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -104,7 +105,7 @@ class ServiceBuilderImpl implements ServiceBuilder
     this.type = type != null ? type : ServiceType.NONE;
     this.baseUri = baseUri != null ? baseUri : "";
     this.suffix = "";
-    this.propertyBuilderContainer = new PropertyBuilderContainer();
+    this.propertyBuilderContainer = null;
 
     this.isBuildable = Buildable.DONT_KNOW;
   }
@@ -176,27 +177,41 @@ class ServiceBuilderImpl implements ServiceBuilder
 
   public void addProperty( String name, String value ) {
     this.isBuildable = Buildable.DONT_KNOW;
+    if ( this.propertyBuilderContainer == null ) {
+      this.propertyBuilderContainer = new PropertyBuilderContainer();
+      this.propertyBuilderContainer.setContainingBuilder( this );
+    }
     this.propertyBuilderContainer.addProperty(name, value);
   }
 
   public boolean removeProperty( Property property ) {
+    if ( this.propertyBuilderContainer == null )
+      return false;
     this.isBuildable = Buildable.DONT_KNOW;
     return this.propertyBuilderContainer.removeProperty( property );
   }
 
   public List<Property> getProperties() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getProperties();
   }
 
   public List<String> getPropertyNames() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getPropertyNames();
   }
 
   public List<Property> getProperties( String name ) {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getProperties( name );
   }
 
   public Property getProperty(String name) {
+    if ( this.propertyBuilderContainer == null )
+      return null;
     return this.propertyBuilderContainer.getProperty(name);
   }
 
@@ -273,7 +288,8 @@ class ServiceBuilderImpl implements ServiceBuilder
 
     // Check subordinates.
 //    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
-    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
+    if ( this.propertyBuilderContainer != null )
+      builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
 //    if ( this.isRootServiceContainer )
 //      builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
 

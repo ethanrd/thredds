@@ -42,6 +42,7 @@ import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -139,21 +140,29 @@ class CatalogImpl implements Catalog
 
   @Override
   public List<Property> getProperties() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getProperties();
   }
 
   @Override
   public List<String> getPropertyNames() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getPropertyNames();
   }
 
   @Override
   public List<Property> getProperties( String name ) {
-    return null;
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
+    return this.propertyBuilderContainer.getProperties( name );
   }
 
   @Override
   public Property getProperty( String name ) {
+    if ( this.propertyBuilderContainer == null )
+      return null;
     return this.propertyBuilderContainer.getProperty( name );
   }
 

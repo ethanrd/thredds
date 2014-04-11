@@ -48,6 +48,7 @@ import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 //import ucar.thredds.catalog.simpleimpl.ServiceContainer;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -97,7 +98,7 @@ class ServiceImpl implements Service, ServiceBuilder
     this.type = type;
     this.baseUriAsString = baseUriAsString;
     this.suffix = "";
-    this.propertyBuilderContainer = new PropertyBuilderContainer();
+    this.propertyBuilderContainer = null;
 
 //    if ( globalServiceContainer == null )
 //    {
@@ -177,6 +178,10 @@ class ServiceImpl implements Service, ServiceBuilder
   public void addProperty( String name, String value ) {
     if ( this.isBuilt )
       throw new IllegalStateException( "This ServiceBuilder has been built." );
+    if ( this.propertyBuilderContainer == null ) {
+      this.propertyBuilderContainer = new PropertyBuilderContainer();
+      this.propertyBuilderContainer.setContainingBuilder( this );
+    }
     this.isBuildable = Buildable.DONT_KNOW;
     this.propertyBuilderContainer.addProperty( name, value );
   }
@@ -184,23 +189,34 @@ class ServiceImpl implements Service, ServiceBuilder
   public boolean removeProperty( Property property ) {
     if ( this.isBuilt )
       throw new IllegalStateException( "This ServiceBuilder has been built." );
+    if ( this.propertyBuilderContainer == null )
+      return false;
     this.isBuildable = Buildable.DONT_KNOW;
     return this.propertyBuilderContainer.removeProperty( property );
   }
 
   public List<Property> getProperties() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
+
     return this.propertyBuilderContainer.getProperties();
   }
 
   public List<String> getPropertyNames() {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getPropertyNames();
   }
 
   public List<Property> getProperties( String name ) {
+    if ( this.propertyBuilderContainer == null )
+      return Collections.emptyList();
     return this.propertyBuilderContainer.getProperties( name );
   }
 
   public Property getProperty( String name) {
+    if ( this.propertyBuilderContainer == null )
+      return null;
     return this.propertyBuilderContainer.getProperty( name );
   }
 
@@ -277,11 +293,17 @@ class ServiceImpl implements Service, ServiceBuilder
     // Check subordinates.
 //    if ( this.isRootContainer)
 //      builderIssues.addAllIssues( this.globalServiceContainer.getIssues( this ));
-    builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues() );
+    if ( this.propertyBuilderContainer != null )
+      builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues() );
 
     // Check if this is leaf service that it has a baseUri.
 //    if ( this.serviceContainer.isEmpty() && this.baseUri == null )
 //      issues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this, null ));
+
+    if ( builderIssues.isValid())
+      this.isBuildable = Buildable.YES;
+    else
+      this.isBuildable = Buildable.NO;
 
     return builderIssues;
   }

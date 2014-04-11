@@ -34,6 +34,8 @@ package ucar.thredds.catalog.builder;
 
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
+import ucar.thredds.catalog.Service;
+import ucar.thredds.catalog.ServiceType;
 
 /**
  * _more_
@@ -46,9 +48,9 @@ public interface ThreddsBuilderFactory
   public CatalogBuilder newCatalogBuilder( String name, String docBaseUri, String version, DateType expires, DateType lastModified );
   public CatalogBuilder newCatalogBuilder( Catalog catalog );
 
-//  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
-//  public ServiceBuilder newServiceBuilder( Service service );
-//
+  public ServiceBuilder newServiceBuilder( String name, ServiceType type, String baseUri );
+  public ServiceBuilder newServiceBuilder( Service service );
+
 //  public AccessBuilder newAccessBuilder( String serviceBuilderName, String urlPath );
 
 //  public DatasetBuilder newDatasetBuilder( String name );
