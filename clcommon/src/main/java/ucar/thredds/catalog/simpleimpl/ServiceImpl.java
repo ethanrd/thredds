@@ -48,6 +48,7 @@ import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 //import ucar.thredds.catalog.simpleimpl.ServiceContainer;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
@@ -284,21 +285,53 @@ class ServiceImpl implements Service, ServiceBuilder
    *
    * @return true if this ServiceBuilder is in a state where build() will succeed.
    */
-  public BuilderIssues checkForIssues()
-  {
+  public BuilderIssues checkForIssues() {
+//    if ( catalogWideServiceBuilderTracker == null )
+//      this.initialize();
+
     builderIssues = new BuilderIssues();
 
-//    builderIssues.addAllIssues( this.serviceContainer.getIssues());
+    if ( this.name == null )
+      builderIssues.addIssue( BuilderIssue.Severity.ERROR, "Service name may not be null.", this);
+    if ( this.type == null )
+      builderIssues.addIssue( BuilderIssue.Severity.ERROR, "Service type must not be null.", this);
+    if ( baseUriAsString == null )
+      builderIssues.addIssue( BuilderIssue.Severity.ERROR, "Base URI must not be null.", this);
+
+    // Check that the baseUri is a valid URI.
+    if ( ! this.baseUriAsString.isEmpty()) {
+      try {
+        new URI( this.baseUriAsString);
+      } catch (URISyntaxException e) {
+        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.ERROR, "The baseUri [" + this.baseUriAsString + "] of this Service [" + this.name + "] must be a valid URI.", this));
+      }
+    }
 
     // Check subordinates.
-//    if ( this.isRootContainer)
-//      builderIssues.addAllIssues( this.globalServiceContainer.getIssues( this ));
+//    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
     if ( this.propertyBuilderContainer != null )
-      builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues() );
+      builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
+//    if ( this.isRootServiceContainer )
+//      builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
 
-    // Check if this is leaf service that it has a baseUri.
-//    if ( this.serviceContainer.isEmpty() && this.baseUri == null )
-//      issues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this, null ));
+    // Various checks on this service itself.
+    if ( this.getType() == ServiceType.COMPOUND ) {
+      // Compound services should contain nested services.
+//      if ( this.serviceBuilderContainer.isEmpty()) {
+//        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "No contained services in this compound service.", this));
+//      }
+      // Compound services should not have a baseURI.
+      if ( this.getBaseUriAsString() != null && ! this.getBaseUriAsString().isEmpty() )
+        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "This compound service has a baseURI.", this));
+    } else {
+      // Non-compound services should have a baseUri.
+      if ( this.baseUriAsString == null || this.baseUriAsString.equals( "") )
+        builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, "Non-compound services must have base URI.", this ));
+
+      // Non-compound services MAY NOT contain nested services
+//      if ( ! this.serviceBuilderContainer.isEmpty() )
+//        builderIssues.addIssue(new BuilderIssue(BuilderIssue.Severity.ERROR, "Non-compound services may not contian other services.", this ));
+    }
 
     if ( builderIssues.isValid())
       this.isBuildable = Buildable.YES;
