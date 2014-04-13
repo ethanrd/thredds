@@ -7,6 +7,8 @@
   - Limit initial work to Catalog
 ** Current actions
 *** TODO Consolidate checkForIssues() as utility that impls can use
+*** TODO When set isBuildable to DONT_KNOW, also set buildIssues to null
+- So only carrying around buildIssues incase build(), release them once can't build()
 *** TODO Add handling for next XML element
 **** XML elements
 - [x] Catalog
