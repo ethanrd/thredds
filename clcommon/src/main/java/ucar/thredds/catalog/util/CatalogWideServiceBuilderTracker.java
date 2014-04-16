@@ -35,7 +35,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
   private BuilderIssues builderIssues;
 
   CatalogWideServiceBuilderTracker() {
-    this.isBuildable = Buildable.YES;
+    this.isBuildable = Buildable.DONT_KNOW;
   }
 
   boolean isServiceNameReferenceable( String name ) {
@@ -106,6 +106,7 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
           this.sameNameServiceBuildersCounter.get( service.getName()).decrement();
 
         }
+        this.isBuildable = Buildable.DONT_KNOW;
         return true;
       } // else {The given service is not known. Other(s) with same name are known.}
       return false;
@@ -150,14 +151,13 @@ class CatalogWideServiceBuilderTracker implements ThreddsBuilder
   public BuilderIssues checkForIssues( )
   {
     this.builderIssues = new BuilderIssues();
-    if ( this.allServices == null || this.allServices.isEmpty())
-      return this.builderIssues;
-
-    for ( String serviceName : this.sameNameServiceBuildersCounter.keySet() ) {
-      if ( this.sameNameServiceBuildersCounter.get( serviceName).getCount() > 1 ) {
-        ServiceBuilder referencableService = this.referencableServiceBuilders.get( serviceName);
-        this.builderIssues.addIssue(
-            new BuilderIssue( BuilderIssue.Severity.WARNING, "Catalog contains duplicate service name [" + serviceName + "].", referencableService));
+    if ( this.allServices != null && ! this.allServices.isEmpty()) {
+      for ( String serviceName : this.sameNameServiceBuildersCounter.keySet() ) {
+        if ( this.sameNameServiceBuildersCounter.get( serviceName).getCount() > 1 ) {
+          ServiceBuilder referencableService = this.referencableServiceBuilders.get( serviceName);
+          this.builderIssues.addIssue(
+              new BuilderIssue( BuilderIssue.Severity.WARNING, "Catalog contains duplicate service name [" + serviceName + "].", referencableService));
+        }
       }
     }
 

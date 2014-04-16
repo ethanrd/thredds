@@ -30,9 +30,13 @@ public class ServiceBuilderContainer // implements ThreddsBuilder
   private ThreddsBuilder.Buildable isBuildable;
   private BuilderIssues builderIssues;
 
-  public ServiceBuilderContainer( ThreddsBuilderFactory threddsBuilderFactory
-//      , CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker
-  ) {
+  public ServiceBuilderContainer( ThreddsBuilderFactory threddsBuilderFactory ) {
+    this( threddsBuilderFactory, null );
+  }
+
+  public ServiceBuilderContainer( ThreddsBuilderFactory threddsBuilderFactory,
+                                  CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker )
+  {
     if ( threddsBuilderFactory == null )
       throw new IllegalArgumentException( "ThreddsBuilderFactory may not be null." );
     this.threddsBuilderFactory = threddsBuilderFactory;

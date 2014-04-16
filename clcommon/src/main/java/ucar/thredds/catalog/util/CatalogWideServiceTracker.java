@@ -44,19 +44,19 @@ final class CatalogWideServiceTracker
     }
   }
 
-  boolean isServiceNameInUseGlobally( String name ) {
+  boolean isServiceNameReferenceable( String name ) {
     if ( name == null
-        || this.referencableServiceBuilders == null
-        || this.referencableServiceBuilders.isEmpty()  )
+        || this.allServices == null
+        || this.allServices.isEmpty()  )
       return false;
     return this.referencableServiceBuilders.containsKey( name );
   }
 
-  Service getServiceByGloballyUniqueName( String name )
+  Service getReferenceableService( String name )
   {
     if ( name == null
-        || this.referencableServiceBuilders == null
-        || this.referencableServiceBuilders.isEmpty()  )
+        || this.allServices == null
+        || this.allServices.isEmpty()  )
       return null;
 
     return this.referencableServiceBuilders.get( name);
@@ -66,13 +66,15 @@ final class CatalogWideServiceTracker
     return this.referencableServiceBuilders == null || this.referencableServiceBuilders.isEmpty();
   }
 
-  int numberOfServicesWithGloballyUniqueNames() {
-    if ( this.referencableServiceBuilders == null)
+  int numberOfReferenceableServices() {
+    if ( this.allServices == null)
       return 0;
     return this.referencableServiceBuilders.size();
   }
 
-  int numberOfServicesWithDuplicateNames() {
+  int numberOfNonReferenceableServices() {
+    if ( this.allServices == null)
+      return 0;
     return this.allServices.size() - this.referencableServiceBuilders.size();
   }
 
