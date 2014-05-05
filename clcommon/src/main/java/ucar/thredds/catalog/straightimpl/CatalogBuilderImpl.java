@@ -35,10 +35,13 @@ package ucar.thredds.catalog.straightimpl;
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
 import ucar.thredds.catalog.Property;
+import ucar.thredds.catalog.ServiceType;
 import ucar.thredds.catalog.builder.BuilderIssue;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.CatalogBuilder;
+import ucar.thredds.catalog.builder.ServiceBuilder;
 import ucar.thredds.catalog.util.PropertyBuilderContainer;
+import ucar.thredds.catalog.util.ServiceBuilderContainer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,7 +62,7 @@ class CatalogBuilderImpl implements CatalogBuilder
   private DateType expires;
   private DateType lastModified;
 
-//  private ServiceBuilderContainer serviceBuilderContainer;
+  private ServiceBuilderContainer serviceBuilderContainer;
 //  private CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
 //
 //  private DatasetNodeContainer datasetContainer;
@@ -134,32 +137,31 @@ class CatalogBuilderImpl implements CatalogBuilder
     return this.lastModified;
   }
 
-//  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
-//    this.isBuildable = Buildable.DONT_KNOW;
-//    return this.serviceBuilderContainer.addService( name, type, baseUri );
-//  }
-//
-//  public boolean removeService( ServiceBuilder serviceBuilder ) {
-//    if ( serviceBuilder == null )
-//      return false;
-//
-//    this.isBuildable = Buildable.DONT_KNOW;
-//    return this.serviceBuilderContainer.removeService( serviceBuilder );
-//  }
-//
-//  public List<ServiceBuilder> getServiceBuilders()
-//  {
-//    return this.serviceBuilderContainer.getServiceBuilders();
-//  }
-//
-//  public ServiceBuilder getServiceBuilderByName( String name )
-//  {
-//    return this.serviceBuilderContainer.getServiceBuilderByName( name );
-//  }
-//
-//  public ServiceBuilder findServiceBuilderByNameGlobally( String name ) {
-//    return this.catalogWideServiceBuilderTracker.getReferenceableService(name);
-//  }
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
+    if ( this.serviceBuilderContainer == null )
+      this.serviceBuilderContainer = new ServiceBuilderContainer();
+    this.isBuildable = Buildable.DONT_KNOW;
+    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( name, type, baseUri );
+    this.serviceBuilderContainer.addService( serviceBuilder );
+    return serviceBuilder;
+  }
+
+  public boolean removeService( ServiceBuilder serviceBuilder ) {
+    if ( serviceBuilder == null )
+      return false;
+
+    this.isBuildable = Buildable.DONT_KNOW;
+    return this.serviceBuilderContainer.removeService( serviceBuilder );
+  }
+
+  public List<ServiceBuilder> getServiceBuilders() {
+    return this.serviceBuilderContainer.getServices();
+  }
+
+  @Override
+  public ServiceBuilder findReferencableServiceBuilderByName( String name ) {
+    return this.serviceBuilderContainer.findReferencableServiceBuilderByName( name );
+  }
 
   public void addProperty( String name, String value ) {
     this.isBuildable = Buildable.DONT_KNOW;
@@ -269,7 +271,7 @@ class CatalogBuilderImpl implements CatalogBuilder
       builderIssues.addIssue( new BuilderIssue( BuilderIssue.Severity.WARNING, String.format( "The document base URI [%s} is not absolute.", this.docBaseUri), this));
 
     // Check subordinates.
-//    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
+    builderIssues.addAllIssues( this.serviceBuilderContainer.checkForIssues());
     if ( this.propertyBuilderContainer != null )
       builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues() );
 //    builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues());
@@ -289,7 +291,7 @@ class CatalogBuilderImpl implements CatalogBuilder
 
     return new CatalogImpl( this.name, this.docBaseUri, this.version,
         this.expires, this.lastModified,
-        this.propertyBuilderContainer, // this.serviceBuilderContainer,
+        this.propertyBuilderContainer, this.serviceBuilderContainer,
 //        this.catalogWideServiceBuilderTracker,
         this.builderIssues );
   }

@@ -37,7 +37,10 @@ import ucar.thredds.catalog.Catalog;
 import ucar.thredds.catalog.Property;
 import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssues;
+import ucar.thredds.catalog.builder.ThreddsBuilder;
 import ucar.thredds.catalog.util.PropertyBuilderContainer;
+import ucar.thredds.catalog.util.ServiceBuilderContainer;
+import ucar.thredds.catalog.util.ServiceContainer;
 import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 import java.net.URI;
@@ -59,7 +62,7 @@ class CatalogImpl implements Catalog
   private final DateType expires; // DateType instances are mutable
   private final DateType lastModified;
 
-//  private final ServiceContainer serviceContainer;
+  private final ServiceContainer serviceContainer;
 //  private final CatalogWideServiceTracker catalogWideServiceTracker;
 //
 //  //private final DatasetNodeContainer datasetNodeContainer;
@@ -70,13 +73,13 @@ class CatalogImpl implements Catalog
 
 
   CatalogImpl( String name, String docBaseUri, String version, DateType expires, DateType lastModified,
-               PropertyBuilderContainer propertyBuilderContainer, //ServiceBuilderContainer serviceBuilderContainer,
+               PropertyBuilderContainer propertyBuilderContainer, ServiceBuilderContainer serviceBuilderContainer,
 //               CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker,
                BuilderIssues builderIssues
   )
   {
-//    if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
-//      throw new IllegalArgumentException( "Failed to build Catalog, ServiceBuilderContainer is not buildable.");
+    if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
+      throw new IllegalArgumentException( "Failed to build Catalog, ServiceBuilderContainer is not buildable.");
 //    if ( catalogWideServiceBuilderTracker.isBuildable() != ThreddsBuilder.Buildable.YES)
 //      throw new IllegalArgumentException( "Failed to build Catalog, CatalogWideServiceBuilderTracker is not buildable.");
 //    if ( datasetNodeBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
@@ -94,7 +97,7 @@ class CatalogImpl implements Catalog
     this.lastModified = lastModified;
 
     this.propertyBuilderContainer = propertyBuilderContainer;
-//    this.serviceContainer = serviceBuilderContainer.build();
+    this.serviceContainer = serviceBuilderContainer.build();
 //    this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
 
     //this.datasetNodeContainer = datasetNodeBuilderContainer.build();

@@ -120,6 +120,51 @@ public class ServiceBuilderTest {
     assertEquals( "value3", property.getValue() );
   }
 
+//  @Test
+//  public void checkServices() {
+//    ServiceBuilder serviceBuilder =
+//        this.threddsBuilderFactory.newServiceBuilder( "all", ServiceType.COMPOUND, "" );
+//    assertNotNull( serviceBuilder );
+//
+//
+//
+//    serviceBuilder.addProperty( "name1", "value1" );
+//    serviceBuilder.addProperty( "name2", "value2" );
+//    serviceBuilder.addProperty( "name3", "value3" );
+//    List<Property> properties = serviceBuilder.getProperties();
+//    assertEquals( 3, properties.size() );
+//    Property property = properties.get( 0 );
+//    assertEquals( "name1", property.getName() );
+//    assertEquals( "value1", property.getValue() );
+//    List<Property> propsName = serviceBuilder.getProperties( "name1" );
+//    assertEquals( 1, propsName.size() );
+//    assertEquals( property, propsName.get( 0 ) );
+//
+//    property = properties.get( 1 );
+//    assertEquals( "name2", property.getName() );
+//    assertEquals( "value2", property.getValue() );
+//    propsName = serviceBuilder.getProperties( "name2" );
+//    assertEquals( 1, propsName.size() );
+//    assertEquals( property, propsName.get( 0 ) );
+//
+//    property = properties.get( 2 );
+//    assertEquals( "name3", property.getName() );
+//    assertEquals( "value3", property.getValue() );
+//    propsName = serviceBuilder.getProperties( "name3" );
+//    assertEquals( 1, propsName.size() );
+//    assertEquals( property, propsName.get( 0 ) );
+//
+//    assertTrue( serviceBuilder.removeProperty( properties.get( 1) ));
+//    properties = serviceBuilder.getProperties();
+//    assertEquals( 2, properties.size() );
+//    property = properties.get( 0 );
+//    assertEquals( "name1", property.getName() );
+//    assertEquals( "value1", property.getValue() );
+//    property = properties.get( 1 );
+//    assertEquals( "name3", property.getName() );
+//    assertEquals( "value3", property.getValue() );
+//  }
+
   //===========================
   @Test
   public void checkConformance_NonCompoundServiceNotValidWithEmptyBaseUri() {
@@ -133,6 +178,7 @@ public class ServiceBuilderTest {
     assertTrue( issues.isValid() );
   }
 
+  // TODO all the tests below
 //  @Test
 //  public void checkConformance_NotAbleToAddServiceToNonCompoundService() {
 //    ServiceBuilder serviceBuilder =

@@ -45,11 +45,16 @@ import java.util.List;
  *
  * @author edavis
  */
-class ServiceContainer
+public class ServiceContainer
 {
   private final List<Service> services;
+  private final CatalogWideServiceTracker catalogWideServiceTracker;
 
   ServiceContainer( List<ServiceBuilder> serviceBuilderList ) {
+    this(serviceBuilderList, new CatalogWideServiceTracker());
+  }
+
+  ServiceContainer( List<ServiceBuilder> serviceBuilderList, CatalogWideServiceBuilderTracker cwsbt) {
     if ( serviceBuilderList == null || serviceBuilderList.isEmpty() )
       this.services = null;
     else {
@@ -79,4 +84,9 @@ class ServiceContainer
       return Collections.emptyList();
     return Collections.unmodifiableList( new ArrayList<Service>( this.services ) );
   }
+
+  public Service findReferencableServiceByName( String serviceName) {
+    return this.catalogWideServiceTracker.getReferenceableService( serviceName );
+  }
+
 }

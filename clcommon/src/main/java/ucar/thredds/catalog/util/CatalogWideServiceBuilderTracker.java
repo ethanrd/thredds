@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author edavis
  */
-class CatalogWideServiceBuilderTracker implements ThreddsBuilder
+public class CatalogWideServiceBuilderTracker implements ThreddsBuilder
 {
   /** List of all services including those with duplicate names. */
   private List<ServiceBuilder> allServices;

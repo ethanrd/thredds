@@ -76,26 +76,22 @@ public interface ServiceBuilder extends ThreddsBuilder
   public List<Property> getProperties( String name );
   public Property getProperty( String name );
 
-//  /**
-//   * Add a new Service object with the given name, type, and base url to this
-//   * Service returning a ServiceBuilder object to allow full construction and
-//   * modification of the new Service.
-//   *
-//   * <p>If this Service or an already added Service has the given name, an
-//   * IllegalStateException is thrown. {@link ucar.thredds.catalog.builder.ServiceBuilder#getServiceBuilderByName(String)}
-//   * can be used to check before calling this method.
-//   *
-//   * @param name the name of the new Service object.
-//   * @param type the type of the new Service object.
-//   * @param baseUri the base URI of the new Service object.
-//   * @return a ServiceBuilder for further construction and modification of the new Service.
-//   *
-//   * @throws IllegalArgumentException if the name, type, or base URI are null.
-//   * @throws IllegalStateException this ServiceBuilder has already been finished or the top container of this ServiceBuilder already contains a ServiceBuilder with the given name.
-//   */
-//  public ServiceBuilder addService( String name, ServiceType type, String baseUri );
-//  public boolean removeService( ServiceBuilder serviceBuilder );
-//
+  /**
+   * Add a new Service object with the given name, type, and base url to this
+   * Service returning a ServiceBuilder object to allow full construction and
+   * modification of the new Service.
+   *
+   * @param name the name of the new Service object.
+   * @param type the type of the new Service object.
+   * @param baseUri the base URI of the new Service object.
+   * @return a ServiceBuilder for further construction and modification of the new Service.
+   *
+   * @throws IllegalArgumentException if the name, type, or base URI are null.
+   * @throws IllegalStateException this ServiceBuilder has already been finished or the top container of this ServiceBuilder already contains a ServiceBuilder with the given name.
+   */
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri );
+  public boolean removeService( ServiceBuilder serviceBuilder );
+
 ////  /**
 ////   * Add a new Service object with the given name, type, and base url to this
 ////   * Service at the index indicated and return a ServiceBuilder object. The
@@ -118,9 +114,9 @@ public interface ServiceBuilder extends ThreddsBuilder
 ////   * @throws IllegalStateException this Service or an already added Service has the given name.
 ////   */
 ////  public ServiceBuilder addService( String name, ServiceType type, String baseUri, int index );
-//  public List<ServiceBuilder> getServiceBuilders();
+  public List<ServiceBuilder> getServiceBuilders();
 //  public ServiceBuilder getServiceBuilderByName( String name );
-//  public ServiceBuilder findServiceBuilderByNameGlobally( String name );
+  public ServiceBuilder findReferencableServiceBuilderByName( String name );
 
   /**
    * Return the finished Service.
