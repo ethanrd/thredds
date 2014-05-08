@@ -22,11 +22,14 @@ public class ServiceBuilderContainer // implements ThreddsBuilder
 
   private final CatalogWideServiceBuilderTracker catalogWideServiceBuilderTracker;
 
+  private boolean isRootServiceContainer;
+
   private ThreddsBuilder.Buildable isBuildable;
   private BuilderIssues builderIssues;
 
   public ServiceBuilderContainer() {
     this( new CatalogWideServiceBuilderTracker());
+    this.isRootServiceContainer = true;
   }
 
   /**
@@ -40,6 +43,8 @@ public class ServiceBuilderContainer // implements ThreddsBuilder
     this.catalogWideServiceBuilderTracker = catalogWideServiceBuilderTracker;
 
     this.serviceBuilderList = null;
+    this.isRootServiceContainer = false;
+
     this.isBuildable = ThreddsBuilder.Buildable.YES;
   }
 
@@ -127,6 +132,9 @@ public class ServiceBuilderContainer // implements ThreddsBuilder
       for ( ServiceBuilder curServiceBuilder : this.serviceBuilderList ) {
         builderIssues.addAllIssues( curServiceBuilder.checkForIssues() );
       }
+
+      if ( this.isRootServiceContainer)
+        builderIssues.addAllIssues( this.catalogWideServiceBuilderTracker.checkForIssues() );
     }
     if ( builderIssues.isValid()) {
       this.isBuildable = ThreddsBuilder.Buildable.YES;
@@ -149,6 +157,9 @@ public class ServiceBuilderContainer // implements ThreddsBuilder
     if ( this.isBuildable != ThreddsBuilder.Buildable.YES )
       throw new IllegalStateException( "ServiceBuilderContainer is not in buildable state.");
 
-    return new ServiceContainer( this.serviceBuilderList );
+    if ( this.isRootServiceContainer)
+      return new ServiceContainer( this.serviceBuilderList, this.catalogWideServiceBuilderTracker );
+    else
+      return new ServiceContainer( this.serviceBuilderList );
   }
 }

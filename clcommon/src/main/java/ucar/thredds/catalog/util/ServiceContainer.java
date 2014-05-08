@@ -36,9 +36,7 @@ import ucar.thredds.catalog.Service;
 import ucar.thredds.catalog.builder.ServiceBuilder;
 import ucar.thredds.catalog.builder.ThreddsBuilder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Helper class for those classes that contain services: CatalogImpl and ServiceImpl.
@@ -55,10 +53,13 @@ public class ServiceContainer
   }
 
   ServiceContainer( List<ServiceBuilder> serviceBuilderList, CatalogWideServiceBuilderTracker cwsbt) {
-    if ( serviceBuilderList == null || serviceBuilderList.isEmpty() )
+    if ( serviceBuilderList == null || serviceBuilderList.isEmpty() ) {
       this.services = null;
+      this.catalogWideServiceTracker = null;
+    }
     else {
       List<Service> tmpServiceList = new ArrayList<Service>();
+      Map<String,Service> referencableServicesMap = new HashMap<String, Service>();
       for ( ServiceBuilder curServiceBuilder : serviceBuilderList) {
         if ( curServiceBuilder.isBuildable() != ThreddsBuilder.Buildable.YES ) {
           throw new IllegalArgumentException( "Can't construct ServiceContainer with ServiceBuilders [" + curServiceBuilder.getName() + "] that are not buildable.");
@@ -67,6 +68,11 @@ public class ServiceContainer
       }
       this.services = tmpServiceList;
     }
+  }
+
+  ServiceContainer( List<ServiceBuilder> serviceBuilderList, CatalogWideServiceBuilderTracker cwsbt,
+                    CatalogWideServiceTracker catalogWideServiceTracker ) {
+
   }
 
   boolean isEmpty() {
