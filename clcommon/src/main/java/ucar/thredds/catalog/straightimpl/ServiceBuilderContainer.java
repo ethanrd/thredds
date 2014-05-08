@@ -1,9 +1,10 @@
-package ucar.thredds.catalog.util;
+package ucar.thredds.catalog.straightimpl;
 
 import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.ServiceBuilder;
 import ucar.thredds.catalog.builder.ThreddsBuilder;
+import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;

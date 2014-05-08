@@ -39,8 +39,6 @@ import ucar.thredds.catalog.builder.BuilderIssue;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.ServiceBuilder;
 import ucar.thredds.catalog.util.PropertyBuilderContainer;
-import ucar.thredds.catalog.util.ServiceBuilderContainer;
-import ucar.thredds.catalog.util.CatalogWideServiceBuilderTracker;
 //import ucar.thredds.catalog.straightimpl.PropertyBuilderContainer;
 //import ucar.thredds.catalog.straightimpl.ServiceBuilderContainer;
 

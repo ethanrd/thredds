@@ -1,9 +1,8 @@
-package ucar.thredds.catalog.util;
+package ucar.thredds.catalog.straightimpl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import ucar.thredds.catalog.Service;
 import ucar.thredds.catalog.ServiceType;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.ServiceBuilder;

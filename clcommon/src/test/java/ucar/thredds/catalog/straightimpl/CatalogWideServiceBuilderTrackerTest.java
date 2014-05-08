@@ -1,4 +1,4 @@
-package ucar.thredds.catalog.util;
+package ucar.thredds.catalog.straightimpl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

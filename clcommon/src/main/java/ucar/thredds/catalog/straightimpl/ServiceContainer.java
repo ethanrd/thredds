@@ -30,7 +30,7 @@
  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
  * WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package ucar.thredds.catalog.util;
+package ucar.thredds.catalog.straightimpl;
 
 import ucar.thredds.catalog.Service;
 import ucar.thredds.catalog.builder.ServiceBuilder;

@@ -39,8 +39,6 @@ import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.ThreddsBuilder;
 import ucar.thredds.catalog.util.PropertyBuilderContainer;
-import ucar.thredds.catalog.util.ServiceBuilderContainer;
-import ucar.thredds.catalog.util.ServiceContainer;
 import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
 import java.net.URI;

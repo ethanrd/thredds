@@ -1,4 +1,4 @@
-package ucar.thredds.catalog.util;
+package ucar.thredds.catalog.straightimpl;
 
 import ucar.thredds.catalog.Service;
 import ucar.thredds.catalog.builder.ServiceBuilder;

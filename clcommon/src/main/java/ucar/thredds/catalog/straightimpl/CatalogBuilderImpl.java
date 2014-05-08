@@ -41,7 +41,6 @@ import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.CatalogBuilder;
 import ucar.thredds.catalog.builder.ServiceBuilder;
 import ucar.thredds.catalog.util.PropertyBuilderContainer;
-import ucar.thredds.catalog.util.ServiceBuilderContainer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
