@@ -99,6 +99,6 @@ public interface Service extends ThreddsCatalogNode
    */
   public List<Service> getServices();
 
-  public Service getService( String name );
+//  public Service getService( String name );
   public Service findReferencableServiceByName( String name );
 }
