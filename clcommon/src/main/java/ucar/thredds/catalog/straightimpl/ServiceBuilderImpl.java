@@ -85,19 +85,9 @@ class ServiceBuilderImpl implements ServiceBuilder
   private BuilderIssues builderIssues;
   private Buildable isBuildable;
 
-  ServiceBuilderImpl( String name, ServiceType type, String baseUri, CatalogWideServiceBuilderTracker  ) {
-
-  }
-
-  /**
-   * Constructs a ServiceBuilderImpl.
-   *
-   * @param name the name of the ServiceBuilder
-   * @param type the ServiceType of the ServiceBuilder
-   * @param baseUri the baseUri of the ServiceBuilder
-   */
-  ServiceBuilderImpl( String name, ServiceType type, String baseUri )
-  {
+  ServiceBuilderImpl( String name, ServiceType type, String baseUri, ServiceBuilderContainer serviceBuilderContainer ) {
+    if ( serviceBuilderContainer == null )
+      throw new IllegalArgumentException( "ServiceBuilderContainer may not be null, call other constructor if no containing catalog." );
     this.name = name != null ? name : "";
     this.description = "";
     this.type = type != null ? type : ServiceType.NONE;
@@ -105,7 +95,15 @@ class ServiceBuilderImpl implements ServiceBuilder
     this.suffix = "";
     this.propertyBuilderContainer = null;
 
+    this.serviceBuilderContainer = serviceBuilderContainer;
+    this.isRootServiceContainer = false;
+
     this.isBuildable = Buildable.DONT_KNOW;
+  }
+
+  ServiceBuilderImpl( String name, ServiceType type, String baseUri ) {
+    this( name, type, baseUri, new ServiceBuilderContainer());
+    this.isRootServiceContainer = true;
   }
 
   public void initialize() {
