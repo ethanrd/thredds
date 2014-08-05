@@ -65,7 +65,7 @@ final class ServiceImpl implements Service
 //  private final ServiceContainer serviceContainer;
 //
 //  private final CatalogWideServiceTracker catalogWideServiceTracker;
-  private final boolean isRootContainer;
+//  private final boolean isRootContainer;
 
   private final ThreddsCatalogIssueContainer threddsCatalogIssueContainer;
 
@@ -110,7 +110,7 @@ final class ServiceImpl implements Service
     this.suffix = suffix == null ? "" : suffix;
     this.propertyBuilderContainer = propertyBuilderContainer;
 //    this.serviceContainer = serviceBuilderContainer.build();
-    this.isRootContainer = isRootContainer;
+//    this.isRootContainer = isRootContainer;
 //    if ( this.isRootContainer )
 //      this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
 //    else
@@ -169,12 +169,12 @@ final class ServiceImpl implements Service
 //  public List<Service> getServices() {
 //    return this.serviceContainer.getServices();
 //  }
-//
+
 //  public Service getService(String name) {
 //    return this.serviceContainer.getServiceByName( name );
 //  }
-//
-//  public Service findServiceByNameGlobally( String name ) {
+
+//  public Service findReferencableServiceByName( String name ) {
 //    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
 //  }
 

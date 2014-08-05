@@ -211,34 +211,34 @@ class ServiceBuilderImpl implements ServiceBuilder
     return this.propertyBuilderContainer.getProperty(name);
   }
 
-  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
-    if ( this.serviceBuilderContainer == null )
-      this.initialize();
-
-    this.isBuildable = Buildable.DONT_KNOW;
-
-    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( name, type, baseUri );
-    this.serviceBuilderContainer.addService( serviceBuilder );
-    return serviceBuilder;
-  }
-
-  public boolean removeService( ServiceBuilder serviceBuilder ) {
-    if ( serviceBuilder == null )
-      return false;
-
-    if ( this.serviceBuilderContainer == null )
-      this.initialize();
-
-    this.isBuildable = Buildable.DONT_KNOW;
-    return this.serviceBuilderContainer.removeService( serviceBuilder );
-  }
-
-  public List<ServiceBuilder> getServiceBuilders() {
-    if ( this.serviceBuilderContainer == null )
-      this.initialize();
-
-    return this.serviceBuilderContainer.getServices();
-  }
+//  public ServiceBuilder addService( String name, ServiceType type, String baseUri ) {
+//    if ( this.serviceBuilderContainer == null )
+//      this.initialize();
+//
+//    this.isBuildable = Buildable.DONT_KNOW;
+//
+//    ServiceBuilderImpl serviceBuilder = new ServiceBuilderImpl( name, type, baseUri );
+//    this.serviceBuilderContainer.addService( serviceBuilder );
+//    return serviceBuilder;
+//  }
+//
+//  public boolean removeService( ServiceBuilder serviceBuilder ) {
+//    if ( serviceBuilder == null )
+//      return false;
+//
+//    if ( this.serviceBuilderContainer == null )
+//      this.initialize();
+//
+//    this.isBuildable = Buildable.DONT_KNOW;
+//    return this.serviceBuilderContainer.removeService( serviceBuilder );
+//  }
+//
+//  public List<ServiceBuilder> getServiceBuilders() {
+//    if ( this.serviceBuilderContainer == null )
+//      this.initialize();
+//
+//    return this.serviceBuilderContainer.getServices();
+//  }
 
 //  public ServiceBuilder getServiceBuilderByName( String name ) {
 //    if ( this.serviceBuilderContainer == null )
@@ -248,10 +248,11 @@ class ServiceBuilderImpl implements ServiceBuilder
 //  }
 
   public ServiceBuilder findReferencableServiceBuilderByName( String name ) {
-    if ( this.catalogWideServiceBuilderTracker == null )
-      this.initialize();
-
-    return this.catalogWideServiceBuilderTracker.getReferenceableService( name );
+//    if ( this.catalogWideServiceBuilderTracker == null )
+//      this.initialize();
+//
+//    return this.catalogWideServiceBuilderTracker.getReferenceableService( name );
+    return null;
   }
 
   public Buildable isBuildable() {
