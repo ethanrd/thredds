@@ -35,6 +35,7 @@ package ucar.thredds.catalog.straightimpl;
 import ucar.nc2.units.DateType;
 import ucar.thredds.catalog.Catalog;
 import ucar.thredds.catalog.Property;
+import ucar.thredds.catalog.Service;
 import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.ThreddsBuilder;
@@ -127,17 +128,21 @@ class CatalogImpl implements Catalog
     return this.lastModified;
   }
 
-//  public List<Service> getServices() {
-//    return this.serviceContainer.getServices();
-//  }
-//
+  @Override
+  public List<Service> getServices() {
+    return this.serviceContainer.getServices();
+  }
+
 //  public Service getServiceByName( String name ) {
 //    return this.serviceContainer.getServiceByName( name );
 //  }
-//
-//  public Service findServiceByNameGlobally( String name ) {
+
+  @Override
+  public Service findReferencableServiceByName( String name )
+  {
 //    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
-//  }
+    return null;
+  }
 
   @Override
   public List<Property> getProperties() {

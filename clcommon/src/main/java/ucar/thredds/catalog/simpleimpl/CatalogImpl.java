@@ -39,12 +39,11 @@ import java.util.Collections;
 import java.util.List;
 
 import ucar.nc2.units.DateType;
-import ucar.thredds.catalog.Catalog;
-import ucar.thredds.catalog.Property;
-import ucar.thredds.catalog.ThreddsCatalogIssueContainer;
+import ucar.thredds.catalog.*;
 import ucar.thredds.catalog.builder.BuilderIssue;
 import ucar.thredds.catalog.builder.BuilderIssues;
 import ucar.thredds.catalog.builder.CatalogBuilder;
+import ucar.thredds.catalog.builder.ServiceBuilder;
 import ucar.thredds.catalog.util.PropertyBuilderContainer;
 import ucar.thredds.catalog.util.ThreddsCatalogIssuesImpl;
 
@@ -159,63 +158,70 @@ class CatalogImpl implements Catalog, CatalogBuilder
     return this.lastModified;
   }
 
-//  public ServiceBuilder addService( String name, ServiceType type, String baseUri )
-//  {
-//    if ( this.isBuilt )
-//      throw new IllegalStateException( "This CatalogBuilder has been built." );
-//
+  @Override
+  public ServiceBuilder addService( String name, ServiceType type, String baseUri )
+  {
+    if ( this.isBuilt )
+      throw new IllegalStateException( "This CatalogBuilder has been built." );
+
 //    return this.serviceContainer.addService( name, type, baseUri );
-//  }
-//
-//  public boolean removeService( ServiceBuilder serviceBuilder )
-//  {
-//    if ( this.isBuilt )
-//      throw new IllegalStateException( "This CatalogBuilder has been built." );
-//    if ( serviceBuilder == null )
-//      return false;
-//
+    return null;
+  }
+
+  @Override
+  public boolean removeService( ServiceBuilder serviceBuilder )
+  {
+    if ( this.isBuilt )
+      throw new IllegalStateException( "This CatalogBuilder has been built." );
+    if ( serviceBuilder == null )
+      return false;
+
 //    return this.serviceContainer.removeService( (ServiceImpl) serviceBuilder );
-//  }
-//
-//  public List<Service> getServices()
-//  {
-//    if ( !isBuilt )
-//      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without build() being called." );
+    return false;
+  }
+
+  @Override
+  public List<ServiceBuilder> getServiceBuilders()
+  {
+    if ( this.isBuilt )
+      throw new IllegalStateException( "This CatalogBuilder has been built." );
 //    return this.serviceContainer.getServices();
-//  }
-//
+    return null;
+  }
+
+  @Override
+  public List<Service> getServices()
+  {
+    if ( !isBuilt )
+      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without build() being called." );
+//    return this.serviceContainer.getServices();
+    return null;
+  }
+
 //  public Service getServiceByName( String name )
 //  {
 //    if ( !isBuilt )
 //      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
 //    return this.serviceContainer.getServiceByName( name );
 //  }
-//
-//  public Service findServiceByNameGlobally( String name )
-//  {
-//    if ( !isBuilt )
-//      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
+
+  @Override
+  public Service findReferencableServiceByName( String name )
+  {
+    if ( !isBuilt )
+      throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
 //    return this.globalServiceContainer.getServiceByGloballyUniqueName( name );
-//  }
-//
-//  public List<ServiceBuilder> getServiceBuilders()
-//  {
-//    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
-//    return this.serviceContainer.getServiceBuilders();
-//  }
-//
-//  public ServiceBuilder getServiceBuilderByName( String name )
-//  {
-//    if ( isBuilt ) throw new IllegalStateException( "This CatalogBuilder has been built." );
-//    return this.serviceContainer.getServiceBuilderByName( name );
-//  }
-//
-//  public ServiceBuilder findServiceBuilderByNameGlobally( String name )
-//  {
-//    if ( isBuilt )
-//      throw new IllegalStateException( "This CatalogBuilder has been built." );
+    return null;
+  }
+
+  @Override
+  public ServiceBuilder findReferencableServiceBuilderByName( String name )
+  {
+    if ( isBuilt )
+      throw new IllegalStateException( "This CatalogBuilder has been built." );
 //    return this.globalServiceContainer.getServiceByGloballyUniqueName( name );
-//  }
+    return null;
+  }
 
   @Override
   public void addProperty( String name, String value ) {
