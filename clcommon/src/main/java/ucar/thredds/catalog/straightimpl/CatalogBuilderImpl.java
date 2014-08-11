@@ -149,8 +149,11 @@ class CatalogBuilderImpl implements CatalogBuilder
     if ( serviceBuilder == null )
       return false;
 
-    this.isBuildable = Buildable.DONT_KNOW;
-    return this.serviceBuilderContainer.removeService( serviceBuilder );
+    if ( this.serviceBuilderContainer.removeService( serviceBuilder ) ) {
+      this.isBuildable = Buildable.DONT_KNOW;
+      return true;
+    }
+    return false;
   }
 
   public List<ServiceBuilder> getServiceBuilders() {

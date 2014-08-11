@@ -35,6 +35,7 @@ package ucar.thredds.catalog.simpleimpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,7 +63,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
   private DateType expires;
   private DateType lastModified;
 
-//  private final ServiceContainer serviceContainer;
+  private final ServiceContainer serviceContainer;
 //  private final GlobalServiceContainer globalServiceContainer;
 //
 //  private final DatasetNodeContainer datasetContainer;
@@ -87,6 +88,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
     this.lastModified = lastModified != null ? lastModified : new DateType();
 
     this.propertyBuilderContainer = null;
+    this.serviceContainer = new ServiceContainer();
 
     this.isBuildable = Buildable.DONT_KNOW;
   }
@@ -164,8 +166,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
     if ( this.isBuilt )
       throw new IllegalStateException( "This CatalogBuilder has been built." );
 
-//    return this.serviceContainer.addService( name, type, baseUri );
-    return null;
+    return this.serviceContainer.addService( name, type, baseUri );
   }
 
   @Override
@@ -176,7 +177,10 @@ class CatalogImpl implements Catalog, CatalogBuilder
     if ( serviceBuilder == null )
       return false;
 
-//    return this.serviceContainer.removeService( (ServiceImpl) serviceBuilder );
+    if ( this.serviceContainer.removeService( (ServiceImpl) serviceBuilder ) ) {
+      this.isBuildable = Buildable.DONT_KNOW;
+      return true;
+    }
     return false;
   }
 
@@ -185,8 +189,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
   {
     if ( this.isBuilt )
       throw new IllegalStateException( "This CatalogBuilder has been built." );
-//    return this.serviceContainer.getServices();
-    return null;
+    return Collections.unmodifiableList( new ArrayList<ServiceBuilder>( this.serviceContainer.getServiceImpls() ) );
   }
 
   @Override
@@ -194,8 +197,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
   {
     if ( !isBuilt )
       throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without build() being called." );
-//    return this.serviceContainer.getServices();
-    return null;
+    return Collections.unmodifiableList( new ArrayList<Service>( this.serviceContainer.getServiceImpls() ) );
   }
 
 //  public Service getServiceByName( String name )
@@ -211,7 +213,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
     if ( !isBuilt )
       throw new IllegalStateException( "This Catalog has escaped its CatalogBuilder without being build()-ed." );
 //    return this.globalServiceContainer.getServiceByGloballyUniqueName( name );
-    return null;
+    return this.serviceContainer.findReferencableServiceImplByName( name );
   }
 
   @Override
@@ -220,7 +222,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
     if ( isBuilt )
       throw new IllegalStateException( "This CatalogBuilder has been built." );
 //    return this.globalServiceContainer.getServiceByGloballyUniqueName( name );
-    return null;
+    return this.serviceContainer.findReferencableServiceImplByName( name );
   }
 
   @Override
