@@ -79,8 +79,8 @@ class CatalogBuilderImpl implements CatalogBuilder
     this.lastModified = lastModified != null ? lastModified : new DateType();
 
 //    this.catalogWideServiceBuilderTracker = new CatalogWideServiceBuilderTracker();
-//    this.serviceBuilderContainer = new ServiceBuilderContainer( catalogWideServiceBuilderTracker);
-//
+    this.serviceBuilderContainer = new ServiceBuilderContainer(); // catalogWideServiceBuilderTracker);
+
 //    //this.datasetContainer = new DatasetNodeContainer( null );
     this.propertyBuilderContainer = null;
     this.isBuildable = Buildable.DONT_KNOW;

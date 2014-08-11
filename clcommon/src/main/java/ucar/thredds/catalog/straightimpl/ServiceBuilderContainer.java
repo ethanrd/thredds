@@ -108,6 +108,10 @@ public class ServiceBuilderContainer // implements ThreddsBuilder
 
   public ServiceBuilder findReferencableServiceBuilderByName( String serviceName) {
     //return this.catalogWideServiceBuilderTracker.getReferenceableService( serviceName );
+    for (ServiceBuilder curSB : this.serviceBuilderList ) {
+      if ( curSB.getName().equals( serviceName ) )
+        return curSB;
+    }
     return null;
   }
 
