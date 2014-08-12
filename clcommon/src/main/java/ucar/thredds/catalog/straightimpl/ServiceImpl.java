@@ -92,7 +92,7 @@ final class ServiceImpl implements Service
       throw new IllegalArgumentException( "Name must not be null or empty.");
     if ( type == null )
       throw new IllegalArgumentException( "Service type must not be null.");
-    if ( propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
+    if ( propertyBuilderContainer != null && propertyBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
       throw new IllegalArgumentException( "ServiceBuilder can't be built when PropertyBuilderContainer is not buildable.");
 //    if ( serviceBuilderContainer.isBuildable() != ThreddsBuilder.Buildable.YES )
 //      throw new IllegalArgumentException( "ServiceBuilder can't be built when ServiceBuilderContainer is not buildable.");
@@ -109,7 +109,7 @@ final class ServiceImpl implements Service
     }
     this.suffix = suffix == null ? "" : suffix;
     this.propertyBuilderContainer = propertyBuilderContainer;
-//    this.serviceContainer = serviceBuilderContainer.build();
+//    this.serviceContainer = serviceBuilderContainer != null ? serviceBuilderContainer.build() : null;
 //    this.isRootContainer = isRootContainer;
 //    if ( this.isRootContainer )
 //      this.catalogWideServiceTracker = catalogWideServiceBuilderTracker.build();
