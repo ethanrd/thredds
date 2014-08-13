@@ -94,6 +94,10 @@ public class ServiceContainer
 
   public Service findReferencableServiceByName( String serviceName) {
     //return this.catalogWideServiceTracker.getReferenceableService( serviceName );
+    for (Service curSB : this.services ) {
+      if ( curSB.getName().equals( serviceName ) )
+        return curSB;
+    }
     return null;
   }
 

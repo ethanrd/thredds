@@ -141,7 +141,7 @@ class CatalogImpl implements Catalog
   public Service findReferencableServiceByName( String name )
   {
 //    return this.catalogWideServiceTracker.getServiceByGloballyUniqueName( name );
-    return null;
+    return this.serviceContainer.findReferencableServiceByName( name );
   }
 
   @Override

@@ -370,7 +370,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
 
     // Check subordinates.
 //    builderIssues.addAllIssues( this.globalServiceContainer.checkForIssues());
-//    builderIssues.addAllIssues( this.serviceContainer.checkForIssues());
+    builderIssues.addAllIssues( this.serviceContainer.checkForIssues());
 //    builderIssues.addAllIssues( this.datasetContainer.checkForIssues());
     if ( this.propertyBuilderContainer != null )
       builderIssues.addAllIssues( this.propertyBuilderContainer.checkForIssues());
@@ -398,7 +398,7 @@ class CatalogImpl implements Catalog, CatalogBuilder
     }
     this.docBaseUri = tmpUri;
 
-//    this.serviceContainer.build();
+    this.serviceContainer.build();
 //    this.datasetContainer.build();
 
     this.threddsCatalogIssueContainer = new ThreddsCatalogIssuesImpl( builderIssues);

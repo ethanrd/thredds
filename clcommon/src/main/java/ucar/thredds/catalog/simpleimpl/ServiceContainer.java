@@ -191,7 +191,7 @@ public class ServiceContainer
    *
    * @return any BuilderIssues with the current state of this ServiceContainer.
    */
-  BuilderIssues getIssues()
+  BuilderIssues checkForIssues()
   {
     BuilderIssues issues = new BuilderIssues();
 
@@ -209,7 +209,7 @@ public class ServiceContainer
    * @throws BuilderException if any of the contained services are not in a valid state.
    */
   void build()
-          throws BuilderException
+          throws IllegalStateException
   {
     if ( this.isBuilt )
       return;
