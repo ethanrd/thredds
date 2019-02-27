@@ -358,14 +358,14 @@ public class DatasetUrl {
       checkDap4 = true;
     }
 
-    if (!checkDap2) {
-      ServiceType result = checkIfDods(location);
+    if (!checkDap4) {
+      ServiceType result = checkIfDap4(location);
       if (result != null)
         return result;
     }
 
-    if (!checkDap4) {
-      ServiceType result = checkIfDap4(location);
+    if (!checkDap2) {
+      ServiceType result = checkIfDods(location);
       if (result != null)
         return result;
     }
